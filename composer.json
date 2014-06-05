@@ -1,0 +1,86 @@
+{
+	"name": "cartalyst/sentinel",
+	"description": "PHP 5.4+ Fully-featured Authentication & Authorization System",
+	"keywords": ["auth", "security", "laravel", "codeigniter", "fuelphp", "kohana"],
+	"license": "BSD-3-Clause",
+	"authors": [
+		{
+			"name": "Cartalyst LLC",
+			"email": "help@cartalyst.com"
+		},
+		{
+			"name": "Ben Corlett",
+			"email": "ben.corlett@cartalyst.com",
+			"role": "Developer"
+		},
+		{
+			"name": "Bruno Gaspar",
+			"email": "bruno.gaspar@cartalyst.com",
+			"role": "Developer"
+		},
+		{
+			"name": "Dan Syme",
+			"email": "dan.syme@cartalyst.com",
+			"role": "Creator & Designer"
+		},
+		{
+			"name": "Daniel Petrie",
+			"email": "dan.petrie@cartalyst.com",
+			"role": "Developer"
+		}
+	],
+	"repositories": [
+		{
+			"type": "package",
+			"package": {
+				"name": "swipeidentity/php-toolkit",
+				"version": "1.0.0",
+				"dist": {
+					"url": "https://www.swipeidentity.com/toolkits/swipeidentity-php-toolkit-1.0.zip",
+					"type": "zip"
+				},
+				"autoload": {
+					"classmap": [
+						"toolkit/com/swipeidentity/api"
+					]
+				}
+			}
+		}
+	],
+	"require": {
+		"php": ">=5.4.0",
+		"illuminate/support": ">=4.0.9,<4.3",
+		"machuga/authority" : "~2.1"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "~4.0",
+		"mockery/mockery": "~0.9",
+		"illuminate/cookie": ">=4.0.9,<4.3",
+		"illuminate/database": ">=4.0.9,<4.3",
+		"illuminate/http": ">=4.0.9,<4.3",
+		"illuminate/session": ">=4.0.9,<4.3",
+		"ircmaxell/password-compat": "~1.0",
+		"swipeidentity/php-toolkit": "~1.0"
+	},
+	"suggest": {
+		"illuminate/database": "By default, Sentinel utilizes the powerful Illuminate database layer.",
+		"illuminate/events": "To hook into various events across Sentinel, we recommend using Illuminate's event dispatcher.",
+		"ircmaxell/password-compat": "Default hashing uses PHP 5.5 password_* functions, with forward-compatible support."
+	},
+	"autoload": {
+		"classmap": [
+			"src/migrations"
+		],
+		"psr-4": {
+			"Cartalyst\\Sentinel\\": "src/"
+		}
+	},
+	"extra": {
+		"component": "package",
+		"branch-alias": {
+			"dev-develop": "3.0-dev"
+		}
+	},
+	"minimum-stability": "dev",
+	"prefer-stable": true
+}
