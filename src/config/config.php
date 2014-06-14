@@ -139,7 +139,7 @@ return [
 	| types of throttling.
 	|
 	| The first type is "global". Global throttling will monitor the overall
-	| failed login attempts across your site and can limit the affects of an
+	| failed login attempts across your site and can limit the effects of an
 	| attempted DDoS attack.
 	|
 	| The second type is "ip". This allows you to throttle the failed login

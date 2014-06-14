@@ -60,7 +60,7 @@ class ThrottlingException extends RuntimeException {
 	/**
 	 * Returns the type.
 	 *
-	 * @return int
+	 * @return string
 	 */
 	public function getType()
 	{
@@ -70,7 +70,7 @@ class ThrottlingException extends RuntimeException {
 	/**
 	 * Set the type.
 	 *
-	 * @param  int  $type
+	 * @param  string  $type
 	 * @return void
 	 */
 	public function setType($type)
