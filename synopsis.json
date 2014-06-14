@@ -2,7 +2,7 @@
 	"name" : "Sentinel",
 	"github" : "cartalyst/sentinel",
 	"demo" : {
-		"source" : "https://github.com/cartalyst/demo-sentry",
-		"online" : "http://demo.cartalyst.com/sentry"
+		"source" : "https://github.com/cartalyst/demo-sentinel",
+		"online" : "http://demo.cartalyst.com/sentinel"
 	}
 }
