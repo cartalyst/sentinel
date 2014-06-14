@@ -1,0 +1,20 @@
+{
+	"introduction" : [
+		"index",
+		"installation",
+		"integration"
+	],
+	"usage": [
+		"index",
+		"authentication",
+		"users",
+		"groups",
+		"permissions",
+		"activation",
+		"reminder",
+		"throttle",
+		"checkpoints",
+		"hashing",
+		"swipe"
+	]
+}
