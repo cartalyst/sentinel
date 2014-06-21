@@ -290,11 +290,6 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 			}
 		}
 
-		if ($password && strlen($password) < 6)
-		{
-			throw new \InvalidArgumentException('Your [password] must be at least 6 characters.');
-		}
-
 		return true;
 	}
 
