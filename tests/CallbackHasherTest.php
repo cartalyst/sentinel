@@ -46,4 +46,16 @@ class CallbackHasherTest extends PHPUnit_Framework_TestCase {
 		$this->assertFalse($hasher->check('fail', $hashedValue));
 	}
 
+	public function testShortValue()
+	{
+		// Never use this hashing strategy!
+		$hash = function($value) { return strrev($value); };
+		$check = function($value, $hashedValue) { return (strrev($value) === $hashedValue); };
+		$hasher = new CallbackHasher($hash, $check);
+
+		$hashedValue = $hasher->hash('foo');
+		$this->assertTrue($hashedValue !== 'foo');
+		$this->assertTrue($hasher->check('foo', $hashedValue));
+	}
+
 }
