@@ -42,4 +42,12 @@ class NativeHasherTest extends PHPUnit_Framework_TestCase {
 		$this->assertFalse($hasher->check('fail', $hashedValue));
 	}
 
+	public function testShortValue()
+	{
+		$hasher = new NativeHasher;
+		$hashedValue = $hasher->hash('foo');
+		$this->assertTrue($hashedValue !== 'foo');
+		$this->assertTrue($hasher->check('foo', $hashedValue));
+	}
+
 }
