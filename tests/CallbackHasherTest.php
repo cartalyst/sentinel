@@ -58,4 +58,28 @@ class CallbackHasherTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($hasher->check('foo', $hashedValue));
 	}
 
+	public function testUtf8Value()
+	{
+		// Never use this hashing strategy!
+		$hash = function($value) { return strrev($value); };
+		$check = function($value, $hashedValue) { return (strrev($value) === $hashedValue); };
+		$hasher = new CallbackHasher($hash, $check);
+
+		$hashedValue = $hasher->hash('fÄÓñ');
+		$this->assertTrue($hashedValue !== 'fÄÓñ');
+		$this->assertTrue($hasher->check('fÄÓñ', $hashedValue));
+	}
+
+	public function testSymbolsValue()
+	{
+		// Never use this hashing strategy!
+		$hash = function($value) { return strrev($value); };
+		$check = function($value, $hashedValue) { return (strrev($value) === $hashedValue); };
+		$hasher = new CallbackHasher($hash, $check);
+
+		$hashedValue = $hasher->hash('!"#$%^&*()-_,./:;<=>?@[]{}`~|');
+		$this->assertTrue($hashedValue !== '!"#$%^&*()-_,./:;<=>?@[]{}`~|');
+		$this->assertTrue($hasher->check('!"#$%^&*()-_,./:;<=>?@[]{}`~|', $hashedValue));
+	}
+
 }

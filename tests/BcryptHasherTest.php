@@ -50,4 +50,20 @@ class BcryptHasherTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($hasher->check('foo', $hashedValue));
 	}
 
+	public function testUtf8Value()
+	{
+		$hasher = new BcryptHasher;
+		$hashedValue = $hasher->hash('fÄÓñ');
+		$this->assertTrue($hashedValue !== 'fÄÓñ');
+		$this->assertTrue($hasher->check('fÄÓñ', $hashedValue));
+	}
+
+	public function testSymbolsValue()
+	{
+		$hasher = new BcryptHasher;
+		$hashedValue = $hasher->hash('!"#$%^&*()-_,./:;<=>?@[]{}`~|');
+		$this->assertTrue($hashedValue !== '!"#$%^&*()-_,./:;<=>?@[]{}`~|');
+		$this->assertTrue($hasher->check('!"#$%^&*()-_,./:;<=>?@[]{}`~|', $hashedValue));
+	}
+
 }
