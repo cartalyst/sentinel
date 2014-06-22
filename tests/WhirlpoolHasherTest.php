@@ -50,4 +50,20 @@ class WhirlpoolHasherTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($hasher->check('foo', $hashedValue));
 	}
 
+	public function testUtf8Value()
+	{
+		$hasher = new WhirlpoolHasher;
+		$hashedValue = $hasher->hash('fÄÓñ');
+		$this->assertTrue($hashedValue !== 'fÄÓñ');
+		$this->assertTrue($hasher->check('fÄÓñ', $hashedValue));
+	}
+
+	public function testSymbolsValue()
+	{
+		$hasher = new WhirlpoolHasher;
+		$hashedValue = $hasher->hash('!"#$%^&*()-_,./:;<=>?@[]{}`~|');
+		$this->assertTrue($hashedValue !== '!"#$%^&*()-_,./:;<=>?@[]{}`~|');
+		$this->assertTrue($hasher->check('!"#$%^&*()-_,./:;<=>?@[]{}`~|', $hashedValue));
+	}
+
 }
