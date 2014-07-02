@@ -42,28 +42,9 @@
 			"role": "Developer"
 		}
 	],
-	"repositories": [
-		{
-			"type": "package",
-			"package": {
-				"name": "swipeidentity/php-toolkit",
-				"version": "1.0.0",
-				"dist": {
-					"url": "https://www.swipeidentity.com/toolkits/swipeidentity-php-toolkit-1.0.zip",
-					"type": "zip"
-				},
-				"autoload": {
-					"classmap": [
-						"toolkit/com/swipeidentity/api"
-					]
-				}
-			}
-		}
-	],
 	"require": {
 		"php": ">=5.4.0",
-		"illuminate/support": ">=4.0.9,<4.3",
-		"machuga/authority" : "~2.1"
+		"illuminate/support": ">=4.0.9,<4.3"
 	},
 	"require-dev": {
 		"illuminate/cookie": ">=4.0.9,<4.3",
@@ -72,8 +53,7 @@
 		"illuminate/session": ">=4.0.9,<4.3",
 		"ircmaxell/password-compat": "~1.0",
 		"mockery/mockery": "~0.9",
-		"phpunit/phpunit": "~4.0",
-		"swipeidentity/php-toolkit": "~1.0"
+		"phpunit/phpunit": "~4.0"
 	},
 	"suggest": {
 		"illuminate/database": "By default, Sentinel utilizes the powerful Illuminate database layer.",

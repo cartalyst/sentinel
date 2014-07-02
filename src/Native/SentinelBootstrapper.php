@@ -19,7 +19,6 @@
 
 use Cartalyst\Sentinel\Activations\IlluminateActivationRepository;
 use Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint;
-use Cartalyst\Sentinel\Checkpoints\SwipeIdentityCheckpoint;
 use Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint;
 use Cartalyst\Sentinel\Cookies\NativeCookie;
 use Cartalyst\Sentinel\Groups\IlluminateGroupRepository;
@@ -28,7 +27,6 @@ use Cartalyst\Sentinel\Persistence\SentinelPersistence;
 use Cartalyst\Sentinel\Reminders\IlluminateReminderRepository;
 use Cartalyst\Sentinel\Sentinel;
 use Cartalyst\Sentinel\Sessions\NativeSession;
-use Cartalyst\Sentinel\Swipe\SentinelSwipe;
 use Cartalyst\Sentinel\Throttling\IlluminateThrottleRepository;
 use Cartalyst\Sentinel\Users\IlluminateUserRepository;
 use Illuminate\Events\Dispatcher;
@@ -168,7 +166,6 @@ class SentinelBootstrapper {
 		$checkpoints = $this->config['checkpoints'];
 
 		$activation = $this->createActivationCheckpoint($activations);
-		$swipe = $this->createSwipeCheckpoint($ipAddress);
 		$throttle = $this->createThrottleCheckpoint($ipAddress);
 
 		foreach ($checkpoints as $index => $checkpoint)
@@ -182,31 +179,6 @@ class SentinelBootstrapper {
 		}
 
 		return $checkpoints;
-	}
-
-	protected function createSwipeCheckpoint($ipAddress)
-	{
-		$swipe = $this->createSwipe($ipAddress);
-
-		return new SwipeIdentityCheckpoint($swipe);
-	}
-
-	protected function createSwipe($ipAddress)
-	{
-		$email = $this->config['swipe']['email'];
-		$password = $this->config['swipe']['password'];
-		$apiKey = $this->config['swipe']['api_key'];
-		$appCode = $this->config['swipe']['app_code'];
-		$method = $this->config['swipe']['method'];
-
-		return new SentinelSwipe(
-			$email,
-			$password,
-			$apiKey,
-			$appCode,
-			$ipAddress,
-			$method
-		);
 	}
 
 	protected function createThrottleCheckpoint($ipAddress)

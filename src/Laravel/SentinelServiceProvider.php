@@ -19,7 +19,6 @@
 
 use Cartalyst\Sentinel\Activations\IlluminateActivationRepository;
 use Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint;
-use Cartalyst\Sentinel\Checkpoints\SwipeIdentityCheckpoint;
 use Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint;
 use Cartalyst\Sentinel\Cookies\IlluminateCookie;
 use Cartalyst\Sentinel\Groups\IlluminateGroupRepository;
@@ -28,7 +27,6 @@ use Cartalyst\Sentinel\Persistence\SentinelPersistence;
 use Cartalyst\Sentinel\Reminders\IlluminateReminderRepository;
 use Cartalyst\Sentinel\Sentinel;
 use Cartalyst\Sentinel\Sessions\IlluminateSession;
-use Cartalyst\Sentinel\Swipe\SentinelSwipe;
 use Cartalyst\Sentinel\Throttling\IlluminateThrottleRepository;
 use Cartalyst\Sentinel\Users\IlluminateUserRepository;
 use Illuminate\Support\ServiceProvider;
@@ -138,7 +136,6 @@ class SentinelServiceProvider extends ServiceProvider {
 	protected function registerCheckpoints()
 	{
 		$this->registerActivationCheckpoint();
-		$this->registerSwipeCheckpoint();
 		$this->registerThrottleCheckpoint();
 
 		$this->app['sentinel.checkpoints'] = $this->app->share(function($app)
@@ -147,16 +144,12 @@ class SentinelServiceProvider extends ServiceProvider {
 
 			$checkpoints = array_map(function($checkpoint) use ($app)
 			{
-				switch ($checkpoint)
+				if ( ! $app->offsetExists("sentinel.checkpoint.{$checkpoint}"))
 				{
-					case 'activation':
-					case 'swipe':
-					case 'throttle':
-						return $app["sentinel.checkpoint.{$checkpoint}"];
-
-					default:
-						throw new \InvalidArgumentException("Invalid checkpoint [$checkpoint] given.");
+					throw new \InvalidArgumentException("Invalid checkpoint [$checkpoint] given.");
 				}
+
+				return $app["sentinel.checkpoint.{$checkpoint}"];
 			}, $checkpoints);
 
 			return $checkpoints;
@@ -181,37 +174,6 @@ class SentinelServiceProvider extends ServiceProvider {
 			$expires = $app['config']['cartalyst/sentinel::activations.expires'];
 
 			return new IlluminateActivationRepository($model, $expires);
-		});
-	}
-
-	protected function registerSwipeCheckpoint()
-	{
-		$this->registerSwipe();
-
-		$this->app['sentinel.checkpoint.swipe'] = $this->app->share(function($app)
-		{
-			return new SwipeIdentityCheckpoint($app['sentinel.swipe']);
-		});
-	}
-
-	protected function registerSwipe()
-	{
-		$this->app['sentinel.swipe'] = $this->app->share(function($app)
-		{
-			$email = $app['config']['cartalyst/sentinel::swipe.email'];
-			$password = $app['config']['cartalyst/sentinel::swipe.password'];
-			$apiKey = $app['config']['cartalyst/sentinel::swipe.api_key'];
-			$appCode = $app['config']['cartalyst/sentinel::swipe.app_code'];
-			$method = $app['config']['cartalyst/sentinel::swipe.method'];
-
-			return new SentinelSwipe(
-				$email,
-				$password,
-				$apiKey,
-				$appCode,
-				$this->app['request']->getClientIp(),
-				$method
-			);
 		});
 	}
 
@@ -326,8 +288,6 @@ class SentinelServiceProvider extends ServiceProvider {
 			'sentinel.groups',
 			'sentinel.activations',
 			'sentinel.checkpoint.activation',
-			'sentinel.swipe',
-			'sentinel.checkpoint.swipe',
 			'sentinel.throttling',
 			'sentinel.checkpoint.throttle',
 			'sentinel.checkpoints',
