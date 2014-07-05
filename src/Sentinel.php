@@ -25,8 +25,8 @@ use Cartalyst\Sentinel\Cookies\NativeCookie;
 use Cartalyst\Sentinel\Groups\GroupRepositoryInterface;
 use Cartalyst\Sentinel\Groups\IlluminateGroupRepository;
 use Cartalyst\Sentinel\Hashing\NativeHasher;
-use Cartalyst\Sentinel\Persistence\PersistenceInterface;
-use Cartalyst\Sentinel\Persistence\SentinelPersistence;
+use Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface;
+use Cartalyst\Sentinel\Persistences\IlluminatePersistenceRepository;
 use Cartalyst\Sentinel\Reminders\IlluminateReminderRepository;
 use Cartalyst\Sentinel\Reminders\ReminderRepositoryInterface;
 use Cartalyst\Sentinel\Sessions\NativeSession;
@@ -49,7 +49,7 @@ class Sentinel {
 	/**
 	 * The persistence driver (the class which actually manages sessions).
 	 *
-	 * @var \Cartalyst\Sentinel\Persistence\PersistenceInterface
+	 * @var \Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface
 	 */
 	protected $persistence;
 
@@ -126,7 +126,7 @@ class Sentinel {
 	/**
 	 * Create a new Sentinel instance.
 	 *
-	 * @param  \Cartalyst\Sentinel\Persistence\PersistenceInterface  $persistence
+	 * @param  \Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface  $persistence
 	 * @param  \Cartalyst\Sentinel\Users\UserRepositoryInterface  $users
 	 * @param  \Cartalyst\Sentinel\Groups\GroupRepositoryInterface  $groups
 	 * @param  \Cartalyst\Sentinel\Activations\ActivationRepositoryInterface  $activations
@@ -134,7 +134,7 @@ class Sentinel {
 	 * @return void
 	 */
 	public function __construct(
-		PersistenceInterface $persistence,
+		PersistenceRepositoryInterface $persistence,
 		UserRepositoryInterface $users,
 		GroupRepositoryInterface $groups,
 		ActivationRepositoryInterface $activations,
@@ -706,46 +706,6 @@ class Sentinel {
 	}
 
 	/**
-	 * Returns the persistence instance.
-	 *
-	 * @return \Cartalyst\Sentinel\Persistence\PersistenceInterface
-	 */
-	public function getPersistence()
-	{
-		if ($this->persistence === null)
-		{
-			$this->persistence = $this->createPersistence();
-		}
-
-		return $this->persistence;
-	}
-
-	/**
-	 * Set the persistence instance.
-	 *
-	 * @param  \Cartalyst\Sentinel\Persistence\PersistenceInterface  $persistence
-	 * @return void
-	 */
-	public function setPersistence(PersistenceInterface $persistence)
-	{
-		$this->persistence = $persistence;
-	}
-
-	/**
-	 * Creates a persistence instance.
-	 *
-	 * @return \Cartalyst\Sentinel\Users\IlluminateUserRepository
-	 */
-	protected function createPersistence()
-	{
-		$session = new NativeSession;
-
-		$cookie = new NativeCookie;
-
-		return new SentinelPersistence($session, $cookie);
-	}
-
-	/**
 	 * Returns the user repository.
 	 *
 	 * @return \Cartalyst\Sentinel\Users\UserRepositoryInterface
@@ -846,6 +806,44 @@ class Sentinel {
 	public function setEventDispatcher(Dispatcher $dispatcher)
 	{
 		$this->dispatcher = $dispatcher;
+	}
+
+	/**
+	 * Returns the persistences repository.
+	 *
+	 * @return \Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface
+	 */
+	public function getPersistencesRepository()
+	{
+		if ($this->persistence === null)
+		{
+			$this->persistence = $this->createPersistencesRepository();
+		}
+
+		return $this->persistence;
+	}
+
+	/**
+	 * Set the persistences repository.
+	 *
+	 * @param  \Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface  $persistences
+	 * @return void
+	 */
+	public function setPersistencesRepository(PersistenceRepositoryInterface $persistences)
+	{
+		$this->persistence = $persistences;
+	}
+
+	/**
+	 * Creates a default persistences repository if none has been specified.
+	 *
+	 * @return \Cartalyst\Sentinel\Persistences\IlluminatePersistenceRepository
+	 */
+	protected function createPersistencesRepository()
+	{
+		$model = 'Cartalyst\Sentinel\Persistences\EloquentPersistence';
+
+		return new IlluminatePersistenceRepository($model);
 	}
 
 	/**

@@ -1,4 +1,4 @@
-<?php namespace Cartalyst\Sentinel\Persistence;
+<?php namespace Cartalyst\Sentinel\Persistences;
 /**
  * Part of the Sentinel package.
  *
@@ -17,7 +17,7 @@
  * @link       http://cartalyst.com
  */
 
-interface PersistenceInterface {
+interface PersistenceRepositoryInterface {
 
 	/**
 	 * Checks for a persistence code in the current session.
@@ -48,14 +48,15 @@ interface PersistenceInterface {
 	 * @param  \Cartalyst\Sentinel\Persistence\PersistableInterface  $persistable
 	 * @return void
 	 */
-	public function remove(PersistableInterface $persistable);
+	public function remove();
 
 	/**
-	 * Flushes all persistence for the given user.
+	 * Flushes persistences for the given user.
 	 *
 	 * @param  \Cartalyst\Sentinel\Persistence\PersistableInterface  $persistable
+	 * @param  bool  $current
 	 * @return void
 	 */
-	public function flush(PersistableInterface $persistable);
+	public function flush(PersistableInterface $persistable, $current = true);
 
 }

@@ -73,6 +73,24 @@ return [
 
 	/*
 	|--------------------------------------------------------------------------
+	| Persistences
+	|--------------------------------------------------------------------------
+	|
+	| Here you may specify the persistences model used and weather to use the
+	| single persistence mode.
+	|
+	*/
+
+	'persistences' => [
+
+		'model' => 'Cartalyst\Sentinel\Persistences\EloquentPersistence',
+
+		'single' => false,
+
+	],
+
+	/*
+	|--------------------------------------------------------------------------
 	| Checkpoints
 	|--------------------------------------------------------------------------
 	|

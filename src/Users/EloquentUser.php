@@ -20,7 +20,7 @@
 use Cartalyst\Sentinel\Groups\GroupableInterface;
 use Cartalyst\Sentinel\Groups\GroupInterface;
 use Cartalyst\Sentinel\Permissions\PermissibleInterface;
-use Cartalyst\Sentinel\Persistence\PersistableInterface;
+use Cartalyst\Sentinel\Persistences\PersistableInterface;
 use Cartalyst\Sentinel\Permissions\SentinelPermissions;
 use Illuminate\Database\Eloquent\Model;
 
@@ -41,6 +41,11 @@ class EloquentUser extends Model implements GroupableInterface, PermissibleInter
 		'first_name',
 		'last_name',
 	];
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected $persistableKey = 'user_id';
 
 	/**
 	 * Cached permissions instance for the given user.
@@ -64,6 +69,13 @@ class EloquentUser extends Model implements GroupableInterface, PermissibleInter
 	protected static $groupsModel = 'Cartalyst\Sentinel\Groups\EloquentGroup';
 
 	/**
+	 * The persistences model name.
+	 *
+	 * @var string
+	 */
+	protected static $persistencesModel = 'Cartalyst\Sentinel\Persistence\EloquentPersistence';
+
+	/**
 	 * Returns an array of login column names.
 	 *
 	 * @return array
@@ -84,25 +96,13 @@ class EloquentUser extends Model implements GroupableInterface, PermissibleInter
 	}
 
 	/**
-	 * Get mutator for the "persistence codes" attribute.
+	 * Persistences relationship.
 	 *
-	 * @param  mixed  $codes
-	 * @return array
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
 	 */
-	public function getPersistenceCodesAttribute($codes)
+	public function persistences()
 	{
-		return $codes ? json_decode($codes, true) : [];
-	}
-
-	/**
-	 * Set mutator for the "persistence codes" attribute.
-	 *
-	 * @param  mixed  $codes
-	 * @return void
-	 */
-	public function setPersistenceCodesAttribute(array $codes)
-	{
-		$this->attributes['persistence_codes'] = $codes ? json_encode(array_values($codes)) : '';
+		return $this->hasMany(static::$persistencesModel, 'user_id');
 	}
 
 	/**
@@ -187,46 +187,33 @@ class EloquentUser extends Model implements GroupableInterface, PermissibleInter
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getPersistenceCodes()
-	{
-		return $this->persistence_codes;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function addPersistenceCode($code)
-	{
-		$codes = $this->persistence_codes;
-
-		$codes[] = $code;
-
-		$this->persistence_codes = $codes;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function removePersistenceCode($code)
-	{
-		$codes = $this->persistence_codes;
-
-		$index = array_search($code, $codes);
-
-		if ($index !== false)
-		{
-			unset($codes[$index]);
-		}
-
-		$this->persistence_codes = $codes;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function getUserId()
 	{
 		return $this->getKey();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getPersistableId()
+	{
+		return $this->getKey();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getPersistableKey()
+	{
+		return $this->persistableKey;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function setPersistableKey($key)
+	{
+		$this->persistableKey = $key;
 	}
 
 	/**
@@ -294,12 +281,32 @@ class EloquentUser extends Model implements GroupableInterface, PermissibleInter
 	}
 
 	/**
+	 * Get the persistences model.
+	 *
+	 * @return string
+	 */
+	public static function getPersistencesModel()
+	{
+		return static::$persistencesModel;
+	}
+
+	/**
+	 * Set the persistences model.
+	 *
+	 * @param  string  $persistencesModel
+	 * @return void
+	 */
+	public static function setPersistencesModel($persistencesModel)
+	{
+		static::$persistencesModel = $persistencesModel;
+	}
+
+	/**
 	 * Dynamically pass missing methods to the user.
 	 *
 	 * @param  string  $method
 	 * @param  array   $parameters
 	 * @return mixed
-	 * @throws \BadMethodCallException
 	 */
 	public function __call($method, $parameters)
 	{

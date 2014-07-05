@@ -1,4 +1,4 @@
-<?php namespace Cartalyst\Sentinel\Persistence;
+<?php namespace Cartalyst\Sentinel\Persistences;
 /**
  * Part of the Sentinel package.
  *
@@ -20,33 +20,24 @@
 interface PersistableInterface {
 
 	/**
+	 * Returns the persistable primary key value.
+	 *
+	 * @return string
+	 */
+	public function getPersistableId();
+
+	/**
+	 * Returns the persistable key name.
+	 *
+	 * @return string
+	 */
+	public function getPersistableKey();
+
+	/**
 	 * Generates a random persist code.
 	 *
 	 * @return string
 	 */
 	public function generatePersistenceCode();
-
-	/**
-	 * Returns an array of assigned persist codes.
-	 *
-	 * @return array
-	 */
-	public function getPersistenceCodes();
-
-	/**
-	 * Adds a new persist code.
-	 *
-	 * @param  string  $code
-	 * @return void
-	 */
-	public function addPersistenceCode($code);
-
-	/**
-	 * Removes a persist code.
-	 *
-	 * @param  string  $code
-	 * @return void
-	 */
-	public function removePersistenceCode($code);
 
 }

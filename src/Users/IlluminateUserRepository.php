@@ -105,25 +105,14 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 	 */
 	public function findByPersistenceCode($code)
 	{
-		// Narrow down our query to those who's persistence codes array
-		// contains ours. We'll filter the right user out.
-		$users = $this->createModel()
+		return $this->createModel()
 			->newQuery()
 			->with('groups')
-			->where('persistence_codes', 'like', "%{$code}%")
-			->get();
-
-		$users = $users->filter(function($user) use ($code)
-		{
-			return in_array($code, $user->persistence_codes);
-		});
-
-		if (count($users) > 1)
-		{
-			throw new \RuntimeException('Multiple users were found with the same persistence code. This should not happen.');
-		}
-
-		return $users->first();
+			->whereHas('persistences', function($q) use ($code)
+			{
+				$q->where('code', $code);
+			})
+			->first();
 	}
 
 	/**

@@ -23,7 +23,7 @@ use Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint;
 use Cartalyst\Sentinel\Cookies\IlluminateCookie;
 use Cartalyst\Sentinel\Groups\IlluminateGroupRepository;
 use Cartalyst\Sentinel\Hashing\NativeHasher;
-use Cartalyst\Sentinel\Persistence\SentinelPersistence;
+use Cartalyst\Sentinel\Persistences\IlluminatePersistenceRepository;
 use Cartalyst\Sentinel\Reminders\IlluminateReminderRepository;
 use Cartalyst\Sentinel\Sentinel;
 use Cartalyst\Sentinel\Sessions\IlluminateSession;
@@ -67,7 +67,16 @@ class SentinelServiceProvider extends ServiceProvider {
 
 		$this->app['sentinel.persistence'] = $this->app->share(function($app)
 		{
-			return new SentinelPersistence($app['sentinel.session'], $app['sentinel.cookie']);
+			$model = $app['config']['cartalyst/sentinel::persistences.model'];
+			$single = $app['config']['cartalyst/sentinel::persistences.single'];
+			$users = $app['config']['cartalyst/sentinel::users.model'];
+
+			if (class_exists($users) && method_exists($users, 'setPersistencesModel'))
+			{
+				forward_static_call_array([$users, 'setPersistencesModel'], [$model]);
+			}
+
+			return new IlluminatePersistenceRepository($app['sentinel.session'], $app['sentinel.cookie'], $model, $single);
 		});
 	}
 
@@ -98,8 +107,8 @@ class SentinelServiceProvider extends ServiceProvider {
 		$this->app['sentinel.users'] = $this->app->share(function($app)
 		{
 			$model = $app['config']['cartalyst/sentinel::users.model'];
-
 			$groups = $app['config']['cartalyst/sentinel::groups.model'];
+
 			if (class_exists($groups) && method_exists($groups, 'setUsersModel'))
 			{
 				forward_static_call_array([$groups, 'setUsersModel'], [$model]);
@@ -122,8 +131,8 @@ class SentinelServiceProvider extends ServiceProvider {
 		$this->app['sentinel.groups'] = $this->app->share(function($app)
 		{
 			$model = $app['config']['cartalyst/sentinel::groups.model'];
-
 			$users = $app['config']['cartalyst/sentinel::users.model'];
+
 			if (class_exists($users) && method_exists($users, 'setGroupsModel'))
 			{
 				forward_static_call_array([$users, 'setGroupsModel'], [$model]);
