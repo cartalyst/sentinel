@@ -47,11 +47,11 @@ class Sentinel {
 	protected $user;
 
 	/**
-	 * The persistence driver (the class which actually manages sessions).
+	 * The Persistence repository.
 	 *
 	 * @var \Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface
 	 */
-	protected $persistence;
+	protected $persistences;
 
 	/**
 	 * The User repository.
@@ -134,14 +134,14 @@ class Sentinel {
 	 * @return void
 	 */
 	public function __construct(
-		PersistenceRepositoryInterface $persistence,
+		PersistenceRepositoryInterface $persistences,
 		UserRepositoryInterface $users,
 		GroupRepositoryInterface $groups,
 		ActivationRepositoryInterface $activations,
 		Dispatcher $dispatcher
 	)
 	{
-		$this->persistence = $persistence;
+		$this->persistences = $persistences;
 
 		$this->users = $users;
 
@@ -245,12 +245,12 @@ class Sentinel {
 			return $this->user;
 		}
 
-		if ( ! $code = $this->persistence->check())
+		if ( ! $code = $this->persistences->check())
 		{
 			return false;
 		}
 
-		if ( ! $user = $this->users->findByPersistenceCode($code))
+		if ( ! $user = $this->persistences->findUserByPersistenceCode($code))
 		{
 			return false;
 		}
@@ -506,9 +506,9 @@ class Sentinel {
 	 */
 	public function login(UserInterface $user, $remember = false)
 	{
-		$method = $remember === true ? 'addAndRemember' : 'add';
+		$method = $remember === true ? 'persistAndRemember' : 'persist';
 
-		$this->persistence->{$method}($user);
+		$this->persistences->{$method}($user);
 
 		$response = $this->users->recordLogin($user);
 
@@ -532,23 +532,23 @@ class Sentinel {
 	}
 
 	/**
-	 * Log the current (or given) user out.
+	 * Log the current user out.
 	 *
 	 * @param  bool  $everywhere
 	 * @return bool
 	 */
-	public function logout($everywhere = false)
+	public function logout(UserInterface $user = null, $everywhere = false)
 	{
-		$user = $this->getUser();
+		$user = $user ?: $this->getUser();
 
 		if ($user === null)
 		{
 			return true;
 		}
 
-		$method = $everywhere === true ? 'flush' : 'remove';
+		$method = $everywhere === true ? 'flush' : 'forget';
 
-		$this->persistence->{$method}($user);
+		$this->persistences->{$method}($user);
 
 		return $this->users->recordLogout($user);
 	}
@@ -815,12 +815,12 @@ class Sentinel {
 	 */
 	public function getPersistencesRepository()
 	{
-		if ($this->persistence === null)
+		if ($this->persistences === null)
 		{
-			$this->persistence = $this->createPersistencesRepository();
+			$this->persistences = $this->createPersistencesRepository();
 		}
 
-		return $this->persistence;
+		return $this->persistences;
 	}
 
 	/**
@@ -831,7 +831,7 @@ class Sentinel {
 	 */
 	public function setPersistencesRepository(PersistenceRepositoryInterface $persistences)
 	{
-		$this->persistence = $persistences;
+		$this->persistences = $persistences;
 	}
 
 	/**

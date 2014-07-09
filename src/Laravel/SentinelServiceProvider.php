@@ -37,11 +37,6 @@ class SentinelServiceProvider extends ServiceProvider {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected $defer = true;
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function boot()
 	{
 		$this->package('cartalyst/sentinel', 'cartalyst/sentinel', __DIR__.'/..');
@@ -114,7 +109,7 @@ class SentinelServiceProvider extends ServiceProvider {
 				forward_static_call_array([$groups, 'setUsersModel'], [$model]);
 			}
 
-			return new IlluminateUserRepository($app['sentinel.hasher'], $model);
+			return new IlluminateUserRepository($app['sentinel.hasher'], $model, $app['events']);
 		});
 	}
 

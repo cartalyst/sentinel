@@ -20,18 +20,25 @@
 interface PersistableInterface {
 
 	/**
-	 * Returns the persistable primary key value.
+	 * Returns the persistable key name.
+	 *
+	 * @return string
+	 */
+	public function getPersistableKey();
+
+	/**
+	 * Returns the persistable key value.
 	 *
 	 * @return string
 	 */
 	public function getPersistableId();
 
 	/**
-	 * Returns the persistable key name.
+	 * Returns the persistable relationship name.
 	 *
 	 * @return string
 	 */
-	public function getPersistableKey();
+	public function getPersistableRelationship();
 
 	/**
 	 * Generates a random persist code.

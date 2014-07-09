@@ -35,7 +35,7 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface 
 	 *
 	 * @var string
 	 */
-	protected $model = 'Cartalyst\Sentinel\Persistence\EloquentPersistence';
+	protected $model = 'Cartalyst\Sentinel\Persistences\EloquentPersistence';
 
 	/**
 	 * Session storage driver.
@@ -123,7 +123,7 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function add(PersistableInterface $persistable, $remember = false)
+	public function persist(PersistableInterface $persistable, $remember = false)
 	{
 		if ($this->single)
 		{
@@ -141,11 +141,8 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface 
 
 		$persistence = $this->createModel();
 
-		$persistence->fill([
-			'code' => $code,
-		]);
-
 		$persistence->{$persistable->getPersistableKey()} = $persistable->getPersistableId();
+		$persistence->code = $code;
 
 		return $persistence->save();
 	}
@@ -153,15 +150,15 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function addAndRemember(PersistableInterface $persistable)
+	public function persistAndRemember(PersistableInterface $persistable)
 	{
-		return $this->add($persistable, true);
+		return $this->persist($persistable, true);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function remove()
+	public function forget()
 	{
 		$code = $this->check();
 
@@ -173,6 +170,14 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface 
 		$this->session->forget();
 		$this->cookie->forget();
 
+		return $this->remove($code);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function remove($code)
+	{
 		return $this->createModel()
 			->where('code', $code)
 			->delete();
@@ -181,14 +186,14 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function flush(PersistableInterface $persistable, $current = true)
+	public function flush(PersistableInterface $persistable, $forget = true)
 	{
-		if ($current)
+		if ($forget)
 		{
-			$this->remove();
+			$this->forget($persistable);
 		}
 
-		foreach($persistable->persistences()->get() as $persistence)
+		foreach($persistable->{$persistable->getPersistableRelationship()}()->get() as $persistence)
 		{
 			if ($persistence->code !== $this->check())
 			{

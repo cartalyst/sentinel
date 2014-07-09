@@ -32,7 +32,7 @@ interface PersistenceRepositoryInterface {
 	 * @param  \Cartalyst\Sentinel\Persistence\PersistableInterface  $persistable
 	 * @return void
 	 */
-	public function add(PersistableInterface $persistable);
+	public function persist(PersistableInterface $persistable);
 
 	/**
 	 * Adds a new user persistence, to remember.
@@ -40,23 +40,31 @@ interface PersistenceRepositoryInterface {
 	 * @param  \Cartalyst\Sentinel\Persistence\PersistableInterface  $persistable
 	 * @return void
 	 */
-	public function addAndRemember(PersistableInterface $persistable);
+	public function persistAndRemember(PersistableInterface $persistable);
 
 	/**
 	 * Removes the persistence bound to the current session.
 	 *
 	 * @param  \Cartalyst\Sentinel\Persistence\PersistableInterface  $persistable
-	 * @return void
+	 * @return bool|null
 	 */
-	public function remove();
+	public function forget();
 
 	/**
 	 * Flushes persistences for the given user.
 	 *
 	 * @param  \Cartalyst\Sentinel\Persistence\PersistableInterface  $persistable
-	 * @param  bool  $current
+	 * @param  bool  $forget
 	 * @return void
 	 */
-	public function flush(PersistableInterface $persistable, $current = true);
+	public function flush(PersistableInterface $persistable, $forget = true);
+
+	/**
+	 * Removes the given persistence code.
+	 *
+	 * @param  string  $code
+	 * @return bool|null
+	 */
+	public function remove($code);
 
 }

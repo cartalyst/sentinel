@@ -48,6 +48,11 @@ class EloquentUser extends Model implements GroupableInterface, PermissibleInter
 	protected $persistableKey = 'user_id';
 
 	/**
+	 * {@inheritDoc}
+	 */
+	protected $persistableRelationship = 'persistences';
+
+	/**
 	 * Cached permissions instance for the given user.
 	 *
 	 * @var \Cartalyst\Sentinel\Permissions\PermissionsInterface
@@ -73,7 +78,7 @@ class EloquentUser extends Model implements GroupableInterface, PermissibleInter
 	 *
 	 * @var string
 	 */
-	protected static $persistencesModel = 'Cartalyst\Sentinel\Persistence\EloquentPersistence';
+	protected static $persistencesModel = 'Cartalyst\Sentinel\Persistences\EloquentPersistence';
 
 	/**
 	 * Returns an array of login column names.
@@ -206,6 +211,14 @@ class EloquentUser extends Model implements GroupableInterface, PermissibleInter
 	public function getPersistableKey()
 	{
 		return $this->persistableKey;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getPersistableRelationship()
+	{
+		return $this->persistableRelationship;
 	}
 
 	/**

@@ -36,14 +36,6 @@ class EloquentPersistence extends Model implements PersistenceInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	protected $fillable = [
-		'code',
-		'user_id',
-	];
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function user()
 	{
 		return $this->belongsTo(static::$usersModel);
