@@ -52,8 +52,6 @@ And constructed with the following guidelines:
 
 ## Support
 
-If you like Sentinel, consider [subscribing](http://www.cartalyst.com/pricing) to our [Arsenal](http://www.cartalyst.com/arsenal). It allows us to keep creating awesome software and afford to eat at night. Subscribers also get **priority support** with all of our packages, both free and subscriber-only.
-
 Have a bug? Please create an issue here on GitHub that conforms with [necolas's guidelines](https://github.com/necolas/issue-guidelines).
 
 https://github.com/cartalyst/sentinel/issues
