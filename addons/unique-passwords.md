@@ -48,4 +48,29 @@ Run the following command to migrate Sentinel Unique Passwords.
 
 ### Native
 
-..
+```php
+use Cartalyst\SentinelUniquePasswords\UniquePasswords;
+
+$uniquePasswords = new UniquePasswords(Sentinel::getUserRepository());
+
+Sentinel::getEventDispatcher()->listen("eloquent.created: Cartalyst\Sentinel\Users\EloquentUser", function($user, $credentials) use ($uniquePasswords)
+{
+	$uniquePasswords->created($user, $credentials);
+});
+
+Sentinel::getEventDispatcher()->listen('sentinel.user.filled', function($user, $credentials) use ($uniquePasswords)
+{
+	$uniquePasswords->filled($user, $credentials);
+});
+
+$user = Sentinel::findById(1);
+
+try
+{
+	Sentinel::update($user, ['password' => 'foobar']);
+}
+catch (Cartalyst\SentinelUniquePasswords\Exceptions\NotUniquePasswordException $e)
+{
+	// Generate your error here
+}
+```

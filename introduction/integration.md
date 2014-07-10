@@ -32,4 +32,30 @@ This will publish the config file to `app/config/packages/cartalyst/sentinel/con
 
 ## Native
 
-..
+Sentinel ships with default implementations for `illuminate/database`, in order to use it, make sure you require it on your `composer.json` file.
+
+```php
+use Cartalyst\Sentinel\Native\Facades\Sentinel;
+use Illuminate\Database\Capsule\Manager as Capsule;
+
+require 'vendor/autoload.php';
+
+$capsule = new Capsule;
+
+$capsule->addConnection([
+    'driver'    => 'mysql',
+    'host'      => 'localhost',
+    'database'  => 'sentinel',
+    'username'  => 'user',
+    'password'  => 'secret',
+    'charset'   => 'utf8',
+    'collation' => 'utf8_unicode_ci',
+]);
+
+$capsule->bootEloquent();
+
+Sentinel::register([
+	'email'    => 'test@example.com',
+	'password' => 'foobar',
+]);
+```
