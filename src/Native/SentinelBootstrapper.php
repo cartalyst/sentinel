@@ -52,16 +52,17 @@ class SentinelBootstrapper {
 		$persistence = $this->createPersistence();
 		$users       = $this->createUsers();
 		$groups      = $this->createGroups();
+		$activations = $this->createActivations();
 		$dispatcher  = $this->createEventsDispatcher();
 
 		$sentinel = new Sentinel(
 			$persistence,
 			$users,
 			$groups,
+			$activations,
 			$dispatcher
 		);
 
-		$activations = $this->createActivations();
 		$ipAddress   = $this->guessIpAddress();
 		$checkpoints = $this->createCheckpoints($activations, $ipAddress);
 
