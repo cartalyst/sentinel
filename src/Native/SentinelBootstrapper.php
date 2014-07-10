@@ -75,8 +75,8 @@ class SentinelBootstrapper {
 		$persistence = $this->createPersistence();
 		$users       = $this->createUsers();
 		$groups      = $this->createGroups();
-		$dispatcher  = $this->getEventDispatcher();
 		$activations = $this->createActivations();
+		$dispatcher  = $this->getEventDispatcher();
 
 		$sentinel = new Sentinel(
 			$persistence,
