@@ -20,6 +20,7 @@
 use Carbon\Carbon;
 use Cartalyst\Sentinel\Hashing\HasherInterface;
 use Closure;
+use Illuminate\Events\Dispatcher;
 
 class IlluminateUserRepository implements UserRepositoryInterface {
 
@@ -29,6 +30,13 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 	 * @var \Cartalyst\Sentinel\Hashing\HasherInterface
 	 */
 	protected $hasher;
+
+	/**
+	 * Dispatcher.
+	 *
+	 * @var \Cartalyst\Sentinel\Hashing\HasherInterface
+	 */
+	protected $dispatcher;
 
 	/**
 	 * Model name.
@@ -44,7 +52,7 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 	 * @param  string  $model
 	 * @return void
 	 */
-	public function __construct(HasherInterface $hasher, $model = null)
+	public function __construct(HasherInterface $hasher, $model = null, Dispatcher $dispatcher = null)
 	{
 		$this->hasher = $hasher;
 
@@ -52,6 +60,8 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 		{
 			$this->model = $model;
 		}
+
+		$this->dispatcher = $dispatcher;
 	}
 
 	/**
@@ -207,9 +217,13 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 			$user = $this->findById($user);
 		}
 
+		$this->fireEvent('user.updating', compact('user', 'credentials'));
+
 		$this->fill($user, $credentials);
 
 		$user->save();
+
+		$this->fireEvent('user.updated', compact('user', 'credentials'));
 
 		return $user;
 	}
@@ -302,9 +316,11 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 	 */
 	protected function fill(UserInterface $user, array $credentials)
 	{
+		$this->fireEvent('user.filling', compact('user', 'credentials'));
+
 		$loginNames = $user->getLoginNames();
 
-		list($logins, $password, $credentials) = $this->parseCredentials($credentials, $loginNames);
+		list($logins, $password, $attributes) = $this->parseCredentials($credentials, $loginNames);
 
 		if (is_array($logins))
 		{
@@ -319,7 +335,7 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 			]);
 		}
 
-		$user->fill($credentials);
+		$user->fill($attributes);
 
 		if (isset($password))
 		{
@@ -327,6 +343,8 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 
 			$user->fill(compact('password'));
 		}
+
+		$this->fireEvent('user.filled', compact('user', 'credentials'));
 	}
 
 	/**
@@ -338,6 +356,17 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 	public function setHasher(HasherInterface $hasher)
 	{
 		$this->hasher = $hasher;
+	}
+
+	/**
+	 * Get the hasher.
+	 *
+	 * @param \Cartalyst\Sentinel\Hashing\HasherInterface  $hasher
+	 * @return void
+	 */
+	public function getHasher()
+	{
+		return $this->hasher;
 	}
 
 	/**
@@ -353,6 +382,16 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 	}
 
 	/**
+	 * Returns the model.
+	 *
+	 * @return string
+	 */
+	public function getModel()
+	{
+		return $this->model;
+	}
+
+	/**
 	 * Runtime override of the model.
 	 *
 	 * @param  string  $model
@@ -361,6 +400,23 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 	public function setModel($model)
 	{
 		$this->model = $model;
+	}
+
+	/**
+	 * Fire a Sentinel event.
+	 *
+	 * @param  string  $event
+	 * @param  mixed   $payload
+	 * @param  bool    $halt
+	 * @return mixed
+	 */
+	protected function fireEvent($event, $payload = [], $halt = false)
+	{
+		if ( ! $dispatcher = $this->dispatcher) return;
+
+		$method = $halt ? 'until' : 'fire';
+
+		return $dispatcher->{$method}("sentinel.{$event}", $payload);
 	}
 
 }

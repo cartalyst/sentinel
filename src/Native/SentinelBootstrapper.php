@@ -33,8 +33,26 @@ use Illuminate\Events\Dispatcher;
 
 class SentinelBootstrapper {
 
+	/**
+	 * Configuration.
+	 *
+	 * @var array
+	 */
 	protected $config;
 
+	/**
+	 * Event dispatcher.
+	 *
+	 * @var \Illuminate\Events\Dispatcher
+	 */
+	protected $dispatcher;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param  arry  $config
+	 * @return void
+	 */
 	public function __construct($config = null)
 	{
 		if (is_string($config))
@@ -47,13 +65,18 @@ class SentinelBootstrapper {
 		}
 	}
 
+	/**
+	 * Creates a sentinel instance.
+	 *
+	 * @return \Cartalyst\Sentinel\Sentinel
+	 */
 	public function createSentinel()
 	{
 		$persistence = $this->createPersistence();
 		$users       = $this->createUsers();
 		$groups      = $this->createGroups();
 		$activations = $this->createActivations();
-		$dispatcher  = $this->createEventsDispatcher();
+		$dispatcher  = $this->getEventDispatcher();
 
 		$sentinel = new Sentinel(
 			$persistence,
@@ -79,6 +102,11 @@ class SentinelBootstrapper {
 		return $sentinel;
 	}
 
+	/**
+	 * Creates a persistences repository.
+	 *
+	 * @return \Cartalyst\Sentinel\Persistences\SentinelPersistence
+	 */
 	protected function createPersistence()
 	{
 		$session = $this->createSession();
@@ -87,16 +115,31 @@ class SentinelBootstrapper {
 		return new SentinelPersistence($session, $cookie);
 	}
 
+	/**
+	 * Creates a session.
+	 *
+	 * @return \Cartalyst\Sentinel\Sessions\NativeSession
+	 */
 	protected function createSession()
 	{
 		return new NativeSession($this->config['session']);
 	}
 
+	/**
+	 * Creates a cookie.
+	 *
+	 * @return \Cartalyst\Sentinel\Cookies\NativeCookie
+	 */
 	protected function createCookie()
 	{
 		return new NativeCookie($this->config['cookie']);
 	}
 
+	/**
+	 * Creates a user repository.
+	 *
+	 * @return \Cartalyst\Sentinel\Users\IlluminateUserRepository
+	 */
 	protected function createUsers()
 	{
 		$hasher = $this->createHasher();
@@ -109,14 +152,24 @@ class SentinelBootstrapper {
 			forward_static_call_array([$groups, 'setUsersModel'], [$model]);
 		}
 
-		return new IlluminateUserRepository($hasher, $model);
+		return new IlluminateUserRepository($hasher, $model, $this->getEventDispatcher());
 	}
 
+	/**
+	 * Creates a hasher.
+	 *
+	 * @return \Cartalyst\Sentinel\Hashing\NativeHasher
+	 */
 	protected function createHasher()
 	{
 		return new NativeHasher;
 	}
 
+	/**
+	 * Creates a group repository.
+	 *
+	 * @return \Cartalyst\Sentinel\Groups\IlluminateGroupRepository
+	 */
 	protected function createGroups()
 	{
 		$model = $this->config['groups']['model'];
@@ -130,6 +183,11 @@ class SentinelBootstrapper {
 		return new IlluminateGroupRepository($model);
 	}
 
+	/**
+	 * Creates an activation repository.
+	 *
+	 * @return \Cartalyst\Sentinel\Activations\IlluminateActivationRepository
+	 */
 	protected function createActivations()
 	{
 		$model = $this->config['activations']['model'];
@@ -138,6 +196,11 @@ class SentinelBootstrapper {
 		return new IlluminateActivationRepository($model, $expires);
 	}
 
+	/**
+	 * Guesses the client's ip address.
+	 *
+	 * @return string
+	 */
 	protected function guessIpAddress()
 	{
 		foreach (['HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR'] as $key)
@@ -157,11 +220,24 @@ class SentinelBootstrapper {
 		}
 	}
 
+	/**
+	 * Create an activation checkpoint.
+	 *
+	 * @param  \Cartalyst\Sentinel\Activations\IlluminateActivationRepository  $activations
+	 * @return \Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint
+	 */
 	protected function createActivationCheckpoint(IlluminateActivationRepository $activations)
 	{
 		return new ActivationCheckpoint($activations);
 	}
 
+	/**
+	 * Create activation and throttling checkpoints.
+	 *
+	 * @param  \Cartalyst\Sentinel\Activations\IlluminateActivationRepository  $activations
+	 * @param  string  $ipAddress
+	 * @return array
+	 */
 	protected function createCheckpoints(IlluminateActivationRepository $activations, $ipAddress)
 	{
 		$checkpoints = $this->config['checkpoints'];
@@ -182,6 +258,12 @@ class SentinelBootstrapper {
 		return $checkpoints;
 	}
 
+	/**
+	 * Create a throttle checkpoint.
+	 *
+	 * @param  string  $ipAddress
+	 * @return \Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint
+	 */
 	protected function createThrottleCheckpoint($ipAddress)
 	{
 		$throttling = $this->createThrottling();
@@ -189,6 +271,11 @@ class SentinelBootstrapper {
 		return new ThrottleCheckpoint($throttling, $ipAddress);
 	}
 
+	/**
+	 * Create a throttling repository.
+	 *
+	 * @return \Cartalyst\Sentinel\Throttling\IlluminateThrottleRepository
+	 */
 	protected function createThrottling()
 	{
 		$model = $this->config['throttling']['model'];
@@ -210,12 +297,28 @@ class SentinelBootstrapper {
 		);
 	}
 
-	protected function createEventsDispatcher()
+	/**
+	 * Returns the event dispatcher.
+	 *
+	 * @return \Illuminate\Events\Dispatcher
+	 */
+	protected function getEventDispatcher()
 	{
-		return new Dispatcher;
+		if ($this->dispatcher)
+		{
+			return $this->dispatcher;
+		}
+
+		return $this->dispatcher = new Dispatcher;
 	}
 
-	protected function createReminders($users)
+	/**
+	 * Create a reminder repository.
+	 *
+	 * @param  \Cartalyst\Sentinel\Users\IlluminateUserRepository  $users
+	 * @return \Cartalyst\Sentinel\Reminders\IlluminateReminderRepository
+	 */
+	protected function createReminders(IlluminateUserRepository $users)
 	{
 		$model = $this->config['reminders']['model'];
 		$expires = $this->config['reminders']['expires'];
