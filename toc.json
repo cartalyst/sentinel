@@ -14,7 +14,10 @@
 		"reminder",
 		"throttle",
 		"checkpoints",
-		"hashing",
-		"swipe"
+		"hashing"
+	],
+	"addons": [
+		"index",
+		"unique-passwords"
 	]
 }
