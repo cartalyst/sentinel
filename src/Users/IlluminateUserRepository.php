@@ -190,6 +190,8 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 	{
 		$user = $this->createModel();
 
+		$this->fireEvent('user.creating', compact('user', 'credentials'));
+
 		$this->fill($user, $credentials);
 
 		if ($callback)
@@ -203,6 +205,8 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 		}
 
 		$user->save();
+
+		$this->fireEvent('user.created', compact('user', 'credentials'));
 
 		return $user;
 	}
