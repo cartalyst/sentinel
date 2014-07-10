@@ -986,7 +986,7 @@ class Sentinel {
 		{
 			$roles = $this->getRoleRepository();
 
-			$method = 'findBy'.substr($method, 11);
+			$method = 'findBy'.substr($method, 10);
 
 			return call_user_func_array([$roles, $method], $parameters);
 		}

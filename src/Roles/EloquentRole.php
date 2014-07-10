@@ -124,6 +124,53 @@ class EloquentRole extends Model implements RoleInterface, PermissibleInterface 
 	}
 
 	/**
+	 * {@inheritDoc}
+	 */
+	public function addPermission($permission, $value)
+	{
+		if ( ! array_key_exists($permission, $this->permissions))
+		{
+			$this->permissions = array_merge($this->permissions, [$permission => $value]);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function updatePermission($permission, $value)
+	{
+		if (array_key_exists($permission, $this->permissions))
+		{
+			$permissions = $this->permissions;
+
+			$permissions[$permission] = $value;
+
+			$this->permissions = $permissions;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function removePermission($permission)
+	{
+		if (array_key_exists($permission, $this->permissions))
+		{
+			$permissions = $this->permissions;
+
+			unset($permissions[$permission]);
+
+			$this->permissions = $permissions;
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Get the users model.
 	 *
 	 * @return string
