@@ -72,7 +72,7 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 		return $this
 			->createModel()
 			->newQuery()
-			->with('groups')
+			->with('roles')
 			->find($id);
 	}
 
@@ -85,7 +85,7 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 
 		$loginNames = $instance->getLoginNames();
 
-		$query = $instance->newQuery()->with('groups');
+		$query = $instance->newQuery()->with('roles');
 
 		list($logins, $password, $credentials) = $this->parseCredentials($credentials, $loginNames);
 
@@ -117,7 +117,7 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 	{
 		return $this->createModel()
 			->newQuery()
-			->with('groups')
+			->with('roles')
 			->whereHas('persistences', function($q) use ($code)
 			{
 				$q->where('code', $code);

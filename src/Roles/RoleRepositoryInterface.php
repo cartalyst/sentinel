@@ -1,4 +1,4 @@
-<?php namespace Cartalyst\Sentinel\Groups;
+<?php namespace Cartalyst\Sentinel\Roles;
 /**
  * Part of the Sentinel package.
  *
@@ -17,29 +17,29 @@
  * @link       http://cartalyst.com
  */
 
-interface GroupRepositoryInterface {
+interface RoleRepositoryInterface {
 
 	/**
-	 * Finds a group by the given primary key.
+	 * Finds a role by the given primary key.
 	 *
 	 * @param  int  $id
-	 * @return \Cartalyst\Sentinel\Groups\GroupInterface
+	 * @return \Cartalyst\Sentinel\Roles\RoleInterface
 	 */
 	public function findById($id);
 
 	/**
-	 * Finds a group by the given slug.
+	 * Finds a role by the given slug.
 	 *
 	 * @param  string  $slug
-	 * @return \Cartalyst\Sentinel\Groups\GroupInterface
+	 * @return \Cartalyst\Sentinel\Roles\RoleInterface
 	 */
 	public function findBySlug($slug);
 
 	/**
-	 * Finds a group by the given name.
+	 * Finds a role by the given name.
 	 *
 	 * @param  string  $name
-	 * @return \Cartalyst\Sentinel\Groups\GroupInterface
+	 * @return \Cartalyst\Sentinel\Roles\RoleInterface
 	 */
 	public function findByName($name);
 

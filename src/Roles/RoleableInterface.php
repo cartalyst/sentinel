@@ -1,4 +1,4 @@
-<?php namespace Cartalyst\Sentinel\Groups;
+<?php namespace Cartalyst\Sentinel\Roles;
 /**
  * Part of the Sentinel package.
  *
@@ -17,27 +17,21 @@
  * @link       http://cartalyst.com
  */
 
-interface GroupInterface {
+interface RoleableInterface {
 
 	/**
-	 * Return the group's primary key.
-	 *
-	 * @return int
-	 */
-	public function getGroupId();
-
-	/**
-	 * Return the group's slug.
-	 *
-	 * @return string
-	 */
-	public function getGroupSlug();
-
-	/**
-	 * Return all users for the group.
+	 * Returns all associated roles.
 	 *
 	 * @return \IteratorAggregate
 	 */
-	public function getUsers();
+	public function getRoles();
+
+	/**
+	 * Returns if the user is in the given role.
+	 *
+	 * @param  mixed  $role
+	 * @return bool
+	 */
+	public function inRole($role);
 
 }

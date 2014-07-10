@@ -1,17 +1,17 @@
 # Sentinel
 
-Sentinel is a PHP 5.4+ fully-featured authentication & authorization system. It also provides additional features such as user groups and additional security features.
+Sentinel is a PHP 5.4+ fully-featured authentication & authorization system. It also provides additional features such as user roles and additional security features.
 
 Sentinel is a framework agnostic set of interfaces with default implementations, though you can substitute any implementations you see fit.
 
 ## Package Story
 
-It also provides additional features such as user groups and additional security features:
+It also provides additional features such as user roles and additional security features:
 
 - Configurable authentication (can use any type of authentication required, such as username or email)
 - Authorization
 - Activation of user *(optional)*
-- Groups and group permissions
+- Roles and role permissions
 - "Remember me"
 - User suspension
 - Login throttling *(optional)*

@@ -21,7 +21,7 @@ use Cartalyst\Sentinel\Activations\IlluminateActivationRepository;
 use Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint;
 use Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint;
 use Cartalyst\Sentinel\Cookies\IlluminateCookie;
-use Cartalyst\Sentinel\Groups\IlluminateGroupRepository;
+use Cartalyst\Sentinel\Roles\IlluminateRoleRepository;
 use Cartalyst\Sentinel\Hashing\NativeHasher;
 use Cartalyst\Sentinel\Persistences\IlluminatePersistenceRepository;
 use Cartalyst\Sentinel\Reminders\IlluminateReminderRepository;
@@ -49,7 +49,7 @@ class SentinelServiceProvider extends ServiceProvider {
 	{
 		$this->registerPersistence();
 		$this->registerUsers();
-		$this->registerGroups();
+		$this->registerRoles();
 		$this->registerCheckpoints();
 		$this->registerReminders();
 		$this->registerSentinel();
@@ -102,11 +102,11 @@ class SentinelServiceProvider extends ServiceProvider {
 		$this->app['sentinel.users'] = $this->app->share(function($app)
 		{
 			$model = $app['config']['cartalyst/sentinel::users.model'];
-			$groups = $app['config']['cartalyst/sentinel::groups.model'];
+			$roles = $app['config']['cartalyst/sentinel::roles.model'];
 
-			if (class_exists($groups) && method_exists($groups, 'setUsersModel'))
+			if (class_exists($roles) && method_exists($roles, 'setUsersModel'))
 			{
-				forward_static_call_array([$groups, 'setUsersModel'], [$model]);
+				forward_static_call_array([$roles, 'setUsersModel'], [$model]);
 			}
 
 			return new IlluminateUserRepository($app['sentinel.hasher'], $model, $app['events']);
@@ -121,19 +121,19 @@ class SentinelServiceProvider extends ServiceProvider {
 		});
 	}
 
-	protected function registerGroups()
+	protected function registerRoles()
 	{
-		$this->app['sentinel.groups'] = $this->app->share(function($app)
+		$this->app['sentinel.roles'] = $this->app->share(function($app)
 		{
-			$model = $app['config']['cartalyst/sentinel::groups.model'];
+			$model = $app['config']['cartalyst/sentinel::roles.model'];
 			$users = $app['config']['cartalyst/sentinel::users.model'];
 
-			if (class_exists($users) && method_exists($users, 'setGroupsModel'))
+			if (class_exists($users) && method_exists($users, 'setRolesModel'))
 			{
-				forward_static_call_array([$users, 'setGroupsModel'], [$model]);
+				forward_static_call_array([$users, 'setRolesModel'], [$model]);
 			}
 
-			return new IlluminateGroupRepository($model);
+			return new IlluminateRoleRepository($model);
 		});
 	}
 
@@ -236,7 +236,7 @@ class SentinelServiceProvider extends ServiceProvider {
 			$sentinel = new Sentinel(
 				$app['sentinel.persistence'],
 				$app['sentinel.users'],
-				$app['sentinel.groups'],
+				$app['sentinel.roles'],
 				$app['sentinel.activations'],
 				$app['events']
 			);
@@ -289,7 +289,7 @@ class SentinelServiceProvider extends ServiceProvider {
 			'sentinel.persistence',
 			'sentinel.hasher',
 			'sentinel.users',
-			'sentinel.groups',
+			'sentinel.roles',
 			'sentinel.activations',
 			'sentinel.checkpoint.activation',
 			'sentinel.throttling',

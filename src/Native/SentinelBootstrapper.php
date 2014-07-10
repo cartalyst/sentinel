@@ -21,7 +21,7 @@ use Cartalyst\Sentinel\Activations\IlluminateActivationRepository;
 use Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint;
 use Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint;
 use Cartalyst\Sentinel\Cookies\NativeCookie;
-use Cartalyst\Sentinel\Groups\IlluminateGroupRepository;
+use Cartalyst\Sentinel\Roles\IlluminateRoleRepository;
 use Cartalyst\Sentinel\Hashing\NativeHasher;
 use Cartalyst\Sentinel\Persistences\IlluminatePersistenceRepository;
 use Cartalyst\Sentinel\Reminders\IlluminateReminderRepository;
@@ -74,14 +74,14 @@ class SentinelBootstrapper {
 	{
 		$persistence = $this->createPersistence();
 		$users       = $this->createUsers();
-		$groups      = $this->createGroups();
+		$roles      = $this->createRoles();
 		$activations = $this->createActivations();
 		$dispatcher  = $this->getEventDispatcher();
 
 		$sentinel = new Sentinel(
 			$persistence,
 			$users,
-			$groups,
+			$roles,
 			$activations,
 			$dispatcher
 		);
@@ -146,10 +146,10 @@ class SentinelBootstrapper {
 
 		$model = $this->config['users']['model'];
 
-		$groups = $this->config['groups']['model'];
-		if (class_exists($groups) && method_exists($groups, 'setUsersModel'))
+		$roles = $this->config['roles']['model'];
+		if (class_exists($roles) && method_exists($roles, 'setUsersModel'))
 		{
-			forward_static_call_array([$groups, 'setUsersModel'], [$model]);
+			forward_static_call_array([$roles, 'setUsersModel'], [$model]);
 		}
 
 		return new IlluminateUserRepository($hasher, $model, $this->getEventDispatcher());
@@ -166,21 +166,21 @@ class SentinelBootstrapper {
 	}
 
 	/**
-	 * Creates a group repository.
+	 * Creates a role repository.
 	 *
-	 * @return \Cartalyst\Sentinel\Groups\IlluminateGroupRepository
+	 * @return \Cartalyst\Sentinel\Roles\IlluminateRoleRepository
 	 */
-	protected function createGroups()
+	protected function createRoles()
 	{
-		$model = $this->config['groups']['model'];
+		$model = $this->config['roles']['model'];
 
 		$users = $this->config['users']['model'];
-		if (class_exists($users) && method_exists($users, 'setGroupsModel'))
+		if (class_exists($users) && method_exists($users, 'setRolesModel'))
 		{
-			forward_static_call_array([$users, 'setGroupsModel'], [$model]);
+			forward_static_call_array([$users, 'setRolesModel'], [$model]);
 		}
 
-		return new IlluminateGroupRepository($model);
+		return new IlluminateRoleRepository($model);
 	}
 
 	/**

@@ -58,16 +58,16 @@ return [
 
 	/*
 	|--------------------------------------------------------------------------
-	| Groups
+	| Roles
 	|--------------------------------------------------------------------------
 	|
-	| Please provide the group model used in Sentinel.
+	| Please provide the role model used in Sentinel.
 	|
 	*/
 
-	'groups' => [
+	'roles' => [
 
-		'model' => 'Cartalyst\Sentinel\Groups\EloquentGroup',
+		'model' => 'Cartalyst\Sentinel\Roles\EloquentRole',
 
 	],
 

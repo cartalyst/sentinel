@@ -1,4 +1,4 @@
-<?php namespace Cartalyst\Sentinel\Groups;
+<?php namespace Cartalyst\Sentinel\Roles;
 /**
  * Part of the Sentinel package.
  *
@@ -17,14 +17,14 @@
  * @link       http://cartalyst.com
  */
 
-class IlluminateGroupRepository implements GroupRepositoryInterface {
+class IlluminateRoleRepository implements RoleRepositoryInterface {
 
 	/**
 	 * Model name.
 	 *
 	 * @var string
 	 */
-	protected $model = 'Cartalyst\Sentinel\Groups\EloquentGroup';
+	protected $model = 'Cartalyst\Sentinel\Roles\EloquentRole';
 
 	/**
 	 * Create a new Illuminate user repository.

@@ -17,14 +17,14 @@
  * @link       http://cartalyst.com
  */
 
-use Cartalyst\Sentinel\Groups\GroupableInterface;
-use Cartalyst\Sentinel\Groups\GroupInterface;
+use Cartalyst\Sentinel\Roles\RoleableInterface;
+use Cartalyst\Sentinel\Roles\RoleInterface;
 use Cartalyst\Sentinel\Permissions\PermissibleInterface;
 use Cartalyst\Sentinel\Persistences\PersistableInterface;
 use Cartalyst\Sentinel\Permissions\SentinelPermissions;
 use Illuminate\Database\Eloquent\Model;
 
-class EloquentUser extends Model implements GroupableInterface, PermissibleInterface, PersistableInterface, UserInterface {
+class EloquentUser extends Model implements RoleableInterface, PermissibleInterface, PersistableInterface, UserInterface {
 
 	/**
 	 * {@inheritDoc}
@@ -67,11 +67,11 @@ class EloquentUser extends Model implements GroupableInterface, PermissibleInter
 	protected $loginNames = ['email'];
 
 	/**
-	 * The groups model name.
+	 * The roles model name.
 	 *
 	 * @var string
 	 */
-	protected static $groupsModel = 'Cartalyst\Sentinel\Groups\EloquentGroup';
+	protected static $rolesModel = 'Cartalyst\Sentinel\Roles\EloquentRole';
 
 	/**
 	 * The persistences model name.
@@ -91,13 +91,13 @@ class EloquentUser extends Model implements GroupableInterface, PermissibleInter
 	}
 
 	/**
-	 * Groups relationship.
+	 * Roles relationship.
 	 *
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
 	 */
-	public function groups()
+	public function roles()
 	{
-		return $this->belongsToMany(static::$groupsModel, 'groups_users', 'user_id', 'group_id')->withTimestamps();
+		return $this->belongsToMany(static::$rolesModel, 'roles_users', 'user_id', 'role_id')->withTimestamps();
 	}
 
 	/**
@@ -135,29 +135,29 @@ class EloquentUser extends Model implements GroupableInterface, PermissibleInter
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getGroups()
+	public function getRoles()
 	{
-		return $this->groups;
+		return $this->roles;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function inGroup($group)
+	public function inRole($role)
 	{
-		$group = array_first($this->groups, function($index, $instance) use ($group)
+		$role = array_first($this->roles, function($index, $instance) use ($role)
 		{
-			if ($group instanceof GroupInterface)
+			if ($role instanceof RoleInterface)
 			{
-				return ($instance->getGroupId() === $group->getGroupId());
+				return ($instance->getRoleId() === $role->getRoleId());
 			}
 
-			if ($instance->getGroupId() == $group)
+			if ($instance->getRoleId() == $role)
 			{
 				return true;
 			}
 
-			if ($instance->getGroupSlug() == $group)
+			if ($instance->getRoleSlug() == $role)
 			{
 				return true;
 			}
@@ -165,7 +165,7 @@ class EloquentUser extends Model implements GroupableInterface, PermissibleInter
 			return false;
 		});
 
-		return $group !== null;
+		return $role !== null;
 	}
 
 	/**
@@ -262,35 +262,35 @@ class EloquentUser extends Model implements GroupableInterface, PermissibleInter
 	{
 		$userPermissions = $this->permissions;
 
-		$groupPermissions = [];
+		$rolePermissions = [];
 
-		foreach ($this->groups as $group)
+		foreach ($this->roles as $role)
 		{
-			$groupPermissions[] = $group->permissions;
+			$rolePermissions[] = $role->permissions;
 		}
 
-		return new SentinelPermissions($userPermissions, $groupPermissions);
+		return new SentinelPermissions($userPermissions, $rolePermissions);
 	}
 
 	/**
-	 * Get the groups model.
+	 * Get the roles model.
 	 *
 	 * @return string
 	 */
-	public static function getGroupsModel()
+	public static function getRolesModel()
 	{
-		return static::$groupsModel;
+		return static::$rolesModel;
 	}
 
 	/**
-	 * Set the groups model.
+	 * Set the roles model.
 	 *
-	 * @param  string  $groupsModel
+	 * @param  string  $rolesModel
 	 * @return void
 	 */
-	public static function setGroupsModel($groupsModel)
+	public static function setRolesModel($rolesModel)
 	{
-		static::$groupsModel = $groupsModel;
+		static::$rolesModel = $rolesModel;
 	}
 
 	/**

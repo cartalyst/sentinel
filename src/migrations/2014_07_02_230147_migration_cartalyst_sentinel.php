@@ -44,7 +44,7 @@ class MigrationCartalystSentinel extends Migration {
 			$table->unique('email');
 		});
 
-		Schema::create('groups', function(Blueprint $table)
+		Schema::create('roles', function(Blueprint $table)
 		{
 			$table->increments('id');
 			$table->string('slug');
@@ -56,14 +56,14 @@ class MigrationCartalystSentinel extends Migration {
 			$table->unique('slug');
 		});
 
-		Schema::create('groups_users', function(Blueprint $table)
+		Schema::create('roles_users', function(Blueprint $table)
 		{
 			$table->integer('user_id')->unsigned();
-			$table->integer('group_id')->unsigned();
+			$table->integer('role_id')->unsigned();
 			$table->nullableTimestamps();
 
 			$table->engine = 'InnoDB';
-			$table->primary(['user_id', 'group_id']);
+			$table->primary(['user_id', 'role_id']);
 		});
 
 		Schema::create('persistences', function(Blueprint $table)
@@ -121,8 +121,8 @@ class MigrationCartalystSentinel extends Migration {
 		Schema::drop('activations');
 		Schema::drop('throttle');
 		Schema::drop('persistences');
-		Schema::drop('groups_users');
-		Schema::drop('groups');
+		Schema::drop('roles_users');
+		Schema::drop('roles');
 		Schema::drop('users');
 	}
 

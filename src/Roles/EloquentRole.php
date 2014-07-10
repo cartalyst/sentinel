@@ -1,4 +1,4 @@
-<?php namespace Cartalyst\Sentinel\Groups;
+<?php namespace Cartalyst\Sentinel\Roles;
 /**
  * Part of the Sentinel package.
  *
@@ -21,12 +21,12 @@ use Cartalyst\Sentinel\Permissions\PermissibleInterface;
 use Cartalyst\Sentinel\Permissions\SentinelPermissions;
 use Illuminate\Database\Eloquent\Model;
 
-class EloquentGroup extends Model implements GroupInterface, PermissibleInterface {
+class EloquentRole extends Model implements RoleInterface, PermissibleInterface {
 
 	/**
 	 * {@inheritDoc}
 	 */
-	protected $table = 'groups';
+	protected $table = 'roles';
 
 	/**
 	 * {@inheritDoc}
@@ -51,7 +51,7 @@ class EloquentGroup extends Model implements GroupInterface, PermissibleInterfac
 	 */
 	public function users()
 	{
-		return $this->belongsToMany(static::$usersModel, 'groups_users', 'group_id', 'user_id')->withTimestamps();
+		return $this->belongsToMany(static::$usersModel, 'roles_users', 'role_id', 'user_id')->withTimestamps();
 	}
 
 	/**
@@ -79,7 +79,7 @@ class EloquentGroup extends Model implements GroupInterface, PermissibleInterfac
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getGroupId()
+	public function getRoleId()
 	{
 		return $this->getKey();
 	}
@@ -87,7 +87,7 @@ class EloquentGroup extends Model implements GroupInterface, PermissibleInterfac
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getGroupSlug()
+	public function getRoleSlug()
 	{
 		return $this->slug;
 	}
@@ -145,7 +145,7 @@ class EloquentGroup extends Model implements GroupInterface, PermissibleInterfac
 	}
 
 	/**
-	 * Dynamically pass missing methods to the group.
+	 * Dynamically pass missing methods to the role.
 	 *
 	 * @param  string  $method
 	 * @param  array   $parameters
