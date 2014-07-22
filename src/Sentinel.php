@@ -22,8 +22,8 @@ use Cartalyst\Sentinel\Activations\ActivationRepositoryInterface;
 use Cartalyst\Sentinel\Activations\IlluminateActivationRepository;
 use Cartalyst\Sentinel\Checkpoints\CheckpointInterface;
 use Cartalyst\Sentinel\Cookies\NativeCookie;
-use Cartalyst\Sentinel\Groups\GroupRepositoryInterface;
-use Cartalyst\Sentinel\Groups\IlluminateGroupRepository;
+use Cartalyst\Sentinel\Roles\RoleRepositoryInterface;
+use Cartalyst\Sentinel\Roles\IlluminateRoleRepository;
 use Cartalyst\Sentinel\Hashing\NativeHasher;
 use Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface;
 use Cartalyst\Sentinel\Persistences\IlluminatePersistenceRepository;
@@ -61,11 +61,11 @@ class Sentinel {
 	protected $users;
 
 	/**
-	 * The Group repository.
+	 * The Role repository.
 	 *
-	 * @var \Cartalyst\Sentinel\Groups\GroupRepositoryInterface
+	 * @var \Cartalyst\Sentinel\Roles\RoleRepositoryInterface
 	 */
-	protected $groups;
+	protected $roles;
 
 	/**
 	 * The Activations repository.
@@ -128,7 +128,7 @@ class Sentinel {
 	 *
 	 * @param  \Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface  $persistence
 	 * @param  \Cartalyst\Sentinel\Users\UserRepositoryInterface  $users
-	 * @param  \Cartalyst\Sentinel\Groups\GroupRepositoryInterface  $groups
+	 * @param  \Cartalyst\Sentinel\Roles\RoleRepositoryInterface  $roles
 	 * @param  \Cartalyst\Sentinel\Activations\ActivationRepositoryInterface  $activations
 	 * @param  \Illuminate\Events\Dispatcher  $dispatcher
 	 * @return void
@@ -136,7 +136,7 @@ class Sentinel {
 	public function __construct(
 		PersistenceRepositoryInterface $persistences,
 		UserRepositoryInterface $users,
-		GroupRepositoryInterface $groups,
+		RoleRepositoryInterface $roles,
 		ActivationRepositoryInterface $activations,
 		Dispatcher $dispatcher
 	)
@@ -145,7 +145,7 @@ class Sentinel {
 
 		$this->users = $users;
 
-		$this->groups = $groups;
+		$this->roles = $roles;
 
 		$this->activations = $activations;
 
@@ -750,41 +750,41 @@ class Sentinel {
 	}
 
 	/**
-	 * Returns the group repository.
+	 * Returns the role repository.
 	 *
-	 * @return \Cartalyst\Sentinel\Groups\GroupRepositoryInterface
+	 * @return \Cartalyst\Sentinel\Roles\RoleRepositoryInterface
 	 */
-	public function getGroupRepository()
+	public function getRoleRepository()
 	{
-		if ($this->groups === null)
+		if ($this->roles === null)
 		{
-			$this->groups = $this->createGroupRepository();
+			$this->roles = $this->createRoleRepository();
 		}
 
-		return $this->groups;
+		return $this->roles;
 	}
 
 	/**
-	 * Set the group repository.
+	 * Set the role repository.
 	 *
-	 * @param  \Cartalyst\Sentinel\Groups\GroupRepositoryInterface  $groups
+	 * @param  \Cartalyst\Sentinel\Roles\RoleRepositoryInterface  $roles
 	 * @return void
 	 */
-	public function setGroupRepository(GroupRepositoryInterface $groups)
+	public function setRoleRepository(RoleRepositoryInterface $roles)
 	{
-		$this->groups = $groups;
+		$this->roles = $roles;
 	}
 
 	/**
-	 * Creates a default group repository if none has been specified.
+	 * Creates a default role repository if none has been specified.
 	 *
-	 * @return \Cartalyst\Sentinel\Groups\IlluminateGroupRepository
+	 * @return \Cartalyst\Sentinel\Roles\IlluminateRoleRepository
 	 */
-	protected function createGroupRepository()
+	protected function createRoleRepository()
 	{
-		$model = 'Cartalyst\Sentinel\Groups\EloquentGroup';
+		$model = 'Cartalyst\Sentinel\Roles\EloquentRole';
 
-		return new IlluminateGroupRepository($model);
+		return new IlluminateRoleRepository($model);
 	}
 
 	/**
@@ -982,16 +982,16 @@ class Sentinel {
 			return call_user_func_array([$user, $method], $parameters);
 		}
 
-		if (starts_with($method, 'findGroupBy'))
+		if (starts_with($method, 'findRoleBy'))
 		{
-			$groups = $this->getGroupRepository();
+			$roles = $this->getRoleRepository();
 
-			$method = 'findBy'.substr($method, 11);
+			$method = 'findBy'.substr($method, 10);
 
-			return call_user_func_array([$groups, $method], $parameters);
+			return call_user_func_array([$roles, $method], $parameters);
 		}
 
-		$methods = ['getGroups', 'inGroup', 'hasAccess', 'hasAnyAccess'];
+		$methods = ['getRoles', 'inRole', 'hasAccess', 'hasAnyAccess'];
 
 		$className = get_class($this);
 

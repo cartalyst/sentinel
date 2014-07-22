@@ -82,7 +82,7 @@ class NativeCookie implements CookieInterface {
 	 */
 	protected function minutesToLifetime($minutes)
 	{
-		return time() + $minutes;
+		return time() + ($minutes * 60);
 	}
 
 	/**
