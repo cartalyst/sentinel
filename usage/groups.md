@@ -43,3 +43,40 @@ Sets the group model.
 ```php
 Sentinel::getGroupRepository()->setModel('Your\Group\Model');
 ```
+
+### Examples
+
+The `$groups` variable throughout the examples refers to the group repository.
+
+```php
+$groups = Sentinel::getGroupRepository();
+```
+
+#### Create a new group.
+
+```php
+$groups->createModel()->create([
+	'name' => 'Subscribers',
+	'slug' => 'subscribers',
+]);
+```
+
+#### Assign a user to a group.
+
+```php
+$user = Sentinel::findById(1);
+
+$group = Sentinel::findGroupByName('Subscribers');
+
+$group->users()->attach($user);
+```
+
+#### Remove a user from a group.
+
+```php
+$user = Sentinel::findById(1);
+
+$group = Sentinel::findGroupByName('Subscribers');
+
+$group->users()->detach($user);
+```
