@@ -44,6 +44,7 @@
 	],
 	"require": {
 		"php": ">=5.4.0",
+		"cartalyst/support": "dev-master",
 		"illuminate/support": ">=4.0.9,<4.3"
 	},
 	"require-dev": {

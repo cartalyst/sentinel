@@ -17,7 +17,7 @@
  * @link       http://cartalyst.com
  */
 
-trait Permissions {
+trait PermissionsTrait {
 
 	/**
 	 * Permissions.
@@ -66,6 +66,8 @@ trait Permissions {
 	public function hasAccess($permissions)
 	{
 		$prepared = $this->getPreparedPermissions();
+
+		var_dump($prepared);
 
 		foreach ((array) $permissions as $permission)
 		{
@@ -172,6 +174,7 @@ trait Permissions {
 				if ( ! array_key_exists($key, $prepared))
 				{
 					$prepared[$key] = $value;
+
 					continue;
 				}
 

@@ -109,7 +109,7 @@ class SentinelServiceProvider extends ServiceProvider {
 				forward_static_call_array([$groups, 'setUsersModel'], [$model]);
 			}
 
-			return new IlluminateUserRepository($app['sentinel.hasher'], $model, $app['events']);
+			return new IlluminateUserRepository($app['sentinel.hasher'], $app['events']);
 		});
 	}
 

@@ -19,7 +19,7 @@
 
 class StrictPermissions implements PermissionsInterface {
 
-	use Permissions;
+	use PermissionsTrait;
 
 	/**
 	 * {@inheritDoc}

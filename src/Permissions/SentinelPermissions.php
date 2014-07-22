@@ -19,7 +19,7 @@
 
 class SentinelPermissions implements PermissionsInterface {
 
-	use Permissions;
+	use PermissionsTrait;
 
 	/**
 	 * {@inheritDoc}
