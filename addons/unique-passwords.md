@@ -1,12 +1,12 @@
-## Unique Passwords
+### Unique Passwords
 
 Sentinel Unique Passwords is a Sentinel addon that prevents users from setting the same password more than once.
 
-### Installation
+#### Installation
 
 The best and easiest way to install Sentinel Unique Passwords is with [Composer](http://getcomposer.org).
 
-#### Preparation
+##### Preparation
 
 Open your `composer.json` file and add the following to the `require` array:
 
@@ -16,7 +16,7 @@ Open your `composer.json` file and add the following to the `require` array:
 
 > **Note:** Make sure that after the required changes your `composer.json` file is valid by running `composer validate`.
 
-#### Install the dependencies
+##### Install the dependencies
 
 Run Composer to install or update the new requirement.
 
@@ -28,9 +28,9 @@ or
 
 Now you are able to require the `vendor/autoload.php` file to autoload the package.
 
-### Integration
+#### Integration
 
-#### Laravel 4
+##### Laravel 4
 
 The Sentinel Unique Passwords package has optional support for Laravel 4 and it comes bundled with a Service Provider for easy integration.
 
@@ -46,7 +46,7 @@ Run the following command to migrate Sentinel Unique Passwords.
 
 `php artisan migrate --package=cartalyst/sentinel-unique-passwords`
 
-### Native
+#### Native
 
 ```php
 use Cartalyst\SentinelUniquePasswords\UniquePasswords;

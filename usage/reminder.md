@@ -1,8 +1,8 @@
-## Reminder
+### Reminder
 
 Reminder allows you to manage reminders through Sentinel.
 
-### Reminder::create($user)
+#### Reminder::create($user)
 
 Creates a new reminder record for the user.
 
@@ -14,7 +14,7 @@ $user = Sentinel::findById(1);
 Reminder::create($user);
 ```
 
-### Reminder::exists($user)
+#### Reminder::exists($user)
 
 Check if a reminder record exists for the user.
 
@@ -26,7 +26,7 @@ $user = Sentinel::findById(1);
 Reminder::exists($user);
 ```
 
-### Reminder::complete($user, $code, $password)
+#### Reminder::complete($user, $code, $password)
 
 Attempt to complete the password reset for the user using the code passed and the new password.
 
@@ -45,7 +45,7 @@ else
 }
 ```
 
-### Reminder::deleteExpired()
+#### Reminder::deleteExpired()
 
 Remove all expired reminders.
 
@@ -53,7 +53,7 @@ Remove all expired reminders.
 Reminder::deleteExpired();
 ```
 
-### Reminder::createModel()
+#### Reminder::createModel()
 
 Creates a new reminder model instance.
 
@@ -61,7 +61,7 @@ Creates a new reminder model instance.
 $reminder = Activate::createModel();
 ```
 
-### Reminder::setModel($model)
+#### Reminder::setModel($model)
 
 Sets the reminder model.
 

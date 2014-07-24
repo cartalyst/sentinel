@@ -1,4 +1,4 @@
-## Throttle
+### Throttle
 
 There are three types of throttling.
 
@@ -17,7 +17,7 @@ On this premise, we encourage you to use array thresholds for global throttling 
 
 You may use any type of throttling for any scenario, and the specific configurations are designed to be customized as your site grows.
 
-### Exceptions
+#### Exceptions
 
 - `Cartalyst\Sentinel\Checkpoints\ThrottlingException`
 

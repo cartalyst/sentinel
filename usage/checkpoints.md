@@ -1,4 +1,4 @@
-## Checkpoints
+### Checkpoints
 
 Checkpoints can be referred to as security gates, the authentication process has to successfully pass through every single gate defined in order to be granted access.
 
@@ -8,21 +8,21 @@ These are classes which may respond to each event and handle accordingly. We shi
 
 Feel free to add, remove or re-order these.
 
-### Activation
+#### Activation
 
 The `activation` checkpoint is responsible for validating the login attempt against the activation to make sure the user is activated prior to granting him access to a protected area.
 
-### Throttle
+#### Throttle
 
 The `throttle` checkpoint is responsible for validating the login attempt against the defined throttling rules.
 
-### Swipe Identity
+#### Swipe Identity
 
 The `swipe` checkpoint is responsible for validating the login using Swipe Identity's two factor authentication mechanism.
 
-### Functions
+#### Functions
 
-#### Sentinel::addCheckpoint($checkpoint)
+##### Sentinel::addCheckpoint($checkpoint)
 
 Add a new checkpoint.
 
@@ -34,7 +34,7 @@ $checkpoint = new Your\Custom\Checkpoint;
 Sentinel::addCheckpoint($checkpoint);
 ```
 
-#### Sentinel::enableCheckpoints()
+##### Sentinel::enableCheckpoints()
 
 Enable checkpoints.
 
@@ -42,7 +42,7 @@ Enable checkpoints.
 Sentinel::enableCheckpoints();
 ```
 
-#### Sentinel::disableCheckpoints()
+##### Sentinel::disableCheckpoints()
 
 Disable checkpoints.
 
@@ -50,7 +50,7 @@ Disable checkpoints.
 Sentinel::disableCheckpoints();
 ```
 
-#### Sentinel::checkpointsEnabled()
+##### Sentinel::checkpointsEnabled()
 
 Check whether checkpoints are enabled or disabled.
 
@@ -58,7 +58,7 @@ Check whether checkpoints are enabled or disabled.
 $checkpoints = Sentinel::checkpointsEnabled();
 ```
 
-#### Sentinel::bypassCheckpoints($callback)
+##### Sentinel::bypassCheckpoints($callback)
 
 Execute a closure that bypasses all checkpoints.
 

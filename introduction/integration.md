@@ -1,6 +1,6 @@
-# Integration
+## Integration
 
-## Laravel 4
+### Laravel 4
 
 The Sentinel package has optional support for Laravel 4 and it comes bundled with a Service Provider and a Facade for easy integration.
 
@@ -16,13 +16,13 @@ In the `$aliases` array add the following facades for this package.
 	'Reminder'      => 'Cartalyst\Sentinel\Laravel\Facades\Reminder',
 	'Sentinel'      => 'Cartalyst\Sentinel\Laravel\Facades\Sentinel',
 
-### Migrations
+#### Migrations
 
 Run the following command to migrate Sentinel.
 
 `php artisan migrate --package=cartalyst/sentinel`
 
-### Configuration
+#### Configuration
 
 After installing, you can publish the package configuration file into your application by running the following command on your terminal:
 
@@ -30,7 +30,7 @@ After installing, you can publish the package configuration file into your appli
 
 This will publish the config file to `app/config/packages/cartalyst/sentinel/config.php` where you can modify the package configuration.
 
-## Native
+### Native
 
 Sentinel ships with default implementations for `illuminate/database`, in order to use it, make sure you require it on your `composer.json` file.
 

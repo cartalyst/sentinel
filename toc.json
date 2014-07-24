@@ -7,6 +7,9 @@
 	"usage": [
 		"index",
 		"authentication",
+		"authorization",
+		"registration",
+		"login",
 		"users",
 		"groups",
 		"permissions",

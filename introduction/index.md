@@ -1,4 +1,4 @@
-# Introduction
+## Introduction
 
 A modern and framework agnostic authorization and authentication package featuring groups, permissions, custom hashing algorithms and additional security features.
 
@@ -8,9 +8,7 @@ The package requires PHP 5.4+ and comes bundled with a Laravel 4 Facade and a Se
 
 Have a [read through the Installation Guide](#installation) and on how to [Integrate it with Laravel 4](#laravel-4).
 
-### Quick Example
-
-#### Create a user
+###### Create a user
 
 ```php
 Sentinel::register(array(
@@ -19,7 +17,7 @@ Sentinel::register(array(
 ));
 ```
 
-#### Authenticate a user
+###### Authenticate a user
 
 ```php
 Sentinel::authenticate(array(

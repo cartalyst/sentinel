@@ -1,10 +1,10 @@
-## Groups
+### Groups
 
 The group repository can be accessed using `Sentinel::getGroupRepository()` and allows you to manage groups using Sentinel.
 
 > **Note** You can add the word `Group` between `find` and the method name and drop the `getGroupRepository` call. Example `Sentinel::findGroupBySlug` instead of `Sentinel::getGroupRepository()->findBySlug`.
 
-### Sentinel::findGroupById($id)
+#### Sentinel::findGroupById($id)
 
 Find a group by id.
 
@@ -12,7 +12,7 @@ Find a group by id.
 $group = Sentinel::findGroupById(1);
 ```
 
-### Sentinel::findGroupBySlug($slug)
+#### Sentinel::findGroupBySlug($slug)
 
 Find a group by slug.
 
@@ -20,7 +20,7 @@ Find a group by slug.
 $group = Sentinel::findGroupBySlug('the-group-slug');
 ```
 
-### Sentinel::findGroupByName($name)
+#### Sentinel::findGroupByName($name)
 
 Find a group by name.
 
@@ -28,7 +28,7 @@ Find a group by name.
 $group = Sentinel::findGroupByName('The Group Name');
 ```
 
-### Sentinel::getGroupRepository()->createModel()
+#### Sentinel::getGroupRepository()->createModel()
 
 Creates a new group model instance.
 
@@ -36,7 +36,7 @@ Creates a new group model instance.
 $group = Sentinel::getGroupRepository()->createModel();
 ```
 
-### Sentinel::getGroupRepository()->setModel($model)
+#### Sentinel::getGroupRepository()->setModel($model)
 
 Sets the group model.
 
@@ -44,7 +44,7 @@ Sets the group model.
 Sentinel::getGroupRepository()->setModel('Your\Group\Model');
 ```
 
-### Examples
+#### Examples
 
 The `$groups` variable throughout the examples refers to the group repository.
 
@@ -52,7 +52,7 @@ The `$groups` variable throughout the examples refers to the group repository.
 $groups = Sentinel::getGroupRepository();
 ```
 
-#### Create a new group.
+##### Create a new group.
 
 ```php
 $groups->createModel()->create([
@@ -61,7 +61,7 @@ $groups->createModel()->create([
 ]);
 ```
 
-#### Assign a user to a group.
+##### Assign a user to a group.
 
 ```php
 $user = Sentinel::findById(1);
@@ -71,7 +71,7 @@ $group = Sentinel::findGroupByName('Subscribers');
 $group->users()->attach($user);
 ```
 
-#### Remove a user from a group.
+##### Remove a user from a group.
 
 ```php
 $user = Sentinel::findById(1);

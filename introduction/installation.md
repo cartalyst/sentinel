@@ -1,8 +1,8 @@
-# Installation
+## Installation
 
 The best and easiest way to install Sentinel is with [Composer](http://getcomposer.org).
 
-## Preparation
+### Preparation
 
 Open your `composer.json` file and add the following to the `require` array:
 
@@ -21,7 +21,7 @@ Add the following lines after the `require` array on your `composer.json` file:
 
 > **Note:** Make sure that after the required changes your `composer.json` file is valid by running `composer validate`.
 
-## Install the dependencies
+### Install the dependencies
 
 Run Composer to install or update the new requirement.
 

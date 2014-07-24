@@ -1,8 +1,8 @@
-## Activation
+### Activation
 
 Activation allows you to manage activations through Sentinel.
 
-### Activation::create($user)
+#### Activation::create($user)
 
 Creates a new activation record for the user.
 
@@ -14,7 +14,7 @@ $user = Sentinel::findById(1);
 Activation::create($user);
 ```
 
-### Activation::exists($user)
+#### Activation::exists($user)
 
 Check if an activation record exists for the user.
 
@@ -26,7 +26,7 @@ $user = Sentinel::findById(1);
 Activation::exists($user);
 ```
 
-### Activation::complete($user, $code)
+#### Activation::complete($user, $code)
 
 Attempt to complete activation for the user using the code passed.
 
@@ -45,7 +45,7 @@ else
 }
 ```
 
-### Activation::completed($user)
+#### Activation::completed($user)
 
 Check if activation has been completed for the user.
 
@@ -64,7 +64,7 @@ else
 }
 ```
 
-### Activation::remove($user)
+#### Activation::remove($user)
 
 Remove the activation for the user.
 
@@ -76,7 +76,7 @@ $user = Sentinel::findById(1);
 Activation::remove($user);
 ```
 
-### Activation::deleteExpired()
+#### Activation::deleteExpired()
 
 Remove all expired activations.
 
@@ -84,7 +84,7 @@ Remove all expired activations.
 Activation::deleteExpired();
 ```
 
-### Activation::createModel()
+#### Activation::createModel()
 
 Creates a new activation model instance.
 
@@ -92,7 +92,7 @@ Creates a new activation model instance.
 $activation = Activate::createModel();
 ```
 
-### Activation::setModel($model)
+#### Activation::setModel($model)
 
 Sets the activation model.
 
@@ -100,7 +100,7 @@ Sets the activation model.
 Activation::setModel('Your\Activation\Model');
 ```
 
-### Exceptions
+#### Exceptions
 
 - `Cartalyst\Sentinel\Checkpoints\NotActivatedException`
 
