@@ -67,8 +67,6 @@ trait PermissionsTrait {
 	{
 		$prepared = $this->getPreparedPermissions();
 
-		var_dump($prepared);
-
 		foreach ((array) $permissions as $permission)
 		{
 			if ( ! $this->checkPermission($prepared, $permission))
