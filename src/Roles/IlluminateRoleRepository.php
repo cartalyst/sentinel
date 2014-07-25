@@ -17,7 +17,12 @@
  * @link       http://cartalyst.com
  */
 
+use Cartalyst\Support\Traits\EventTrait;
+use Cartalyst\Support\Traits\RepositoryTrait;
+
 class IlluminateRoleRepository implements RoleRepositoryInterface {
+
+	use EventTrait, RepositoryTrait;
 
 	/**
 	 * Model name.
@@ -72,29 +77,6 @@ class IlluminateRoleRepository implements RoleRepositoryInterface {
 			->with('users')
 			->where('name', $name)
 			->first();
-	}
-
-	/**
-	 * Create a new instance of the model.
-	 *
-	 * @return \Illuminate\Database\Eloquent\Model
-	 */
-	public function createModel()
-	{
-		$class = '\\'.ltrim($this->model, '\\');
-
-		return new $class;
-	}
-
-	/**
-	 * Runtime override of the model.
-	 *
-	 * @param  string  $model
-	 * @return void
-	 */
-	public function setModel($model)
-	{
-		$this->model = $model;
 	}
 
 }

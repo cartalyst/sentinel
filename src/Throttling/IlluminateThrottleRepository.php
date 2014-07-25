@@ -19,15 +19,12 @@
 
 use Carbon\Carbon;
 use Cartalyst\Sentinel\Users\UserInterface;
+use Cartalyst\Support\Traits\EventTrait;
+use Cartalyst\Support\Traits\RepositoryTrait;
 
 class IlluminateThrottleRepository implements ThrottleRepositoryInterface {
 
-	/**
-	 * Model name.
-	 *
-	 * @var string
-	 */
-	protected $model = 'Cartalyst\Sentinel\Throttling\EloquentThrottle';
+	use EventTrait, RepositoryTrait;
 
 	/**
 	 * The interval which failed logins are checked, to prevent brute force.
@@ -115,12 +112,9 @@ class IlluminateThrottleRepository implements ThrottleRepositoryInterface {
 	 * @param  int  $userInterval
 	 * @param  int|array  $userThresholds
 	 */
-	public function __construct($model = null, $globalInterval = null, $globalThresholds = null, $ipInterval = null, $ipThresholds = null, $userInterval = null, $userThresholds = null)
+	public function __construct($model = 'Cartalyst\Sentinel\Throttling\EloquentThrottle', $globalInterval = null, $globalThresholds = null, $ipInterval = null, $ipThresholds = null, $userInterval = null, $userThresholds = null)
 	{
-		if (isset($model))
-		{
-			$this->model = $model;
-		}
+		$this->model = $model;
 
 		if (isset($globalInterval))
 		{
@@ -380,29 +374,6 @@ class IlluminateThrottleRepository implements ThrottleRepositoryInterface {
 	}
 
 	/**
-	 * Create a new instance of the model.
-	 *
-	 * @return \Illuminate\Database\Eloquent\Model
-	 */
-	public function createModel()
-	{
-		$class = '\\'.ltrim($this->model, '\\');
-
-		return new $class;
-	}
-
-	/**
-	 * Runtime override of the model.
-	 *
-	 * @param  string  $model
-	 * @return void
-	 */
-	public function setModel($model)
-	{
-		$this->model = $model;
-	}
-
-	/**
 	 * Set the global interval.
 	 *
 	 * @param  int  $globalInterval
@@ -411,6 +382,16 @@ class IlluminateThrottleRepository implements ThrottleRepositoryInterface {
 	public function setGlobalInterval($globalInterval)
 	{
 		$this->globalInterval = (int) $globalInterval;
+	}
+
+	/**
+	 * Get the global interval.
+	 *
+	 * @return int
+	 */
+	public function getGlobalInterval()
+	{
+		return $this->globalInterval;
 	}
 
 	/**
@@ -425,6 +406,16 @@ class IlluminateThrottleRepository implements ThrottleRepositoryInterface {
 	}
 
 	/**
+	 * Get the global thresholds.
+	 *
+	 * @return int|array
+	 */
+	public function getGlobalThresholds()
+	{
+		return $this->globalThresholds;
+	}
+
+	/**
 	 * Set the IP address interval.
 	 *
 	 * @param  int  $globalThresholds
@@ -433,6 +424,16 @@ class IlluminateThrottleRepository implements ThrottleRepositoryInterface {
 	public function setIpInterval($ipInterval)
 	{
 		$this->ipInterval = (int) $ipInterval;
+	}
+
+	/**
+	 * Get the IP address interval.
+	 *
+	 * @return int
+	 */
+	public function getIpInterval()
+	{
+		return $this->ipInterval;
 	}
 
 	/**
@@ -447,6 +448,16 @@ class IlluminateThrottleRepository implements ThrottleRepositoryInterface {
 	}
 
 	/**
+	 * Get the IP address thresholds.
+	 *
+	 * @return int|array
+	 */
+	public function getIpThresholds()
+	{
+		return $this->ipThresholds;
+	}
+
+	/**
 	 * Set the user interval.
 	 *
 	 * @param  int  $globalThresholds
@@ -455,6 +466,16 @@ class IlluminateThrottleRepository implements ThrottleRepositoryInterface {
 	public function setUserInterval($userInterval)
 	{
 		$this->userInterval = (int) $userInterval;
+	}
+
+	/**
+	 * Get the user interval.
+	 *
+	 * @return int
+	 */
+	public function getUserInterval()
+	{
+		return $this->userInterval;
 	}
 
 	/**
@@ -468,4 +489,13 @@ class IlluminateThrottleRepository implements ThrottleRepositoryInterface {
 		$this->userThresholds = is_array($userThresholds) ? $userThresholds : (int) $userThresholds;
 	}
 
+	/**
+	 * Get the user thresholds.
+	 *
+	 * @return int|array
+	 */
+	public function getUserThresholds()
+	{
+		return $this->userThresholds;
+	}
 }

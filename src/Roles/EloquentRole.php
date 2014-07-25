@@ -18,10 +18,12 @@
  */
 
 use Cartalyst\Sentinel\Permissions\PermissibleInterface;
-use Cartalyst\Sentinel\Permissions\SentinelPermissions;
+use Cartalyst\Sentinel\Permissions\PermissibleTrait;
 use Illuminate\Database\Eloquent\Model;
 
 class EloquentRole extends Model implements RoleInterface, PermissibleInterface {
+
+	use PermissibleTrait;
 
 	/**
 	 * {@inheritDoc}
@@ -103,71 +105,9 @@ class EloquentRole extends Model implements RoleInterface, PermissibleInterface 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getPermissions()
-	{
-		if ($this->permissionsInstance === null)
-		{
-			$this->permissionsInstance = $this->createPermissions();
-		}
-
-		return $this->permissionsInstance;
-	}
-
-	/**
-	 * Creates a permissions object.
-	 *
-	 * @return \Cartalyst\Sentinel\Permissions\PermissionsInterface
-	 */
 	protected function createPermissions()
 	{
-		return new SentinelPermissions($this->permissions);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function addPermission($permission, $value)
-	{
-		if ( ! array_key_exists($permission, $this->permissions))
-		{
-			$this->permissions = array_merge($this->permissions, [$permission => $value]);
-		}
-
-		return $this;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function updatePermission($permission, $value)
-	{
-		if (array_key_exists($permission, $this->permissions))
-		{
-			$permissions = $this->permissions;
-
-			$permissions[$permission] = $value;
-
-			$this->permissions = $permissions;
-		}
-
-		return $this;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function removePermission($permission)
-	{
-		if (array_key_exists($permission, $this->permissions))
-		{
-			$permissions = $this->permissions;
-
-			unset($permissions[$permission]);
-
-			$this->permissions = $permissions;
-		}
-
-		return $this;
+		return new static::$permissionsClass($this->permissions);
 	}
 
 	/**
@@ -204,7 +144,7 @@ class EloquentRole extends Model implements RoleInterface, PermissibleInterface 
 
 		if (in_array($method, $methods))
 		{
-			$permissions = $this->getPermissions();
+			$permissions = $this->getPermissionsInstance();
 
 			return call_user_func_array([$permissions, $method], $parameters);
 		}

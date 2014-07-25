@@ -17,7 +17,7 @@
  * @link       http://cartalyst.com
  */
 
-class SentinelPermissions implements PermissionsInterface {
+class StandardPermissions implements PermissionsInterface {
 
 	use PermissionsTrait;
 
@@ -38,7 +38,9 @@ class SentinelPermissions implements PermissionsInterface {
 
 		if ( ! empty($this->permissions))
 		{
-			$this->preparePermissions($prepared, $this->permissions);
+			$permissions = [];
+			$this->preparePermissions($permissions, $this->permissions);
+			$prepared = array_merge($prepared, $permissions);
 		}
 
 		return $prepared;

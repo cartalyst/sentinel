@@ -19,11 +19,15 @@
 
 use Carbon\Carbon;
 use Cartalyst\Sentinel\Users\UserInterface;
+use Cartalyst\Support\Traits\EventTrait;
+use Cartalyst\Support\Traits\RepositoryTrait;
 
 /**
  * @todo Switch over to eager loading where possible, under the assumption that the Eloquent user model will include the required relationship.
  */
 class IlluminateActivationRepository implements ActivationRepositoryInterface {
+
+	use EventTrait, RepositoryTrait;
 
 	/**
 	 * Model name.
@@ -173,29 +177,6 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface {
 	protected function generateActivationCode()
 	{
 		return str_random(32);
-	}
-
-	/**
-	 * Create a new instance of the model.
-	 *
-	 * @return \Illuminate\Database\Eloquent\Model
-	 */
-	public function createModel()
-	{
-		$class = '\\'.ltrim($this->model, '\\');
-
-		return new $class;
-	}
-
-	/**
-	 * Runtime override of the model.
-	 *
-	 * @param  string  $model
-	 * @return void
-	 */
-	public function setModel($model)
-	{
-		$this->model = $model;
 	}
 
 }

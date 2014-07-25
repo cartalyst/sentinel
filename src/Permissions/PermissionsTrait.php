@@ -65,9 +65,11 @@ trait PermissionsTrait {
 	 */
 	public function hasAccess($permissions)
 	{
+		if (is_string($permissions)) $permissions = func_get_args();
+
 		$prepared = $this->getPreparedPermissions();
 
-		foreach ((array) $permissions as $permission)
+		foreach ($permissions as $permission)
 		{
 			if ( ! $this->checkPermission($prepared, $permission))
 			{
@@ -83,9 +85,11 @@ trait PermissionsTrait {
 	 */
 	public function hasAnyAccess($permissions)
 	{
+		if (is_string($permissions)) $permissions = func_get_args();
+
 		$prepared = $this->getPreparedPermissions();
 
-		foreach ((array) $permissions as $permission)
+		foreach ($permissions as $permission)
 		{
 			if ($this->checkPermission($prepared, $permission))
 			{
@@ -94,28 +98,6 @@ trait PermissionsTrait {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Get permissions.
-	 *
-	 * @return array
-	 */
-	public function getPermissions()
-	{
-		return $this->permissions;
-	}
-
-	/**
-	 * Set permissions.
-	 *
-	 * @param  array  $permissions
-	 * @return void
-	 */
-	public function setPermissions(array $permissions)
-	{
-		$this->permissions = $permissions;
-		$this->preparedPermissions = null;
 	}
 
 	/**

@@ -17,11 +17,11 @@
  * @link       http://cartalyst.com
  */
 
-use Cartalyst\Sentinel\Permissions\SentinelPermissions;
+use Cartalyst\Sentinel\Permissions\StandardPermissions;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
 
-class SentinelPermissionsTest extends PHPUnit_Framework_TestCase {
+class StandardPermissionsTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * Close mockery.
@@ -35,7 +35,7 @@ class SentinelPermissionsTest extends PHPUnit_Framework_TestCase {
 
 	public function testPermissionsInheritence()
 	{
-		$permissions = new SentinelPermissions(
+		$permissions = new StandardPermissions(
 			['foo' => true, 'bar' => false, 'fred' => true],
 			[
 				['bar' => true],
@@ -47,15 +47,15 @@ class SentinelPermissionsTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($permissions->hasAccess('foo'));
 		$this->assertFalse($permissions->hasAccess('bar'));
 		$this->assertTrue($permissions->hasAccess('qux'));
-		$this->assertFalse($permissions->hasAccess('fred'));
+		$this->assertTrue($permissions->hasAccess('fred'));
 		$this->assertFalse($permissions->hasAccess(['foo', 'bar']));
 		$this->assertTrue($permissions->hasAnyAccess(['foo', 'bar']));
-		$this->assertFalse($permissions->hasAnyAccess(['bar', 'fred']));
+		$this->assertTrue($permissions->hasAnyAccess(['bar', 'fred']));
 	}
 
 	public function testWildcardChecks()
 	{
-		$permissions = new SentinelPermissions(['foo.bar' => true, 'foo.qux' => false]);
+		$permissions = new StandardPermissions(['foo.bar' => true, 'foo.qux' => false]);
 
 		$this->assertFalse($permissions->hasAccess('foo'));
 		$this->assertTrue($permissions->hasAccess('foo*'));
@@ -63,7 +63,7 @@ class SentinelPermissionsTest extends PHPUnit_Framework_TestCase {
 
 	public function testWildcardPermissions()
 	{
-		$permissions = new SentinelPermissions(['foo.*' => true]);
+		$permissions = new StandardPermissions(['foo.*' => true]);
 
 		$this->assertTrue($permissions->hasAccess('foo.bar'));
 		$this->assertTrue($permissions->hasAccess('foo.qux'));
@@ -71,7 +71,7 @@ class SentinelPermissionsTest extends PHPUnit_Framework_TestCase {
 
 	public function testClassPermissions()
 	{
-		$permissions = new SentinelPermissions(['Class@method1,method2' => true]);
+		$permissions = new StandardPermissions(['Class@method1,method2' => true]);
 		$this->assertTrue($permissions->hasAccess('Class@method1'));
 		$this->assertTrue($permissions->hasAccess('Class@method2'));
 	}

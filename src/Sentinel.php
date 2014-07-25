@@ -22,13 +22,13 @@ use Cartalyst\Sentinel\Activations\ActivationRepositoryInterface;
 use Cartalyst\Sentinel\Activations\IlluminateActivationRepository;
 use Cartalyst\Sentinel\Checkpoints\CheckpointInterface;
 use Cartalyst\Sentinel\Cookies\NativeCookie;
-use Cartalyst\Sentinel\Roles\RoleRepositoryInterface;
-use Cartalyst\Sentinel\Roles\IlluminateRoleRepository;
 use Cartalyst\Sentinel\Hashing\NativeHasher;
-use Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface;
 use Cartalyst\Sentinel\Persistences\IlluminatePersistenceRepository;
+use Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface;
 use Cartalyst\Sentinel\Reminders\IlluminateReminderRepository;
 use Cartalyst\Sentinel\Reminders\ReminderRepositoryInterface;
+use Cartalyst\Sentinel\Roles\IlluminateRoleRepository;
+use Cartalyst\Sentinel\Roles\RoleRepositoryInterface;
 use Cartalyst\Sentinel\Sessions\NativeSession;
 use Cartalyst\Sentinel\Users\IlluminateUserRepository;
 use Cartalyst\Sentinel\Users\UserInterface;
@@ -36,6 +36,7 @@ use Cartalyst\Sentinel\Users\UserRepositoryInterface;
 use Closure;
 use Illuminate\Events\Dispatcher;
 use InvalidArgumentException;
+use RuntimeException;
 
 class Sentinel {
 
@@ -460,6 +461,7 @@ class Sentinel {
 	 * Sends a response when HTTP basic authentication fails.
 	 *
 	 * @return mixed
+	 * @throws \RuntimeException
 	 */
 	public function getBasicResponse()
 	{
@@ -470,7 +472,7 @@ class Sentinel {
 			{
 				if (headers_sent())
 				{
-					throw new \RuntimeException('Attempting basic auth after headers have already been sent.');
+					throw new RuntimeException('Attempting basic auth after headers have already been sent.');
 				}
 
 				header('WWW-Authenticate: Basic');
@@ -744,9 +746,7 @@ class Sentinel {
 	{
 		$hasher = new NativeHasher;
 
-		$model = 'Cartalyst\Sentinel\Users\EloquentUser';
-
-		return new IlluminateUserRepository($hasher, $model);
+		return new IlluminateUserRepository($hasher);
 	}
 
 	/**
@@ -782,9 +782,7 @@ class Sentinel {
 	 */
 	protected function createRoleRepository()
 	{
-		$model = 'Cartalyst\Sentinel\Roles\EloquentRole';
-
-		return new IlluminateRoleRepository($model);
+		return new IlluminateRoleRepository();
 	}
 
 	/**
@@ -841,9 +839,7 @@ class Sentinel {
 	 */
 	protected function createPersistencesRepository()
 	{
-		$model = 'Cartalyst\Sentinel\Persistences\EloquentPersistence';
-
-		return new IlluminatePersistenceRepository($model);
+		return new IlluminatePersistenceRepository();
 	}
 
 	/**
@@ -879,9 +875,7 @@ class Sentinel {
 	 */
 	protected function createActivationsRepository()
 	{
-		$model = 'Cartalyst\Sentinel\Activations\EloquentActivation';
-
-		return new IlluminateActivationRepository($model);
+		return new IlluminateActivationRepository();
 	}
 
 	/**
@@ -917,11 +911,9 @@ class Sentinel {
 	 */
 	protected function createRemindersRepository()
 	{
-		$model = 'Cartalyst\Sentinel\Reminders\EloquentReminder';
-
 		$users = $this->getUserRepository();
 
-		return new IlluminateReminderRepository($users, $model);
+		return new IlluminateReminderRepository($users);
 	}
 
 	/**

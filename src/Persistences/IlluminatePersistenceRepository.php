@@ -20,8 +20,12 @@
 use Cartalyst\Sentinel\Cookies\CookieInterface;
 use Cartalyst\Sentinel\Sessions\SessionInterface;
 use Cartalyst\Sentinel\Persistences\PersistableInterface;
+use Cartalyst\Support\Traits\EventTrait;
+use Cartalyst\Support\Traits\RepositoryTrait;
 
 class IlluminatePersistenceRepository implements PersistenceRepositoryInterface {
+
+	use EventTrait, RepositoryTrait;
 
 	/**
 	 * Single session.
@@ -29,13 +33,6 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface 
 	 * @var boolean
 	 */
 	protected $single = false;
-
-	/**
-	 * Model name.
-	 *
-	 * @var string
-	 */
-	protected $model = 'Cartalyst\Sentinel\Persistences\EloquentPersistence';
 
 	/**
 	 * Session storage driver.
@@ -52,6 +49,13 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface 
 	protected $cookie;
 
 	/**
+	 * Model name.
+	 *
+	 * @var string
+	 */
+	protected $model = 'Cartalyst\Sentinel\Persistences\EloquentPersistence';
+
+	/**
 	 * Create a new Sentinel persistence repository.
 	 *
 	 * @param  Cartalyst\Sentinel\Sessions\SessionInterface  $session
@@ -60,6 +64,11 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface 
 	 */
 	public function __construct(SessionInterface $session, CookieInterface $cookie, $model = null, $single = false)
 	{
+		if (isset($model))
+		{
+			$this->model = $model;
+		}
+
 		if (isset($session))
 		{
 			$this->session = $session;
@@ -68,11 +77,6 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface 
 		if (isset($cookie))
 		{
 			$this->cookie  = $cookie;
-		}
-
-		if (isset($model))
-		{
-			$this->model = $model;
 		}
 
 		$this->single = $single;
@@ -102,7 +106,10 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface 
 	 */
 	public function findByPersistenceCode($code)
 	{
-		$persistence = $this->createModel()->where('code', $code)->first();
+		$persistence = $this->createModel()
+			->newQuery()
+			->where('code', $code)
+			->first();
 
 		return $persistence ? $persistence : false;
 	}
@@ -115,7 +122,7 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface 
 	 */
 	public function findUserByPersistenceCode($code)
 	{
-		$persistence = $this->createModel()->where('code', $code)->first();
+		$persistence = $this->findByPersistenceCode($code);
 
 		return $persistence ? $persistence->user : false;
 	}
@@ -179,6 +186,7 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface 
 	public function remove($code)
 	{
 		return $this->createModel()
+			->newQuery()
 			->where('code', $code)
 			->delete();
 	}
@@ -200,29 +208,6 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface 
 				$persistence->delete();
 			}
 		}
-	}
-
-	/**
-	 * Create a new instance of the model.
-	 *
-	 * @return \Illuminate\Database\Eloquent\Model
-	 */
-	public function createModel()
-	{
-		$class = '\\'.ltrim($this->model, '\\');
-
-		return new $class;
-	}
-
-	/**
-	 * Runtime override of the model.
-	 *
-	 * @param  string  $model
-	 * @return void
-	 */
-	public function setModel($model)
-	{
-		$this->model = $model;
 	}
 
 }

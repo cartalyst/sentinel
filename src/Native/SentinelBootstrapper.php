@@ -21,15 +21,16 @@ use Cartalyst\Sentinel\Activations\IlluminateActivationRepository;
 use Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint;
 use Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint;
 use Cartalyst\Sentinel\Cookies\NativeCookie;
-use Cartalyst\Sentinel\Roles\IlluminateRoleRepository;
 use Cartalyst\Sentinel\Hashing\NativeHasher;
 use Cartalyst\Sentinel\Persistences\IlluminatePersistenceRepository;
 use Cartalyst\Sentinel\Reminders\IlluminateReminderRepository;
+use Cartalyst\Sentinel\Roles\IlluminateRoleRepository;
 use Cartalyst\Sentinel\Sentinel;
 use Cartalyst\Sentinel\Sessions\NativeSession;
 use Cartalyst\Sentinel\Throttling\IlluminateThrottleRepository;
 use Cartalyst\Sentinel\Users\IlluminateUserRepository;
 use Illuminate\Events\Dispatcher;
+use InvalidArgumentException;
 
 class SentinelBootstrapper {
 
@@ -74,7 +75,7 @@ class SentinelBootstrapper {
 	{
 		$persistence = $this->createPersistence();
 		$users       = $this->createUsers();
-		$roles      = $this->createRoles();
+		$roles       = $this->createRoles();
 		$activations = $this->createActivations();
 		$dispatcher  = $this->getEventDispatcher();
 
@@ -152,7 +153,7 @@ class SentinelBootstrapper {
 			forward_static_call_array([$roles, 'setUsersModel'], [$model]);
 		}
 
-		return new IlluminateUserRepository($hasher, $model, $this->getEventDispatcher());
+		return new IlluminateUserRepository($hasher, $this->getEventDispatcher(), $model);
 	}
 
 	/**
@@ -237,6 +238,7 @@ class SentinelBootstrapper {
 	 * @param  \Cartalyst\Sentinel\Activations\IlluminateActivationRepository  $activations
 	 * @param  string  $ipAddress
 	 * @return array
+	 * @throws \InvalidArgumentException
 	 */
 	protected function createCheckpoints(IlluminateActivationRepository $activations, $ipAddress)
 	{
@@ -249,7 +251,7 @@ class SentinelBootstrapper {
 		{
 			if ( ! isset($$checkpoint))
 			{
-				throw new \InvalidArgumentException("Invalid checkpoint [$checkpoint] given.");
+				throw new InvalidArgumentException("Invalid checkpoint [$checkpoint] given.");
 			}
 
 			$checkpoints[$index] = $$checkpoint;

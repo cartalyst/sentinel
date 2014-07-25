@@ -17,11 +17,11 @@
  * @link       http://cartalyst.com
  */
 
-use Cartalyst\Sentinel\Cookies\NativeCookie;
+use Cartalyst\Sentinel\Native\SentinelBootstrapper;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
 
-class NativeCookieTest extends PHPUnit_Framework_TestCase {
+class SentinelBootstrapperTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 * Close mockery.
@@ -33,13 +33,13 @@ class NativeCookieTest extends PHPUnit_Framework_TestCase {
 		m::close();
 	}
 
-	public function testGet()
+	public function testInstantiate()
 	{
-		$cookie = new NativeCookie('__sentinel');
-		$this->assertNull($cookie->get());
+		$bootstrapper = new SentinelBootstrapper();
 
-		$_COOKIE['__sentinel'] = serialize('bar');
-		$this->assertEquals('bar', $cookie->get());
+		$sentinel = $bootstrapper->createSentinel();
+
+		$this->assertInstanceOf('Cartalyst\Sentinel\Sentinel', $sentinel);
 	}
 
 }

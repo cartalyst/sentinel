@@ -20,11 +20,15 @@
 use Carbon\Carbon;
 use Cartalyst\Sentinel\Users\UserInterface;
 use Cartalyst\Sentinel\Users\UserRepositoryInterface;
+use Cartalyst\Support\Traits\EventTrait;
+use Cartalyst\Support\Traits\RepositoryTrait;
 
 /**
  * @todo Switch over to eager loading where possible, under the assumption that the Eloquent user model will include the required relationship.
  */
 class IlluminateReminderRepository implements ReminderRepositoryInterface {
+
+	use EventTrait, RepositoryTrait;
 
 	/**
 	 * User repository.
@@ -166,29 +170,6 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface {
 	protected function generateReminderCode()
 	{
 		return str_random(32);
-	}
-
-	/**
-	 * Create a new instance of the model.
-	 *
-	 * @return \Illuminate\Database\Eloquent\Model
-	 */
-	public function createModel()
-	{
-		$class = '\\'.ltrim($this->model, '\\');
-
-		return new $class;
-	}
-
-	/**
-	 * Runtime override of the model.
-	 *
-	 * @param  string  $model
-	 * @return void
-	 */
-	public function setModel($model)
-	{
-		$this->model = $model;
 	}
 
 }

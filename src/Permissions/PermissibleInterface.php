@@ -24,7 +24,7 @@ interface PermissibleInterface {
 	 *
 	 * @return \Cartalyst\Sentinel\Permissions\PermissionsInterface
 	 */
-	public function getPermissions();
+	public function getPermissionsInstance();
 
 	/**
 	 * Adds a permission.
@@ -33,7 +33,7 @@ interface PermissibleInterface {
 	 * @param  bool  $value
 	 * @return \Cartalyst\Sentinel\Permissions\PermissibleInterface
 	 */
-	public function addPermission($permission, $value);
+	public function addPermission($permission, $value = true);
 
 	/**
 	 * Updates a permission.
@@ -42,7 +42,7 @@ interface PermissibleInterface {
 	 * @param  bool  $value
 	 * @return \Cartalyst\Sentinel\Permissions\PermissibleInterface
 	 */
-	public function updatePermission($permission, $value);
+	public function updatePermission($permission, $value = true);
 
 	/**
 	 * Removes a permission.

@@ -17,14 +17,16 @@
  * @link       http://cartalyst.com
  */
 
+use Cartalyst\Sentinel\Permissions\PermissibleInterface;
+use Cartalyst\Sentinel\Permissions\PermissibleTrait;
+use Cartalyst\Sentinel\Persistences\PersistableInterface;
 use Cartalyst\Sentinel\Roles\RoleableInterface;
 use Cartalyst\Sentinel\Roles\RoleInterface;
-use Cartalyst\Sentinel\Permissions\PermissibleInterface;
-use Cartalyst\Sentinel\Persistences\PersistableInterface;
-use Cartalyst\Sentinel\Permissions\SentinelPermissions;
 use Illuminate\Database\Eloquent\Model;
 
 class EloquentUser extends Model implements RoleableInterface, PermissibleInterface, PersistableInterface, UserInterface {
+
+	use PermissibleTrait;
 
 	/**
 	 * {@inheritDoc}
@@ -51,13 +53,6 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 	 * {@inheritDoc}
 	 */
 	protected $persistableRelationship = 'persistences';
-
-	/**
-	 * Cached permissions instance for the given user.
-	 *
-	 * @var \Cartalyst\Sentinel\Permissions\PermissionsInterface
-	 */
-	protected $permissionsInstance;
 
 	/**
 	 * Array of login column names.
@@ -171,66 +166,6 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getPermissions()
-	{
-		if ($this->permissionsInstance === null)
-		{
-			$this->permissionsInstance = $this->createPermissions();
-		}
-
-		return $this->permissionsInstance;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function addPermission($permission, $value)
-	{
-		if ( ! array_key_exists($permission, $this->permissions))
-		{
-			$this->permissions = array_merge($this->permissions, [$permission => $value]);
-		}
-
-		return $this;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function updatePermission($permission, $value)
-	{
-		if (array_key_exists($permission, $this->permissions))
-		{
-			$permissions = $this->permissions;
-
-			$permissions[$permission] = $value;
-
-			$this->permissions = $permissions;
-		}
-
-		return $this;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function removePermission($permission)
-	{
-		if (array_key_exists($permission, $this->permissions))
-		{
-			$permissions = $this->permissions;
-
-			unset($permissions[$permission]);
-
-			$this->permissions = $permissions;
-		}
-
-		return $this;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public function generatePersistenceCode()
 	{
 		return str_random(32);
@@ -316,7 +251,7 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 			$rolePermissions[] = $role->permissions;
 		}
 
-		return new SentinelPermissions($userPermissions, $rolePermissions);
+		return new static::$permissionsClass($userPermissions, $rolePermissions);
 	}
 
 	/**
@@ -374,7 +309,7 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 
 		if (in_array($method, $methods))
 		{
-			$permissions = $this->getPermissions();
+			$permissions = $this->getPermissionsInstance();
 
 			return call_user_func_array([$permissions, $method], $parameters);
 		}

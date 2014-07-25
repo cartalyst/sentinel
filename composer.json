@@ -42,9 +42,15 @@
 			"role": "Developer"
 		}
 	],
+	"repositories": [
+        {
+            "type": "composer",
+            "url": "http://packages.cartalyst.com"
+        }
+    ],
 	"require": {
 		"php": ">=5.4.0",
-		"cartalyst/support": "dev-master",
+		"cartalyst/support": "~1",
 		"illuminate/support": ">=4.0.9,<4.3"
 	},
 	"require-dev": {
@@ -72,7 +78,7 @@
 	"extra": {
 		"component": "package",
 		"branch-alias": {
-			"dev-develop": "1.0.x-dev"
+			"dev-master": "1.0.x-dev"
 		}
 	},
 	"minimum-stability": "dev",

@@ -19,15 +19,15 @@
 
 use Carbon\Carbon;
 use Cartalyst\Sentinel\Hashing\HasherInterface;
+use Cartalyst\Support\Traits\EventTrait;
+use Cartalyst\Support\Traits\RepositoryTrait;
 use Closure;
 use Illuminate\Events\Dispatcher;
-use Cartalyst\Support\Traits\RepositoryTrait;
-use Cartalyst\Support\Traits\EventTrait;
+use InvalidArgumentException;
 
 class IlluminateUserRepository implements UserRepositoryInterface {
 
-	use RepositoryTrait;
-	use EventTrait;
+	use EventTrait, RepositoryTrait;
 
 	/**
 	 * Hasher.
@@ -35,6 +35,13 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 	 * @var \Cartalyst\Sentinel\Hashing\HasherInterface
 	 */
 	protected $hasher;
+
+	/**
+	 * Model name.
+	 *
+	 * @var string
+	 */
+	protected $model = 'Cartalyst\Sentinel\Users\EloquentUser';
 
 	/**
 	 * Create a new Illuminate user repository.
@@ -46,12 +53,16 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 	public function __construct(
 		HasherInterface $hasher,
 		Dispatcher $dispatcher = null,
-		$model = 'Cartalyst\Sentinel\Users\EloquentUser'
+		$model = null
 	)
 	{
 		$this->hasher     = $hasher;
 		$this->dispatcher = $dispatcher;
-		$this->model      = $model;
+
+		if (isset($model))
+		{
+			$this->model = $model;
+		}
 	}
 
 	/**
@@ -274,12 +285,12 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 		{
 			if (empty($logins))
 			{
-				throw new \InvalidArgumentException('No [login] credential was passed.');
+				throw new InvalidArgumentException('No [login] credential was passed.');
 			}
 
 			if ($password === null)
 			{
-				throw new \InvalidArgumentException('You have not passed a [password].');
+				throw new InvalidArgumentException('You have not passed a [password].');
 			}
 		}
 

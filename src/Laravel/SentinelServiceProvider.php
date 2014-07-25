@@ -21,15 +21,16 @@ use Cartalyst\Sentinel\Activations\IlluminateActivationRepository;
 use Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint;
 use Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint;
 use Cartalyst\Sentinel\Cookies\IlluminateCookie;
-use Cartalyst\Sentinel\Roles\IlluminateRoleRepository;
 use Cartalyst\Sentinel\Hashing\NativeHasher;
 use Cartalyst\Sentinel\Persistences\IlluminatePersistenceRepository;
 use Cartalyst\Sentinel\Reminders\IlluminateReminderRepository;
+use Cartalyst\Sentinel\Roles\IlluminateRoleRepository;
 use Cartalyst\Sentinel\Sentinel;
 use Cartalyst\Sentinel\Sessions\IlluminateSession;
 use Cartalyst\Sentinel\Throttling\IlluminateThrottleRepository;
 use Cartalyst\Sentinel\Users\IlluminateUserRepository;
 use Illuminate\Support\ServiceProvider;
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Response;
 
 class SentinelServiceProvider extends ServiceProvider {
@@ -47,7 +48,7 @@ class SentinelServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		$this->registerPersistence();
+		$this->registerPersistences();
 		$this->registerUsers();
 		$this->registerRoles();
 		$this->registerCheckpoints();
@@ -55,7 +56,12 @@ class SentinelServiceProvider extends ServiceProvider {
 		$this->registerSentinel();
 	}
 
-	protected function registerPersistence()
+	/**
+	 * Registers the persistences.
+	 *
+	 * @return void
+	 */
+	protected function registerPersistences()
 	{
 		$this->registerSession();
 		$this->registerCookie();
@@ -75,6 +81,11 @@ class SentinelServiceProvider extends ServiceProvider {
 		});
 	}
 
+	/**
+	 * Registers the session.
+	 *
+	 * @return void
+	 */
 	protected function registerSession()
 	{
 		$this->app['sentinel.session'] = $this->app->share(function($app)
@@ -85,6 +96,11 @@ class SentinelServiceProvider extends ServiceProvider {
 		});
 	}
 
+	/**
+	 * Registers the cookie.
+	 *
+	 * @return void
+	 */
 	protected function registerCookie()
 	{
 		$this->app['sentinel.cookie'] = $this->app->share(function($app)
@@ -95,24 +111,40 @@ class SentinelServiceProvider extends ServiceProvider {
 		});
 	}
 
+	/**
+	 * Registers the users.
+	 *
+	 * @return void
+	 */
 	protected function registerUsers()
 	{
 		$this->registerHasher();
 
 		$this->app['sentinel.users'] = $this->app->share(function($app)
 		{
-			$model = $app['config']['cartalyst/sentinel::users.model'];
+			$users = $app['config']['cartalyst/sentinel::users.model'];
 			$roles = $app['config']['cartalyst/sentinel::roles.model'];
+			$permissions = $app['config']['cartalyst/sentinel::permissions.class'];
 
 			if (class_exists($roles) && method_exists($roles, 'setUsersModel'))
 			{
-				forward_static_call_array([$roles, 'setUsersModel'], [$model]);
+				forward_static_call_array([$roles, 'setUsersModel'], [$users]);
 			}
 
-			return new IlluminateUserRepository($app['sentinel.hasher'], $app['events']);
+			if (class_exists($users) && method_exists($users, 'setPermissionsClass'))
+			{
+				forward_static_call_array([$users, 'setPermissionsClass'], [$permissions]);
+			}
+
+			return new IlluminateUserRepository($app['sentinel.hasher'], $app['events'], $users);
 		});
 	}
 
+	/**
+	 * Registers the hahser.
+	 *
+	 * @return void
+	 */
 	protected function registerHasher()
 	{
 		$this->app['sentinel.hasher'] = $this->app->share(function($app)
@@ -121,6 +153,11 @@ class SentinelServiceProvider extends ServiceProvider {
 		});
 	}
 
+	/**
+	 * Registers the roles.
+	 *
+	 * @return void
+	 */
 	protected function registerRoles()
 	{
 		$this->app['sentinel.roles'] = $this->app->share(function($app)
@@ -137,6 +174,12 @@ class SentinelServiceProvider extends ServiceProvider {
 		});
 	}
 
+	/**
+	 * Registers the checkpoints.
+	 *
+	 * @return void
+	 * @throws \InvalidArgumentException
+	 */
 	protected function registerCheckpoints()
 	{
 		$this->registerActivationCheckpoint();
@@ -150,7 +193,7 @@ class SentinelServiceProvider extends ServiceProvider {
 			{
 				if ( ! $app->offsetExists("sentinel.checkpoint.{$checkpoint}"))
 				{
-					throw new \InvalidArgumentException("Invalid checkpoint [$checkpoint] given.");
+					throw new InvalidArgumentException("Invalid checkpoint [$checkpoint] given.");
 				}
 
 				return $app["sentinel.checkpoint.{$checkpoint}"];
@@ -160,6 +203,11 @@ class SentinelServiceProvider extends ServiceProvider {
 		});
 	}
 
+	/**
+	 * Registers the activation checkpoint.
+	 *
+	 * @return void
+	 */
 	protected function registerActivationCheckpoint()
 	{
 		$this->registerActivations();
@@ -170,6 +218,11 @@ class SentinelServiceProvider extends ServiceProvider {
 		});
 	}
 
+	/**
+	 * Registers the activations.
+	 *
+	 * @return void
+	 */
 	protected function registerActivations()
 	{
 		$this->app['sentinel.activations'] = $this->app->share(function($app)
@@ -181,6 +234,11 @@ class SentinelServiceProvider extends ServiceProvider {
 		});
 	}
 
+	/**
+	 * Registers the throttle checkpoint.
+	 *
+	 * @return void
+	 */
 	protected function registerThrottleCheckpoint()
 	{
 		$this->registerThrottling();
@@ -194,6 +252,11 @@ class SentinelServiceProvider extends ServiceProvider {
 		});
 	}
 
+	/**
+	 * Registers the throttle.
+	 *
+	 * @return void
+	 */
 	protected function registerThrottling()
 	{
 		$this->app['sentinel.throttling'] = $this->app->share(function($app)
@@ -218,6 +281,11 @@ class SentinelServiceProvider extends ServiceProvider {
 		});
 	}
 
+	/**
+	 * Registers the reminders.
+	 *
+	 * @return void
+	 */
 	protected function registerReminders()
 	{
 		$this->app['sentinel.reminders'] = $this->app->share(function($app)
@@ -229,6 +297,11 @@ class SentinelServiceProvider extends ServiceProvider {
 		});
 	}
 
+	/**
+	 * Registers sentinel.
+	 *
+	 * @return void
+	 */
 	protected function registerSentinel()
 	{
 		$this->app['sentinel'] = $this->app->share(function($app)

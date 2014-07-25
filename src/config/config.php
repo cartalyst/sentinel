@@ -73,6 +73,33 @@ return [
 
 	/*
 	|--------------------------------------------------------------------------
+	| Permissions
+	|--------------------------------------------------------------------------
+	|
+	| Here you may specify the permissions class. Sentinel ships with two
+	| permission types.
+	|
+	| 'Cartalyst\Sentinel\Permissions\StrictPermissions'
+	| 'Cartalyst\Sentinel\Permissions\StandardPermissions'
+	|
+	| "StandardPermissions" will assign a higher priority to the user
+	| permissions over role permissions, once a user is allowed or denied
+	| a specific permission, it will be used regardless of the
+	| permissions set on the role.
+	|
+	| "StrictPermissions" will deny any permission as soon as it finds it
+	| rejected on either the user or any of the assigned roles.
+	|
+	*/
+
+	'permissions' => [
+
+		'class' => 'Cartalyst\Sentinel\Permissions\StandardPermissions',
+
+	],
+
+	/*
+	|--------------------------------------------------------------------------
 	| Persistences
 	|--------------------------------------------------------------------------
 	|

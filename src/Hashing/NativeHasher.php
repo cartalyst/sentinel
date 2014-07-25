@@ -17,6 +17,8 @@
  * @link       http://cartalyst.com
  */
 
+use RuntimeException;
+
 class NativeHasher implements HasherInterface {
 
 	/**
@@ -26,7 +28,7 @@ class NativeHasher implements HasherInterface {
 	{
 		if ( ! $hash = password_hash($value, PASSWORD_DEFAULT))
 		{
-			throw new \RuntimeException('Error hashing value. Check system compatibility with password_hash().');
+			throw new RuntimeException('Error hashing value. Check system compatibility with password_hash().');
 		}
 
 		return $hash;
