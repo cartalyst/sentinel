@@ -1,5 +1,7 @@
 # Sentinel
 
+[![Build Status](http://ci.cartalyst.com/build-status/svg/6)](http://ci.cartalyst.com/build-status/view/6)
+
 Sentinel is a PHP 5.4+ fully-featured authentication & authorization system. It also provides additional features such as user groups and additional security features.
 
 Sentinel is a framework agnostic set of interfaces with default implementations, though you can substitute any implementations you see fit.
