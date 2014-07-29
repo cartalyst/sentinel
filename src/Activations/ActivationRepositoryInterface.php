@@ -67,6 +67,6 @@ interface ActivationRepositoryInterface {
 	 *
 	 * @return int
 	 */
-	public function deleteExpired();
+	public function removeExpired();
 
 }
