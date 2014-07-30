@@ -79,9 +79,9 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase {
 		$models->shouldReceive('first')->andReturn($first = new EloquentThrottle);
 		$this->addMockConnection($first);
 		$first->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-		$first->created_at = Carbon::createFromTimestamp($this->time - 1);
+		$first->created_at = Carbon::createFromTimestamp($this->time);
 
-		$result = $this->normalizeTimeDiff(9);
+		$result = $this->normalizeTimeDiff(10);
 
 		$this->assertEquals($result, $throttle->globalDelay());
 	}
@@ -107,7 +107,7 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase {
 		$models->shouldReceive('first')->andReturn($first = new EloquentThrottle);
 		$this->addMockConnection($first);
 		$first->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-		$first->created_at = Carbon::createFromTimestamp($this->time - 1);
+		$first->created_at = Carbon::createFromTimestamp($this->time);
 
 		$result = $this->normalizeTimeDiff(0);
 
@@ -135,9 +135,9 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase {
 		$models->shouldReceive('last')->andReturn($last = new EloquentThrottle);
 		$this->addMockConnection($last);
 		$last->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-		$last->created_at = Carbon::createFromTimestamp($this->time - 1);
+		$last->created_at = Carbon::createFromTimestamp($this->time);
 
-		$result = $this->normalizeTimeDiff(2);
+		$result = $this->normalizeTimeDiff(3);
 
 		$this->assertEquals($result, $throttle->globalDelay());
 	}
@@ -163,9 +163,9 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase {
 		$models->shouldReceive('last')->andReturn($last = new EloquentThrottle);
 		$this->addMockConnection($last);
 		$last->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-		$last->created_at = Carbon::createFromTimestamp($this->time - 1);
+		$last->created_at = Carbon::createFromTimestamp($this->time);
 
-		$result = $this->normalizeTimeDiff(9);
+		$result = $this->normalizeTimeDiff(10);
 
 		$this->assertEquals($result, $throttle->globalDelay());
 	}
@@ -220,9 +220,9 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase {
 		$models->shouldReceive('first')->andReturn($first = new EloquentThrottle);
 		$this->addMockConnection($first);
 		$first->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-		$first->created_at = Carbon::createFromTimestamp($this->time - 1);
+		$first->created_at = Carbon::createFromTimestamp($this->time);
 
-		$result = $this->normalizeTimeDiff(9);
+		$result = $this->normalizeTimeDiff(10);
 
 		$this->assertEquals($result, $throttle->ipDelay('127.0.0.1'));
 	}
@@ -249,9 +249,9 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase {
 		$models->shouldReceive('last')->andReturn($last = new EloquentThrottle);
 		$this->addMockConnection($last);
 		$last->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-		$last->created_at = Carbon::createFromTimestamp($this->time - 1);
+		$last->created_at = Carbon::createFromTimestamp($this->time);
 
-		$result = $this->normalizeTimeDiff(2);
+		$result = $this->normalizeTimeDiff(3);
 
 		$this->assertEquals($result, $throttle->ipDelay('127.0.0.1'));
 	}
@@ -278,9 +278,9 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase {
 		$models->shouldReceive('last')->andReturn($last = new EloquentThrottle);
 		$this->addMockConnection($last);
 		$last->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-		$last->created_at = Carbon::createFromTimestamp($this->time - 1);
+		$last->created_at = Carbon::createFromTimestamp($this->time);
 
-		$result = $this->normalizeTimeDiff(9);
+		$result = $this->normalizeTimeDiff(10);
 
 		$this->assertEquals($result, $throttle->ipDelay('127.0.0.1'));
 	}
@@ -307,12 +307,12 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase {
 		$models->shouldReceive('first')->andReturn($first = new EloquentThrottle);
 		$this->addMockConnection($first);
 		$first->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-		$first->created_at = Carbon::createFromTimestamp($this->time - 1);
+		$first->created_at = Carbon::createFromTimestamp($this->time);
 
 		$user = m::mock('Cartalyst\Sentinel\Users\UserInterface');
 		$user->shouldReceive('getUserId')->andReturn(1);
 
-		$result = $this->normalizeTimeDiff(9);
+		$result = $this->normalizeTimeDiff(10);
 
 		$this->assertEquals($result, $throttle->userDelay($user));
 	}
@@ -339,12 +339,12 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase {
 		$models->shouldReceive('last')->andReturn($last = new EloquentThrottle);
 		$this->addMockConnection($last);
 		$last->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-		$last->created_at = Carbon::createFromTimestamp($this->time - 1);
+		$last->created_at = Carbon::createFromTimestamp($this->time);
 
 		$user = m::mock('Cartalyst\Sentinel\Users\UserInterface');
 		$user->shouldReceive('getUserId')->andReturn(1);
 
-		$result = $this->normalizeTimeDiff(2);
+		$result = $this->normalizeTimeDiff(3);
 
 		$this->assertEquals($result, $throttle->userDelay($user));
 	}
@@ -371,12 +371,12 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase {
 		$models->shouldReceive('last')->andReturn($last = new EloquentThrottle);
 		$this->addMockConnection($last);
 		$last->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-		$last->created_at = Carbon::createFromTimestamp($this->time - 1);
+		$last->created_at = Carbon::createFromTimestamp($this->time);
 
 		$user = m::mock('Cartalyst\Sentinel\Users\UserInterface');
 		$user->shouldReceive('getUserId')->andReturn(1);
 
-		$result = $this->normalizeTimeDiff(9);
+		$result = $this->normalizeTimeDiff(10);
 
 		$this->assertEquals($result, $throttle->userDelay($user));
 	}
@@ -410,16 +410,11 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase {
 
 	protected function normalizeTimeDiff($result)
 	{
-		$endTime = time();
+		$result -= time() - $this->time;
 
-		if ($this->time !== $endTime)
-		{
-			$result -= $endTime - $this->time;
+		$this->time = time();
 
-			$this->time = $endTime;
-		}
-
-		return $result > 0 ? $result : 0;
+		return $result;
 	}
 
 }
