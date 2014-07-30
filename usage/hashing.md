@@ -18,6 +18,8 @@ There are 5 built in hashers:
 
 The encouraged hasher to use in Sentinel is the native hasher. It will use PHP 5.5's `password_hash()` function and is setup to use the most secure hashing strategy of the day (which is current bcrypt). There is no setup required for this hasher.
 
+The native hasher can be used with PHP 5.4 by adding the ircmaxell/password-compat package to your composer.json file.
+
 <div name="bcrypt-hasher" data-unique="bcrypt-hasher"></div>
 
 #### Bcrypt Hasher
