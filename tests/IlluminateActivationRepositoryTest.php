@@ -188,8 +188,6 @@ class IlluminateActivationRepositoryTest extends PHPUnit_Framework_TestCase {
 
 		$model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
 
-		$expires = Carbon::now()->subSeconds($lifetime);
-
 		$query->shouldReceive('where')->with('completed', false)->andReturn($query);
 		$query->shouldReceive('where')->andReturn($query);
 		$query->shouldReceive('delete')->once();

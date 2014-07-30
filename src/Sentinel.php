@@ -226,7 +226,7 @@ class Sentinel {
 			throw new InvalidArgumentException('No valid user was provided.');
 		}
 
-		$activations = $this->getActivationsRepository();
+		$activations = $this->getActivationRepository();
 
 		$activation = $activations->create($user);
 
@@ -237,7 +237,6 @@ class Sentinel {
 	 * Checks to see if a user is logged in.
 	 *
 	 * @return \Cartalyst\Sentinel\Users\UserInterface|bool
-	 * @todo   IS this where we would throw exceptions? (Not Activated etc)
 	 */
 	public function check()
 	{
@@ -566,7 +565,7 @@ class Sentinel {
 		// Temporarily remove the array of registered checkpoints
 		$checkpoints = $this->checkpoints;
 
-		$this->checkpoints = false;
+		$this->checkpoints = [];
 
 		// Fire the callback
 		$result = $callback($this);
@@ -584,7 +583,7 @@ class Sentinel {
 	 */
 	public function checkpointsEnabled()
 	{
-		return $this->checkpoints;
+		return $this->checkpointsEnabled;
 	}
 
 	/**
@@ -714,13 +713,6 @@ class Sentinel {
 	 */
 	public function getUserRepository()
 	{
-		if ($this->users === null)
-		{
-			$this->users = $this->createUserRepository();
-
-			$this->userMethods = [];
-		}
-
 		return $this->users;
 	}
 
@@ -738,29 +730,12 @@ class Sentinel {
 	}
 
 	/**
-	 * Creates a default user repository if none has been specified.
-	 *
-	 * @return \Cartalyst\Sentinel\Users\IlluminateUserRepository
-	 */
-	protected function createUserRepository()
-	{
-		$hasher = new NativeHasher;
-
-		return new IlluminateUserRepository($hasher);
-	}
-
-	/**
 	 * Returns the role repository.
 	 *
 	 * @return \Cartalyst\Sentinel\Roles\RoleRepositoryInterface
 	 */
 	public function getRoleRepository()
 	{
-		if ($this->roles === null)
-		{
-			$this->roles = $this->createRoleRepository();
-		}
-
 		return $this->roles;
 	}
 
@@ -773,16 +748,6 @@ class Sentinel {
 	public function setRoleRepository(RoleRepositoryInterface $roles)
 	{
 		$this->roles = $roles;
-	}
-
-	/**
-	 * Creates a default role repository if none has been specified.
-	 *
-	 * @return \Cartalyst\Sentinel\Roles\IlluminateRoleRepository
-	 */
-	protected function createRoleRepository()
-	{
-		return new IlluminateRoleRepository();
 	}
 
 	/**
@@ -811,13 +776,8 @@ class Sentinel {
 	 *
 	 * @return \Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface
 	 */
-	public function getPersistencesRepository()
+	public function getPersistenceRepository()
 	{
-		if ($this->persistences === null)
-		{
-			$this->persistences = $this->createPersistencesRepository();
-		}
-
 		return $this->persistences;
 	}
 
@@ -827,19 +787,9 @@ class Sentinel {
 	 * @param  \Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface  $persistences
 	 * @return void
 	 */
-	public function setPersistencesRepository(PersistenceRepositoryInterface $persistences)
+	public function setPersistenceRepository(PersistenceRepositoryInterface $persistences)
 	{
 		$this->persistences = $persistences;
-	}
-
-	/**
-	 * Creates a default persistences repository if none has been specified.
-	 *
-	 * @return \Cartalyst\Sentinel\Persistences\IlluminatePersistenceRepository
-	 */
-	protected function createPersistencesRepository()
-	{
-		return new IlluminatePersistenceRepository();
 	}
 
 	/**
@@ -847,13 +797,8 @@ class Sentinel {
 	 *
 	 * @return \Cartalyst\Sentinel\Activations\ActivationRepositoryInterface
 	 */
-	public function getActivationsRepository()
+	public function getActivationRepository()
 	{
-		if ($this->activations === null)
-		{
-			$this->activations = $this->createActivationsRepository();
-		}
-
 		return $this->activations;
 	}
 
@@ -863,19 +808,9 @@ class Sentinel {
 	 * @param  \Cartalyst\Sentinel\Activations\ActivationRepositoryInterface  $activations
 	 * @return void
 	 */
-	public function setActivationsRepository(ActivationRepositoryInterface $activations)
+	public function setActivationRepository(ActivationRepositoryInterface $activations)
 	{
 		$this->activations = $activations;
-	}
-
-	/**
-	 * Creates a default activations repository if none has been specified.
-	 *
-	 * @return \Cartalyst\Sentinel\Activations\IlluminateActivationRepository
-	 */
-	protected function createActivationsRepository()
-	{
-		return new IlluminateActivationRepository();
 	}
 
 	/**
@@ -883,13 +818,8 @@ class Sentinel {
 	 *
 	 * @return \Cartalyst\Sentinel\Reminders\ReminderRepositoryInterface
 	 */
-	public function getRemindersRepository()
+	public function getReminderRepository()
 	{
-		if ($this->reminders === null)
-		{
-			$this->reminders = $this->createRemindersRepository();
-		}
-
 		return $this->reminders;
 	}
 
@@ -899,21 +829,9 @@ class Sentinel {
 	 * @param  \Cartalyst\Sentinel\Reminders\ReminderRepositoryInterface  $reminders
 	 * @return void
 	 */
-	public function setRemindersRepository(ReminderRepositoryInterface $reminders)
+	public function setReminderRepository(ReminderRepositoryInterface $reminders)
 	{
 		$this->reminders = $reminders;
-	}
-
-	/**
-	 * Creates a default reminders repository if none has been specified.
-	 *
-	 * @return \Cartalyst\Sentinel\Reminders\IlluminateReminderRepository
-	 */
-	protected function createRemindersRepository()
-	{
-		$users = $this->getUserRepository();
-
-		return new IlluminateReminderRepository($users);
 	}
 
 	/**

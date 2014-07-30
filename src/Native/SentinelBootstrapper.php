@@ -97,8 +97,8 @@ class SentinelBootstrapper {
 
 		$reminders = $this->createReminders($users);
 
-		$sentinel->setActivationsRepository($activations);
-		$sentinel->setRemindersRepository($reminders);
+		$sentinel->setActivationRepository($activations);
+		$sentinel->setReminderRepository($reminders);
 
 		return $sentinel;
 	}

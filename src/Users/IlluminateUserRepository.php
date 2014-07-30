@@ -47,6 +47,7 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 	 * Create a new Illuminate user repository.
 	 *
 	 * @param  \Cartalyst\Sentinel\Hashing\HasherInterface  $hasher
+	 * @param  \Illuminate\Events\Dispatcher  $dispatcher
 	 * @param  string  $model
 	 * @return void
 	 */

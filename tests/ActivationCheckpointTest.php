@@ -19,6 +19,8 @@
 
 use Cartalyst\Sentinel\Activations\IlluminateActivationRepository;
 use Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint;
+use Cartalyst\Sentinel\Checkpoints\NotActivatedException;
+use Cartalyst\Sentinel\Users\EloquentUser;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
 
@@ -53,6 +55,22 @@ class ActivationCheckpointTest extends PHPUnit_Framework_TestCase {
 		$users->shouldReceive('completed')->once();
 
 		$checkpoint->check(m::mock('Cartalyst\Sentinel\Users\EloquentUser'));
+	}
+
+	public function testNotActivatedExceptionGetUser()
+	{
+		$checkpoint = new ActivationCheckpoint($users = m::mock('Cartalyst\Sentinel\Activations\IlluminateActivationRepository'));
+
+		$users->shouldReceive('completed')->once();
+
+		try
+		{
+			$checkpoint->check(m::mock('Cartalyst\Sentinel\Users\EloquentUser'));
+		}
+		catch(NotActivatedException $e)
+		{
+			$this->assertInstanceOf('Cartalyst\Sentinel\Users\EloquentUser', $e->getUser());
+		}
 	}
 
 }

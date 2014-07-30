@@ -52,6 +52,6 @@ interface ReminderRepositoryInterface {
 	 *
 	 * @return int
 	 */
-	public function deleteExpired();
+	public function removeExpired();
 
 }

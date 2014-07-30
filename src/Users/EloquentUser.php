@@ -198,17 +198,25 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 	/**
 	 * {@inheritDoc}
 	 */
-	public function getPersistableRelationship()
+	public function setPersistableKey($key)
 	{
-		return $this->persistableRelationship;
+		$this->persistableKey = $key;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public function setPersistableKey($key)
+	public function setPersistableRelationship($persistableRelationship)
 	{
-		$this->persistableKey = $key;
+		$this->persistableRelationship = $persistableRelationship;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function getPersistableRelationship()
+	{
+		return $this->persistableRelationship;
 	}
 
 	/**

@@ -102,6 +102,7 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface {
 	{
 		$reminder = $this
 			->createModel()
+			->newQuery()
 			->where('user_id', $user->getUserId())
 			->where('completed', false)
 			->first();
@@ -116,6 +117,7 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface {
 	{
 		$reminder = $this
 			->createModel()
+			->newQuery()
 			->where('user_id', $user->getUserId())
 			->where('code', $code)
 			->where('completed', false)
@@ -150,7 +152,7 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function deleteExpired()
+	public function removeExpired()
 	{
 		$expires = Carbon::now()->subMinutes($this->expires);
 

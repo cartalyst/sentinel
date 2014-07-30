@@ -17,8 +17,10 @@
  * @link       http://cartalyst.com
  */
 
-use Cartalyst\Sentinel\Throttling\IlluminateThrottleRepository;
+use Carbon\Carbon;
 use Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint;
+use Cartalyst\Sentinel\Checkpoints\ThrottlingException;
+use Cartalyst\Sentinel\Throttling\IlluminateThrottleRepository;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
 
@@ -111,6 +113,26 @@ class ThrottleCheckpointTest extends PHPUnit_Framework_TestCase {
 		$throttle->shouldReceive('userDelay')->once()->andReturn(10);
 
 		$checkpoint->fail(m::mock('Cartalyst\Sentinel\Users\EloquentUser'));
+	}
+
+	public function testGetThrottlingExceptionAttributes()
+	{
+		$checkpoint = new ThrottleCheckpoint($throttle = m::mock('Cartalyst\Sentinel\Throttling\IlluminateThrottleRepository'), '127.0.0.1');
+
+		$throttle->shouldReceive('globalDelay')->once();
+		$throttle->shouldReceive('ipDelay')->once()->andReturn(0);
+		$throttle->shouldReceive('userDelay')->once()->andReturn(10);
+
+		try
+		{
+			$checkpoint->fail(m::mock('Cartalyst\Sentinel\Users\EloquentUser'));
+		}
+		catch(ThrottlingException $e)
+		{
+			$this->assertEquals(10, $e->getDelay());
+			$this->assertEquals('user', $e->getType());
+			$this->assertEquals(Carbon::now()->addSeconds(10), $e->getFree());
+		}
 	}
 
 }
