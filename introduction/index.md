@@ -40,7 +40,6 @@ Sentinel is a complete refactor of our popular Sentry authentication & authoriza
 - Improved integration with Laravel (Sentinel::basic(), easy email integration with queues).
 - Improved speed - make use of eager loading.
 - Allow use of implementations (such as Eloquent and Kohana ORM) to take place on the ORM level.
-- Add support for two factor authentication.
 - Allow more flexible activation scenarios.
 - Groups renamed to roles bringing us in-line with RBAC terminology.
 
