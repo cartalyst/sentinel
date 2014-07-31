@@ -322,8 +322,8 @@ class SentinelServiceProvider extends ServiceProvider {
 				}
 			}
 
-			$sentinel->setActivationsRepository($app['sentinel.activations']);
-			$sentinel->setRemindersRepository($app['sentinel.reminders']);
+			$sentinel->setActivationRepository($app['sentinel.activations']);
+			$sentinel->setReminderRepository($app['sentinel.reminders']);
 
 			$sentinel->setRequestCredentials(function() use ($app)
 			{
