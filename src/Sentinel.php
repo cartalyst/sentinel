@@ -19,26 +19,21 @@
 
 use BadMethodCallException;
 use Cartalyst\Sentinel\Activations\ActivationRepositoryInterface;
-use Cartalyst\Sentinel\Activations\IlluminateActivationRepository;
 use Cartalyst\Sentinel\Checkpoints\CheckpointInterface;
-use Cartalyst\Sentinel\Cookies\NativeCookie;
-use Cartalyst\Sentinel\Hashing\NativeHasher;
-use Cartalyst\Sentinel\Persistences\IlluminatePersistenceRepository;
 use Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface;
-use Cartalyst\Sentinel\Reminders\IlluminateReminderRepository;
 use Cartalyst\Sentinel\Reminders\ReminderRepositoryInterface;
-use Cartalyst\Sentinel\Roles\IlluminateRoleRepository;
 use Cartalyst\Sentinel\Roles\RoleRepositoryInterface;
-use Cartalyst\Sentinel\Sessions\NativeSession;
-use Cartalyst\Sentinel\Users\IlluminateUserRepository;
 use Cartalyst\Sentinel\Users\UserInterface;
 use Cartalyst\Sentinel\Users\UserRepositoryInterface;
+use Cartalyst\Support\Traits\EventTrait;
 use Closure;
 use Illuminate\Events\Dispatcher;
 use InvalidArgumentException;
 use RuntimeException;
 
 class Sentinel {
+
+	use EventTrait;
 
 	/**
 	 * The current cached, logged in user.
@@ -83,13 +78,6 @@ class Sentinel {
 	protected $userMethods = [];
 
 	/**
-	 * Event dispatcher.
-	 *
-	 * @var \Illuminate\Events\Dispatcher
-	 */
-	protected $dispatcher;
-
-	/**
 	 * Array that holds all the enabled checkpoints.
 	 *
 	 * @var array
@@ -97,14 +85,14 @@ class Sentinel {
 	protected $checkpoints = [];
 
 	/**
-	 * Bool that holds checkpoint status.
+	 * Flag for the checkpoint status.
 	 *
 	 * @var bool
 	 */
 	protected $checkpointsEnabled = true;
 
 	/**
-	 * Reminders repository.
+	 * The Reminders repository.
 	 *
 	 * @var \Cartalyst\Sentinel\Reminders\ReminderRepositoryInterface
 	 */
@@ -169,6 +157,8 @@ class Sentinel {
 			throw new InvalidArgumentException('You must provide a closure or a boolean.');
 		}
 
+		$this->fireEvent('sentinel.registering', $credentials);
+
 		$valid = $this->users->validForCreation($credentials);
 
 		if ($valid === false)
@@ -184,6 +174,8 @@ class Sentinel {
 		{
 			$this->activate($user);
 		}
+
+		$this->fireEvent('sentinel.registered', $user);
 
 		return $user;
 	}
@@ -202,23 +194,19 @@ class Sentinel {
 	/**
 	 * Activates the given user.
 	 *
-	 * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
+	 * @param  mixed  $user
 	 * @return bool
 	 * @throws \InvalidArgumentException
 	 */
 	public function activate($user)
 	{
-		if (is_string($user))
+		if (is_string($user) || is_array($user))
 		{
 			$users = $this->getUserRepository();
 
-			$user = $users->findById($user);
-		}
-		elseif (is_array($user))
-		{
-			$users = $this->getUserRepository();
+			$method = 'findBy'.(is_string($user) ? 'Id' : 'Credentials');
 
-			$user = $users->findByCredentials($user);
+			$user = $users->{$method}($user);
 		}
 
 		if ( ! $user instanceof UserInterface)
@@ -226,9 +214,13 @@ class Sentinel {
 			throw new InvalidArgumentException('No valid user was provided.');
 		}
 
+		$this->fireEvent('sentinel.activating', $user);
+
 		$activations = $this->getActivationRepository();
 
 		$activation = $activations->create($user);
+
+		$this->fireEvent('sentinel.activated', [ $user, $activation ]);
 
 		return $activations->complete($user, $activation->code);
 	}
@@ -296,7 +288,7 @@ class Sentinel {
 	 */
 	public function authenticate($credentials, $remember = false, $login = true)
 	{
-		$response = $this->fireEvent('authenticating', $credentials, true);
+		$response = $this->fireEvent('sentinel.authenticating', $credentials, true);
 
 		if ($response === false) return false;
 
@@ -333,7 +325,7 @@ class Sentinel {
 			}
 		}
 
-		$this->fireEvent('authenticated', $user);
+		$this->fireEvent('sentinel.authenticated', $user);
 
 		return $this->user = $user;
 	}
@@ -411,7 +403,7 @@ class Sentinel {
 	}
 
 	/**
-	 * Get the request credentials.
+	 * Returns the request credentials.
 	 *
 	 * @return array
 	 */
@@ -535,6 +527,7 @@ class Sentinel {
 	/**
 	 * Log the current user out.
 	 *
+	 * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
 	 * @param  bool  $everywhere
 	 * @return bool
 	 */
@@ -648,38 +641,6 @@ class Sentinel {
 	}
 
 	/**
-	 * Register a Sentinel event.
-	 *
-	 * @param  string  $event
-	 * @param  \Closure|string  $callback
-	 * @param  int  $priority
-	 * @return void
-	 */
-	protected function registerEvent($event, $callback, $priority = 0)
-	{
-		$dispatcher = $this->getEventDispatcher();
-
-		$dispatcher->listen("sentinel.{$event}", $callback, $priority);
-	}
-
-	/**
-	 * Call a Sentinel event.
-	 *
-	 * @param  string  $event
-	 * @param  mixed   $payload
-	 * @param  bool    $halt
-	 * @return mixed
-	 */
-	protected function fireEvent($event, $payload = [], $halt = false)
-	{
-		if ( ! $dispatcher = $this->getEventDispatcher()) return;
-
-		$method = $halt ? 'until' : 'fire';
-
-		return $dispatcher->{$method}("sentinel.{$event}", $payload);
-	}
-
-	/**
 	 * Returns the currently logged in user, lazily checking for it.
 	 *
 	 * @param  bool  $check
@@ -748,27 +709,6 @@ class Sentinel {
 	public function setRoleRepository(RoleRepositoryInterface $roles)
 	{
 		$this->roles = $roles;
-	}
-
-	/**
-	 * Get the event dispatcher.
-	 *
-	 * @return \Illuminate\Events\Dispatcher
-	 */
-	public function getEventDispatcher()
-	{
-		return $this->dispatcher;
-	}
-
-	/**
-	 * Set the event dispatcher.
-	 *
-	 * @param  \Illuminate\Events\Dispatcher  $dispatcher
-	 * @return void
-	 */
-	public function setEventDispatcher(Dispatcher $dispatcher)
-	{
-		$this->dispatcher = $dispatcher;
 	}
 
 	/**
@@ -868,7 +808,7 @@ class Sentinel {
 	 * Dynamically pass missing methods to Sentinel.
 	 *
 	 * @param  string  $method
-	 * @param  array   $parameters
+	 * @param  array  $parameters
 	 * @return mixed
 	 * @throws \BadMethodCallException
 	 */

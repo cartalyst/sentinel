@@ -41,6 +41,8 @@ class SentinelTest extends PHPUnit_Framework_TestCase {
 		$users->shouldReceive('validForCreation')->once()->andReturn(true);
 		$users->shouldReceive('create')->once();
 
+		$dispatcher->shouldReceive('fire')->twice();
+
 		$sentinel->register([
 			'email' => 'foo@example.com',
 			'password' => 'secret',
@@ -52,6 +54,8 @@ class SentinelTest extends PHPUnit_Framework_TestCase {
 		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
 		$users->shouldReceive('validForCreation')->once()->andReturn(false);
+
+		$dispatcher->shouldReceive('fire')->once();
 
 		$user = $sentinel->register([
 			'email' => 'foo@example.com',
@@ -83,6 +87,8 @@ class SentinelTest extends PHPUnit_Framework_TestCase {
 		$activations->shouldReceive('complete')->once()->andReturn(true);
 		$activation->shouldReceive('getAttribute')->once();
 
+		$dispatcher->shouldReceive('fire')->times(4);
+
 		$sentinel->registerAndActivate([
 			'email'    => 'foo@example.com',
 			'password' => 'secret',
@@ -99,6 +105,8 @@ class SentinelTest extends PHPUnit_Framework_TestCase {
 		$activations->shouldReceive('complete')->once()->andReturn(true);
 		$activation->shouldReceive('getAttribute')->once();
 
+		$dispatcher->shouldReceive('fire')->twice();
+
 		$sentinel->activate($user);
 	}
 
@@ -113,6 +121,8 @@ class SentinelTest extends PHPUnit_Framework_TestCase {
 		$activations->shouldReceive('create')->once()->andReturn($activation = m::mock('Cartalyst\Sentinel\Activations\EloquentActivation'));
 		$activations->shouldReceive('complete')->once()->andReturn(true);
 		$activation->shouldReceive('getAttribute')->once();
+
+		$dispatcher->shouldReceive('fire')->twice();
 
 		$sentinel->activate('1');
 	}
@@ -131,6 +141,8 @@ class SentinelTest extends PHPUnit_Framework_TestCase {
 		$activations->shouldReceive('create')->once()->andReturn($activation = m::mock('Cartalyst\Sentinel\Activations\EloquentActivation'));
 		$activations->shouldReceive('complete')->once()->andReturn(true);
 		$activation->shouldReceive('getAttribute')->once();
+
+		$dispatcher->shouldReceive('fire')->twice();
 
 		$sentinel->activate($credentials);
 	}
