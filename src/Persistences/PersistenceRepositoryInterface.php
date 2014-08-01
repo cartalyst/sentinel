@@ -27,12 +27,28 @@ interface PersistenceRepositoryInterface {
 	public function check();
 
 	/**
+	 * Finds a persistence by persistence code.
+	 *
+	 * @param  string  $code
+	 * @return \Cartalyst\Sentinel\Persistences\PersistableInterface|false
+	 */
+	public function findByPersistenceCode($code);
+
+	/**
+	 * Finds a user by persistence code.
+	 *
+	 * @param  string  $code
+	 * @return \Cartalyst\Sentinel\Users\UserInterface|false
+	 */
+	public function findUserByPersistenceCode($code);
+
+	/**
 	 * Adds a new user persistence to the current session and attaches the user.
 	 *
 	 * @param  \Cartalyst\Sentinel\Persistence\PersistableInterface  $persistable
 	 * @return void
 	 */
-	public function persist(PersistableInterface $persistable);
+	public function persist(PersistableInterface $persistable, $remember = false);
 
 	/**
 	 * Adds a new user persistence, to remember.
@@ -51,6 +67,14 @@ interface PersistenceRepositoryInterface {
 	public function forget();
 
 	/**
+	 * Removes the given persistence code.
+	 *
+	 * @param  string  $code
+	 * @return bool|null
+	 */
+	public function remove($code);
+
+	/**
 	 * Flushes persistences for the given user.
 	 *
 	 * @param  \Cartalyst\Sentinel\Persistence\PersistableInterface  $persistable
@@ -58,13 +82,5 @@ interface PersistenceRepositoryInterface {
 	 * @return void
 	 */
 	public function flush(PersistableInterface $persistable, $forget = true);
-
-	/**
-	 * Removes the given persistence code.
-	 *
-	 * @param  string  $code
-	 * @return bool|null
-	 */
-	public function remove($code);
 
 }

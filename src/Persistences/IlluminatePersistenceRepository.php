@@ -99,10 +99,7 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface 
 	}
 
 	/**
-	 * Find by persistence code.
-	 *
-	 * @param  string  $code
-	 * @return \Cartalyst\Sentinel\Persistences\PersistableInterface|false
+	 * {@inheritDoc}
 	 */
 	public function findByPersistenceCode($code)
 	{
@@ -115,10 +112,7 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface 
 	}
 
 	/**
-	 * Find a user by persistence code.
-	 *
-	 * @param  string  $code
-	 * @return \Cartalyst\Sentinel\Persistences\PersistableInterface|false
+	 * {@inheritDoc}
 	 */
 	public function findUserByPersistenceCode($code)
 	{
