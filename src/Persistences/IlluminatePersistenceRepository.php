@@ -18,8 +18,8 @@
  */
 
 use Cartalyst\Sentinel\Cookies\CookieInterface;
-use Cartalyst\Sentinel\Sessions\SessionInterface;
 use Cartalyst\Sentinel\Persistences\PersistableInterface;
+use Cartalyst\Sentinel\Sessions\SessionInterface;
 use Cartalyst\Support\Traits\EventTrait;
 use Cartalyst\Support\Traits\RepositoryTrait;
 

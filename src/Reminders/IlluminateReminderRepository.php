@@ -162,7 +162,7 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface {
 	}
 
 	/**
-	 * Return a random string for an reminder code.
+	 * Returns a random string for a reminder code.
 	 *
 	 * @return string
 	 */
