@@ -23,9 +23,6 @@ use Cartalyst\Sentinel\Users\UserRepositoryInterface;
 use Cartalyst\Support\Traits\EventTrait;
 use Cartalyst\Support\Traits\RepositoryTrait;
 
-/**
- * @todo Switch over to eager loading where possible, under the assumption that the Eloquent user model will include the required relationship.
- */
 class IlluminateReminderRepository implements ReminderRepositoryInterface {
 
 	use EventTrait, RepositoryTrait;
