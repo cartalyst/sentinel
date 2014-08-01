@@ -786,19 +786,8 @@ class Sentinel {
 			$users = $this->getUserRepository();
 
 			$methods = get_class_methods($users);
-			$banned = ['__construct'];
 
-			foreach ($banned as $method)
-			{
-				$index = array_search($method, $methods);
-
-				if ($index !== false)
-				{
-					unset($methods[$index]);
-				}
-			}
-
-			$this->userMethods = $methods;
+			$this->userMethods = array_diff($methods, ['__construct']);
 		}
 
 		return $this->userMethods;
