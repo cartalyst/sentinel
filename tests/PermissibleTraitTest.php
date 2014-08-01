@@ -117,6 +117,8 @@ class PermissibleStub implements PermissibleInterface {
 
 	use PermissibleTrait;
 
+	protected $permissions = [];
+
 	protected function createPermissions()
 	{
 		return new static::$permissionsClass($this->permissions);

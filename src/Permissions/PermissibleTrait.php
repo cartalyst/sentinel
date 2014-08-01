@@ -3,13 +3,6 @@
 trait PermissibleTrait {
 
 	/**
-	 * Permissions.
-	 *
-	 * @var array
-	 */
-	protected $permissions = [];
-
-	/**
 	 * Cached permissions instance for the given user.
 	 *
 	 * @var \Cartalyst\Sentinel\Permissions\PermissionsInterface
