@@ -24,12 +24,12 @@ class CISession implements SessionInterface {
 	/**
 	 * The CodeIgniter session driver.
 	 *
-	 * @param  CI_Session
+	 * @var \CI_Session
 	 */
 	protected $store;
 
 	/**
-	 * Session key.
+	 * The session key.
 	 *
 	 * @var string
 	 */
@@ -40,6 +40,7 @@ class CISession implements SessionInterface {
 	 *
 	 * @param  \CI_Session  $store
 	 * @param  string  $key
+	 * @return void
 	 */
 	public function __construct(Session $store, $key = null)
 	{

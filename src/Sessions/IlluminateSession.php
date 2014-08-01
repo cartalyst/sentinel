@@ -22,14 +22,14 @@ use Illuminate\Session\Store as SessionStore;
 class IlluminateSession implements SessionInterface {
 
 	/**
-	 * Session store object.
+	 * The session store object.
 	 *
 	 * @var \Illuminate\Session\Store
 	 */
 	protected $session;
 
 	/**
-	 * Session key.
+	 * The session key.
 	 *
 	 * @var string
 	 */
@@ -40,6 +40,7 @@ class IlluminateSession implements SessionInterface {
 	 *
 	 * @param  \Illuminate\Session\Store  $session
 	 * @param  string  $key
+	 * @return void
 	 */
 	public function __construct(SessionStore $session, $key = null)
 	{

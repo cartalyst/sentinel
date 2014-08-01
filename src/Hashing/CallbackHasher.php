@@ -40,10 +40,12 @@ class CallbackHasher implements HasherInterface {
 	 *
 	 * @param  \Closure  $hash
 	 * @param  \Closure  $check
+	 * @return void
 	 */
 	public function __construct(Closure $hash, Closure $check)
 	{
 		$this->hash = $hash;
+
 		$this->check = $check;
 	}
 

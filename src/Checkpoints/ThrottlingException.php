@@ -23,14 +23,14 @@ use RuntimeException;
 class ThrottlingException extends RuntimeException {
 
 	/**
-	 * Delay, in seconds.
+	 * The delay, in seconds.
 	 *
 	 * @var string
 	 */
 	protected $delay;
 
 	/**
-	 * Throttling type which caused the exception.
+	 * The throttling type which caused the exception.
 	 *
 	 * @var string
 	 */
@@ -47,7 +47,7 @@ class ThrottlingException extends RuntimeException {
 	}
 
 	/**
-	 * Set the delay.
+	 * Sets the delay.
 	 *
 	 * @param  int  $delay
 	 * @return void
@@ -68,7 +68,7 @@ class ThrottlingException extends RuntimeException {
 	}
 
 	/**
-	 * Set the type.
+	 * Sets the type.
 	 *
 	 * @param  string  $type
 	 * @return void

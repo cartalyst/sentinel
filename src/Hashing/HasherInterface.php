@@ -24,11 +24,12 @@ interface HasherInterface {
 	 *
 	 * @param  string  $value
 	 * @return string
+	 * @throws \RuntimeException
 	 */
 	public function hash($value);
 
 	/**
-	 * Check string against hashed value.
+	 * Checks the string against the hashed value.
 	 *
 	 * @param  string  $value
 	 * @param  string  $hashedValue

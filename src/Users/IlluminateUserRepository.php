@@ -30,14 +30,14 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 	use EventTrait, RepositoryTrait;
 
 	/**
-	 * Hasher.
+	 * The hasher instance.
 	 *
 	 * @var \Cartalyst\Sentinel\Hashing\HasherInterface
 	 */
 	protected $hasher;
 
 	/**
-	 * Model name.
+	 * The Eloquent user model name.
 	 *
 	 * @var string
 	 */
@@ -57,7 +57,8 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 		$model = null
 	)
 	{
-		$this->hasher     = $hasher;
+		$this->hasher = $hasher;
+
 		$this->dispatcher = $dispatcher;
 
 		if (isset($model))
@@ -339,18 +340,7 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 	}
 
 	/**
-	 * Set the hasher.
-	 *
-	 * @param \Cartalyst\Sentinel\Hashing\HasherInterface  $hasher
-	 * @return void
-	 */
-	public function setHasher(HasherInterface $hasher)
-	{
-		$this->hasher = $hasher;
-	}
-
-	/**
-	 * Get the hasher.
+	 * Returns the hasher instance.
 	 *
 	 * @param \Cartalyst\Sentinel\Hashing\HasherInterface  $hasher
 	 * @return void
@@ -358,6 +348,17 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 	public function getHasher()
 	{
 		return $this->hasher;
+	}
+
+	/**
+	 * Sets the hasher instance.
+	 *
+	 * @param \Cartalyst\Sentinel\Hashing\HasherInterface  $hasher
+	 * @return void
+	 */
+	public function setHasher(HasherInterface $hasher)
+	{
+		$this->hasher = $hasher;
 	}
 
 }

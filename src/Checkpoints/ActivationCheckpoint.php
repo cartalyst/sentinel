@@ -25,7 +25,7 @@ class ActivationCheckpoint implements CheckpointInterface {
 	use AuthenticatedCheckpoint;
 
 	/**
-	 * The Activations repository.
+	 * The activation repository.
 	 *
 	 * @var \Cartalyst\Sentinel\Activations\ActivationRepositoryInterface
 	 */

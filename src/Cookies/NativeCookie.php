@@ -20,7 +20,7 @@
 class NativeCookie implements CookieInterface {
 
 	/**
-	 * Cookie options.
+	 * The cookie options.
 	 *
 	 * @var array
 	 */
@@ -107,12 +107,12 @@ class NativeCookie implements CookieInterface {
 	/**
 	 * Sets a PHP cookie.
 	 *
-	 * @param  mixed   $value
-	 * @param  int     $lifetime
+	 * @param  mixed  $value
+	 * @param  int  $lifetime
 	 * @param  string  $path
 	 * @param  string  $domain
-	 * @param  bool    $secure
-	 * @param  bool    $httpOnly
+	 * @param  bool  $secure
+	 * @param  bool  $httpOnly
 	 * @return void
 	 */
 	protected function setCookie($value, $lifetime, $path = null, $domain = null, $secure = null, $httpOnly = null)

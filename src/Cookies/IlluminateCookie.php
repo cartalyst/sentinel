@@ -37,7 +37,7 @@ class IlluminateCookie implements CookieInterface {
 	protected $jar;
 
 	/**
-	 * Cookie key.
+	 * The cookie key.
 	 *
 	 * @var string
 	 */

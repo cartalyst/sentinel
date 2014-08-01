@@ -28,21 +28,21 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface {
 	use EventTrait, RepositoryTrait;
 
 	/**
-	 * User repository.
+	 * The user repository.
 	 *
 	 * @var \Cartalyst\Sentinel\Users\UserRepositoryInterface
 	 */
 	protected $users;
 
 	/**
-	 * Model name.
+	 * The Eloquent reminder model name.
 	 *
 	 * @var string
 	 */
 	protected $model = 'Cartalyst\Sentinel\Reminders\EloquentReminder';
 
 	/**
-	 * Expiration time in seconds.
+	 * The expiration time in seconds.
 	 *
 	 * @var int
 	 */

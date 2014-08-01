@@ -22,7 +22,7 @@ interface SessionInterface {
 	/**
 	 * Put a value in the Sentinel session.
 	 *
-	 * @param  mixed   $value
+	 * @param  mixed  $value
 	 * @return void
 	 */
 	public function put($value);
@@ -35,7 +35,7 @@ interface SessionInterface {
 	public function get();
 
 	/**
-	 * Remove the Sentinel session.
+	 * Removes the Sentinel session.
 	 *
 	 * @return void
 	 */

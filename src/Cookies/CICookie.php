@@ -29,7 +29,7 @@ class CICookie implements CookieInterface {
 	protected $input;
 
 	/**
-	 * Cookie options.
+	 * The cookie options.
 	 *
 	 * @var array
 	 */

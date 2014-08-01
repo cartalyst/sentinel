@@ -42,7 +42,7 @@ class SentinelBootstrapper {
 	protected $config;
 
 	/**
-	 * Event dispatcher.
+	 * The event dispatcher.
 	 *
 	 * @var \Illuminate\Events\Dispatcher
 	 */
@@ -87,7 +87,8 @@ class SentinelBootstrapper {
 			$dispatcher
 		);
 
-		$ipAddress   = $this->guessIpAddress();
+		$ipAddress = $this->guessIpAddress();
+
 		$checkpoints = $this->createCheckpoints($activations, $ipAddress);
 
 		foreach ($checkpoints as $checkpoint)
@@ -98,6 +99,7 @@ class SentinelBootstrapper {
 		$reminders = $this->createReminders($users);
 
 		$sentinel->setActivationRepository($activations);
+
 		$sentinel->setReminderRepository($reminders);
 
 		return $sentinel;
@@ -111,6 +113,7 @@ class SentinelBootstrapper {
 	protected function createPersistence()
 	{
 		$session = $this->createSession();
+
 		$cookie = $this->createCookie();
 
 		return new IlluminatePersistenceRepository($session, $cookie);
@@ -148,6 +151,7 @@ class SentinelBootstrapper {
 		$model = $this->config['users']['model'];
 
 		$roles = $this->config['roles']['model'];
+
 		if (class_exists($roles) && method_exists($roles, 'setUsersModel'))
 		{
 			forward_static_call_array([$roles, 'setUsersModel'], [$model]);
@@ -176,6 +180,7 @@ class SentinelBootstrapper {
 		$model = $this->config['roles']['model'];
 
 		$users = $this->config['users']['model'];
+
 		if (class_exists($users) && method_exists($users, 'setRolesModel'))
 		{
 			forward_static_call_array([$users, 'setRolesModel'], [$model]);
@@ -192,6 +197,7 @@ class SentinelBootstrapper {
 	protected function createActivations()
 	{
 		$model = $this->config['activations']['model'];
+
 		$expires = $this->config['activations']['expires'];
 
 		return new IlluminateActivationRepository($model, $expires);
@@ -245,13 +251,14 @@ class SentinelBootstrapper {
 		$checkpoints = $this->config['checkpoints'];
 
 		$activation = $this->createActivationCheckpoint($activations);
+
 		$throttle = $this->createThrottleCheckpoint($ipAddress);
 
 		foreach ($checkpoints as $index => $checkpoint)
 		{
 			if ( ! isset($$checkpoint))
 			{
-				throw new InvalidArgumentException("Invalid checkpoint [$checkpoint] given.");
+				throw new InvalidArgumentException("Invalid checkpoint [{$checkpoint}] given.");
 			}
 
 			$checkpoints[$index] = $$checkpoint;
@@ -285,6 +292,7 @@ class SentinelBootstrapper {
 		foreach (['global', 'ip', 'user'] as $type)
 		{
 			${"{$type}Interval"} = $this->config['throttling'][$type]['interval'];
+
 			${"{$type}Thresholds"} = $this->config['throttling'][$type]['thresholds'];
 		}
 
@@ -306,12 +314,12 @@ class SentinelBootstrapper {
 	 */
 	protected function getEventDispatcher()
 	{
-		if ($this->dispatcher)
+		if ( ! $this->dispatcher)
 		{
-			return $this->dispatcher;
+			$this->dispatcher = new Dispatcher;
 		}
 
-		return $this->dispatcher = new Dispatcher;
+		return $this->dispatcher;
 	}
 
 	/**
@@ -323,6 +331,7 @@ class SentinelBootstrapper {
 	protected function createReminders(IlluminateUserRepository $users)
 	{
 		$model = $this->config['reminders']['model'];
+
 		$expires = $this->config['reminders']['expires'];
 
 		return new IlluminateReminderRepository($users, $model, $expires);

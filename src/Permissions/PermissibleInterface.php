@@ -20,7 +20,7 @@
 interface PermissibleInterface {
 
 	/**
-	 * Returns a permissions instance.
+	 * Returns the permissions instance.
 	 *
 	 * @return \Cartalyst\Sentinel\Permissions\PermissionsInterface
 	 */

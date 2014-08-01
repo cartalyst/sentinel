@@ -21,10 +21,26 @@ use ArrayAccess;
 
 class ConfigRepository implements ArrayAccess {
 
+	/**
+	 * The config file path.
+	 *
+	 * @var string
+	 */
 	protected $file;
 
+	/**
+	 * The config data.
+	 *
+	 * @var array
+	 */
 	protected $config = [];
 
+	/**
+	 * Constructor.
+	 *
+	 * @param  string  $file
+	 * @return void
+	 */
 	public function __construct($file = null)
 	{
 		$this->file = $file ?: __DIR__.'/../config/config.php';
@@ -32,6 +48,11 @@ class ConfigRepository implements ArrayAccess {
 		$this->load();
 	}
 
+	/**
+	 * Load the configuration file.
+	 *
+	 * @return void
+	 */
 	protected function load()
 	{
 		$this->config = require $this->file;

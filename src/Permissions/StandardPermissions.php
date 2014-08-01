@@ -39,7 +39,9 @@ class StandardPermissions implements PermissionsInterface {
 		if ( ! empty($this->permissions))
 		{
 			$permissions = [];
+
 			$this->preparePermissions($permissions, $this->permissions);
+
 			$prepared = array_merge($prepared, $permissions);
 		}
 

@@ -20,7 +20,7 @@
 class NativeSession implements SessionInterface {
 
 	/**
-	 * Session key.
+	 * The session key.
 	 *
 	 * @var string
 	 */

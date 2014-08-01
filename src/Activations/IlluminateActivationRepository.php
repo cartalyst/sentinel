@@ -27,14 +27,14 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface {
 	use EventTrait, RepositoryTrait;
 
 	/**
-	 * Model name.
+	 * The Eloquent activation model name.
 	 *
 	 * @var string
 	 */
 	protected $model = 'Cartalyst\Sentinel\Activations\EloquentActivation';
 
 	/**
-	 * Expiration time in seconds.
+	 * The activation expiration time, in seconds.
 	 *
 	 * @var int
 	 */
@@ -69,10 +69,7 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface {
 
 		$code = $this->generateActivationCode();
 
-		$activation->fill([
-			'code'      => $code,
-			'completed' => false,
-		]);
+		$activation->fill(compact('code'));
 
 		$activation->user_id = $user->getUserId();
 

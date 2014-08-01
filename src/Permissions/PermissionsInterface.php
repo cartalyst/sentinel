@@ -20,7 +20,7 @@
 interface PermissionsInterface {
 
 	/**
-	 * Return if access is available for all given permissions.
+	 * Returns if access is available for all given permissions.
 	 *
 	 * @param  array|string  $permissions
 	 * @return bool
@@ -28,7 +28,7 @@ interface PermissionsInterface {
 	public function hasAccess($permissions);
 
 	/**
-	 * Return if access is available for any given permissions.
+	 * Returns if access is available for any given permissions.
 	 *
 	 * @param  array|string  $permissions
 	 * @return bool

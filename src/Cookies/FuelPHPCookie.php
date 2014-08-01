@@ -22,7 +22,7 @@ use Fuel\Core\Cookie;
 class FuelPHPCookie implements CookieInterface {
 
 	/**
-	 * Cookie key.
+	 * The cookie key.
 	 *
 	 * @var string
 	 */

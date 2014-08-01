@@ -20,21 +20,21 @@
 trait PermissibleTrait {
 
 	/**
-	 * Cached permissions instance for the given user.
+	 * The cached permissions instance for the given user.
 	 *
 	 * @var \Cartalyst\Sentinel\Permissions\PermissionsInterface
 	 */
 	protected $permissionsInstance;
 
 	/**
-	 * The permissions instance class.
+	 * The permissions instance class name.
 	 *
 	 * @var string
 	 */
 	protected static $permissionsClass = 'Cartalyst\Sentinel\Permissions\StrictPermissions';
 
 	/**
-	 * Get permissions.
+	 * Returns the permissions.
 	 *
 	 * @return array
 	 */
@@ -44,7 +44,7 @@ trait PermissibleTrait {
 	}
 
 	/**
-	 * Set permissions.
+	 * Sets permissions.
 	 *
 	 * @param  array  $permissions
 	 * @return void
@@ -55,7 +55,7 @@ trait PermissibleTrait {
 	}
 
 	/**
-	 * Get the permissions class.
+	 * Returns the permissions class name.
 	 *
 	 * @return string
 	 */
@@ -65,7 +65,7 @@ trait PermissibleTrait {
 	}
 
 	/**
-	 * Set the permissions class.
+	 * Sets the permissions class name.
 	 *
 	 * @param  string  $permissionsClass
 	 * @return void
@@ -76,7 +76,7 @@ trait PermissibleTrait {
 	}
 
 	/**
-	 * Creates a permissions object.
+	 * Creates the permissions object.
 	 *
 	 * @return \Cartalyst\Sentinel\Permissions\PermissionsInterface
 	 */

@@ -40,7 +40,7 @@ class NotActivatedException extends RuntimeException {
 	}
 
 	/**
-	 * Set the user associated with Sentinel (does not log in).
+	 * Sets the user associated with Sentinel (does not log in).
 	 *
 	 * @param  \Cartalyst\Sentinel\Users\UserInterface
 	 * @return void

@@ -5,7 +5,8 @@
 		"php",
 		"cartalyst",
 		"laravel",
-		"auth", "security",
+		"auth",
+		"security",
 		"codeigniter",
 		"fuelphp",
 		"kohana"

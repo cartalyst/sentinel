@@ -20,14 +20,14 @@
 trait PermissionsTrait {
 
 	/**
-	 * Permissions.
+	 * The permissions.
 	 *
 	 * @var array
 	 */
 	protected $permissions = [];
 
 	/**
-	 * Secondary permissions.
+	 * The secondary permissions.
 	 *
 	 * @var array
 	 */
@@ -101,7 +101,7 @@ trait PermissionsTrait {
 	}
 
 	/**
-	 * Get secondary permissions.
+	 * Returns the secondary permissions.
 	 *
 	 * @return array
 	 */
@@ -111,7 +111,7 @@ trait PermissionsTrait {
 	}
 
 	/**
-	 * Set secondary permissions.
+	 * Sets secondary permissions.
 	 *
 	 * @param  array  $secondaryPermissions
 	 * @return void
@@ -119,11 +119,12 @@ trait PermissionsTrait {
 	public function setSecondaryPermissions(array $secondaryPermissions)
 	{
 		$this->secondaryPermissions = $secondaryPermissions;
+
 		$this->preparedPermissions = null;
 	}
 
 	/**
-	 * Lazily grabs prepared permissions.
+	 * Lazily grab the prepared permissions.
 	 *
 	 * @return array
 	 */
@@ -196,7 +197,7 @@ trait PermissionsTrait {
 	/**
 	 * Checks a permission in the prepared array, including wildcard checks and permissions.
 	 *
-	 * @param  array   $prepared
+	 * @param  array  $prepared
 	 * @param  string  $permission
 	 * @return bool
 	 */
@@ -219,7 +220,7 @@ trait PermissionsTrait {
 	}
 
 	/**
-	 * Returns prepared permissions.
+	 * Returns the prepared permissions.
 	 *
 	 * @return void
 	 */

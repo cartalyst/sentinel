@@ -25,7 +25,7 @@ class IlluminateRoleRepository implements RoleRepositoryInterface {
 	use EventTrait, RepositoryTrait;
 
 	/**
-	 * Model name.
+	 * The Eloquent role model name.
 	 *
 	 * @var string
 	 */
@@ -50,7 +50,8 @@ class IlluminateRoleRepository implements RoleRepositoryInterface {
 	 */
 	public function findById($id)
 	{
-		return $this->createModel()
+		return $this
+			->createModel()
 			->newQuery()
 			->with('users')
 			->find($id);
@@ -61,7 +62,8 @@ class IlluminateRoleRepository implements RoleRepositoryInterface {
 	 */
 	public function findBySlug($slug)
 	{
-		return $this->createModel()
+		return $this
+			->createModel()
 			->newQuery()
 			->with('users')
 			->where('slug', $slug)
@@ -73,7 +75,8 @@ class IlluminateRoleRepository implements RoleRepositoryInterface {
 	 */
 	public function findByName($name)
 	{
-		return $this->createModel()
+		return $this
+			->createModel()
 			->newQuery()
 			->with('users')
 			->where('name', $name)

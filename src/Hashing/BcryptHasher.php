@@ -22,7 +22,7 @@ class BcryptHasher implements HasherInterface {
 	use Hasher;
 
 	/**
-	 * Hash strength.
+	 * The hash strength.
 	 *
 	 * @var int
 	 */
@@ -35,7 +35,7 @@ class BcryptHasher implements HasherInterface {
 	{
 		$salt = $this->createSalt();
 
-		// Format strength
+		// Format the strength
 		$strength = str_pad($this->strength, 2, '0', STR_PAD_LEFT);
 
 		// Create prefix - "$2y$"" fixes blowfish weakness

@@ -24,12 +24,12 @@ class FuelPHPSession implements SessionInterface {
 	/**
 	 * The FuelPHP session driver.
 	 *
-	 * @param  Fuel\Core\Session_Driver
+	 * @var \Fuel\Core\Session_Driver
 	 */
 	protected $store;
 
 	/**
-	 * Session key.
+	 * The session key.
 	 *
 	 * @var string
 	 */
@@ -40,6 +40,7 @@ class FuelPHPSession implements SessionInterface {
 	 *
 	 * @param  \Fuel\Core\Session_Driver  $store
 	 * @param  string  $key
+	 * @return void
 	 */
 	public function __construct(Session $store, $key = null)
 	{

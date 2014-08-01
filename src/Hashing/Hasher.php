@@ -20,7 +20,7 @@
 trait Hasher {
 
 	/**
-	 * Salt length.
+	 * The salt length.
 	 *
 	 * @var int
 	 */
