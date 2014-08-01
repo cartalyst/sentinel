@@ -128,7 +128,7 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase {
 
 	public function testRecordLogin()
 	{
-		list($users, $hasher, $model, $query) = $this->getUsersMock(false, true);
+		list($users, $hasher, $model, $query) = $this->getUsersMock(false);
 
 		$model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
 		$query->shouldReceive('insertGetId')->once();
@@ -138,7 +138,7 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase {
 
 	public function testRecordLogout()
 	{
-		list($users, $hasher, $model, $query) = $this->getUsersMock(false, true);
+		list($users, $hasher, $model, $query) = $this->getUsersMock(false);
 
 		$model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
 		$query->shouldReceive('insertGetId')->once();
@@ -343,7 +343,7 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase {
 		return $user;
 	}
 
-	protected function getUsersMock($roles = true, $connection = false)
+	protected function getUsersMock($roles = true)
 	{
 		$users = m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository[createModel]', [
 			$hasher = m::mock('Cartalyst\Sentinel\Hashing\NativeHasher')
@@ -358,20 +358,7 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase {
 			$query->shouldReceive('with')->with('roles')->once()->andReturn($query);
 		}
 
-		if ($connection)
-		{
-			$this->addMockConnection($model);
-		}
-
 		return [$users, $hasher, $model, $query];
-	}
-
-	protected function addMockConnection($model)
-	{
-		$model->setConnectionResolver($resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'));
-		$resolver->shouldReceive('connection')->andReturn(m::mock('Illuminate\Database\Connection'));
-		$model->getConnection()->shouldReceive('getQueryGrammar')->andReturn(m::mock('Illuminate\Database\Query\Grammars\Grammar'));
-		$model->getConnection()->shouldReceive('getPostProcessor')->andReturn(m::mock('Illuminate\Database\Query\Processors\Processor'));
 	}
 
 }

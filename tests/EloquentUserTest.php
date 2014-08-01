@@ -156,16 +156,12 @@ class EloquentUserTest extends PHPUnit_Framework_TestCase {
 	{
 		$user = new EloquentUser;
 
-		$this->addMockConnection($user);
-
 		$this->assertInstanceOf('Illuminate\Database\Eloquent\Relations\BelongsToMany', $user->roles());
 	}
 
 	public function testPersistencesRelationship()
 	{
 		$user = new EloquentUser;
-
-		$this->addMockConnection($user);
 
 		$this->assertInstanceOf('Illuminate\Database\Eloquent\Relations\HasMany', $user->persistences());
 	}
@@ -206,14 +202,6 @@ class EloquentUserTest extends PHPUnit_Framework_TestCase {
 		$user = new EloquentUser;
 
 		$this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $user->getRoles());
-	}
-
-	protected function addMockConnection($model)
-	{
-		$model->setConnectionResolver($resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'));
-		$resolver->shouldReceive('connection')->andReturn(m::mock('Illuminate\Database\Connection'));
-		$model->getConnection()->shouldReceive('getQueryGrammar')->andReturn(m::mock('Illuminate\Database\Query\Grammars\Grammar'));
-		$model->getConnection()->shouldReceive('getPostProcessor')->andReturn(m::mock('Illuminate\Database\Query\Processors\Processor'));
 	}
 
 }
