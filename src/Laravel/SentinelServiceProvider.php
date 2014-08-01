@@ -41,6 +41,8 @@ class SentinelServiceProvider extends ServiceProvider {
 	public function boot()
 	{
 		$this->package('cartalyst/sentinel', 'cartalyst/sentinel', __DIR__.'/..');
+
+		$this->garbageCollect();
 	}
 
 	/**
@@ -371,6 +373,48 @@ class SentinelServiceProvider extends ServiceProvider {
 			'sentinel.reminders',
 			'sentinel',
 		];
+	}
+
+	/**
+	 * Garbage collect activations and reminders.
+	 *
+	 * @return void
+	 */
+	protected function garbageCollect()
+	{
+		$config = $this->app['config']['cartalyst/sentinel::activations.lottery'];
+
+		$this->sweep($this->app['sentinel.activations'], $config);
+
+		$config = $this->app['config']['cartalyst/sentinel::reminders.lottery'];
+
+		$this->sweep($this->app['sentinel.reminders'], $config);
+	}
+
+	/**
+	 * Sweep expired codes.
+	 *
+	 * @param  mixed  $repository
+	 * @param  array  $lottery
+	 * @return void
+	 */
+	protected function sweep($repository, $lottery)
+	{
+		if ($this->configHitsLottery($lottery))
+		{
+			$repository->removeExpired();
+		}
+	}
+
+	/**
+	 * Determine if the configuration odds hit the lottery.
+	 *
+	 * @param  array  $lottery
+	 * @return bool
+	 */
+	protected function configHitsLottery(array $lottery)
+	{
+		return mt_rand(1, $lottery[1]) <= $lottery[0];
 	}
 
 }

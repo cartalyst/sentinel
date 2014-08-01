@@ -144,7 +144,8 @@ return [
 	|
 	| Here you may specify the activations model used and the time (in seconds)
 	| which activation codes expire. By default, activation codes expire after
-	| three days.
+	| three days. The lottery is used for garbage collection, expired
+	| codes will be cleared automatically based on the provided odds.
 	|
 	*/
 
@@ -153,6 +154,8 @@ return [
 		'model' => 'Cartalyst\Sentinel\Activations\EloquentActivation',
 
 		'expires' => 259200,
+
+		'lottery' => [2, 100],
 
 	],
 
@@ -163,7 +166,8 @@ return [
 	|
 	| Here you may specify the reminders model used and the time (in seconds)
 	| which reminder codes expire. By default, reminder codes expire
-	| after four hours.
+	| after four hours. The lottery is used for garbage collection, expired
+	| codes will be cleared automatically based on the provided odds.
 	|
 	*/
 
@@ -172,6 +176,8 @@ return [
 		'model' => 'Cartalyst\Sentinel\Reminders\EloquentReminder',
 
 		'expires' => 14400,
+
+		'lottery' => [2, 100],
 
 	],
 
