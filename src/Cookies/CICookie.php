@@ -46,7 +46,7 @@ class CICookie implements CookieInterface {
 	 *
 	 * @param  \CI_Input  $input
 	 * @param  string|array  $options
-	 * @param  string  $key
+	 * @return void
 	 */
 	public function __construct(Input $input, $options = [])
 	{

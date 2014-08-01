@@ -20,14 +20,14 @@
 interface RoleableInterface {
 
 	/**
-	 * Returns all associated roles.
+	 * Returns all the associated roles.
 	 *
 	 * @return \IteratorAggregate
 	 */
 	public function getRoles();
 
 	/**
-	 * Returns if the user is in the given role.
+	 * Checks if the user is in the given role.
 	 *
 	 * @param  mixed  $role
 	 * @return bool

@@ -30,7 +30,7 @@ interface ActivationRepositoryInterface {
 	public function create(UserInterface $user);
 
 	/**
-	 * Check if a valid activation exists.
+	 * Checks if a valid activation for the given user exists.
 	 *
 	 * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
 	 * @return bool
@@ -38,7 +38,7 @@ interface ActivationRepositoryInterface {
 	public function exists(UserInterface $user);
 
 	/**
-	 * Complete activation for the given user.
+	 * Completes the activation for the given user.
 	 *
 	 * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
 	 * @param  string  $code
@@ -47,7 +47,7 @@ interface ActivationRepositoryInterface {
 	public function complete(UserInterface $user, $code);
 
 	/**
-	 * Check if a valid activation has been completed.
+	 * Checks if a valid activation has been completed.
 	 *
 	 * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
 	 * @return bool

@@ -39,9 +39,9 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 	protected $fillable = [
 		'email',
 		'password',
-		'permissions',
-		'first_name',
 		'last_name',
+		'first_name',
+		'permissions',
 	];
 
 	/**
@@ -62,14 +62,14 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 	protected $loginNames = ['email'];
 
 	/**
-	 * The roles model name.
+	 * The Eloquent roles model name.
 	 *
 	 * @var string
 	 */
 	protected static $rolesModel = 'Cartalyst\Sentinel\Roles\EloquentRole';
 
 	/**
-	 * The persistences model name.
+	 * The Eloquent persistences model name.
 	 *
 	 * @var string
 	 */
@@ -86,17 +86,17 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 	}
 
 	/**
-	 * Roles relationship.
+	 * Returns the Roles relationship.
 	 *
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
 	 */
 	public function roles()
 	{
-		return $this->belongsToMany(static::$rolesModel, 'roles_users', 'user_id', 'role_id')->withTimestamps();
+		return $this->belongsToMany(static::$rolesModel, 'role_users', 'user_id', 'role_id')->withTimestamps();
 	}
 
 	/**
-	 * Persistences relationship.
+	 * Returns the Persistences relationship.
 	 *
 	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
 	 */
@@ -147,12 +147,7 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 				return ($instance->getRoleId() === $role->getRoleId());
 			}
 
-			if ($instance->getRoleId() == $role)
-			{
-				return true;
-			}
-
-			if ($instance->getRoleSlug() == $role)
+			if ($instance->getRoleId() == $role || $instance->getRoleSlug() == $role)
 			{
 				return true;
 			}
@@ -244,25 +239,6 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 	}
 
 	/**
-	 * Creates a permissions object.
-	 *
-	 * @return \Cartalyst\Sentinel\Permissions\PermissionsInterface
-	 */
-	protected function createPermissions()
-	{
-		$userPermissions = $this->permissions;
-
-		$rolePermissions = [];
-
-		foreach ($this->roles as $role)
-		{
-			$rolePermissions[] = $role->permissions;
-		}
-
-		return new static::$permissionsClass($userPermissions, $rolePermissions);
-	}
-
-	/**
 	 * Get the roles model.
 	 *
 	 * @return string
@@ -323,6 +299,25 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 		}
 
 		return parent::__call($method, $parameters);
+	}
+
+	/**
+	 * Creates a permissions object.
+	 *
+	 * @return \Cartalyst\Sentinel\Permissions\PermissionsInterface
+	 */
+	protected function createPermissions()
+	{
+		$userPermissions = $this->permissions;
+
+		$rolePermissions = [];
+
+		foreach ($this->roles as $role)
+		{
+			$rolePermissions[] = $role->permissions;
+		}
+
+		return new static::$permissionsClass($userPermissions, $rolePermissions);
 	}
 
 }

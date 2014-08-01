@@ -32,6 +32,7 @@ class FuelPHPCookie implements CookieInterface {
 	 * Create a new FuelPHP cookie driver.
 	 *
 	 * @param  string  $key
+	 * @return void
 	 */
 	public function __construct($key = null)
 	{

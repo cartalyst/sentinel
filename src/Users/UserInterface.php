@@ -20,28 +20,28 @@
 interface UserInterface {
 
 	/**
-	 * Get the user's primary key.
+	 * Returns the user primary key.
 	 *
 	 * @return int
 	 */
 	public function getUserId();
 
 	/**
-	 * Get the user's login.
+	 * Returns the user login.
 	 *
 	 * @return string
 	 */
 	public function getUserLogin();
 
 	/**
-	 * Get the user's login attribute name.
+	 * Returns the user login attribute name.
 	 *
 	 * @return string
 	 */
 	public function getUserLoginName();
 
 	/**
-	 * Get the user's passwrd.
+	 * Returns the user passwrd.
 	 *
 	 * @return string
 	 */

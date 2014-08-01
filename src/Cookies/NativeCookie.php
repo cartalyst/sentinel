@@ -36,6 +36,7 @@ class NativeCookie implements CookieInterface {
 	 * Create a new cookie driver.
 	 *
 	 * @param  string|array  $options
+	 * @return void
 	 */
 	public function __construct($options = [])
 	{

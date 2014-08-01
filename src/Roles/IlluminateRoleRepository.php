@@ -32,9 +32,10 @@ class IlluminateRoleRepository implements RoleRepositoryInterface {
 	protected $model = 'Cartalyst\Sentinel\Roles\EloquentRole';
 
 	/**
-	 * Create a new Illuminate user repository.
+	 * Create a new Illuminate role repository.
 	 *
 	 * @param  string  $model
+	 * @return void
 	 */
 	public function __construct($model = null)
 	{

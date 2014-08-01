@@ -20,24 +20,39 @@
 interface RoleInterface {
 
 	/**
-	 * Return the role's primary key.
+	 * Returns the role's primary key.
 	 *
 	 * @return int
 	 */
 	public function getRoleId();
 
 	/**
-	 * Return the role's slug.
+	 * Returns the role's slug.
 	 *
 	 * @return string
 	 */
 	public function getRoleSlug();
 
 	/**
-	 * Return all users for the role.
+	 * Returns all users for the role.
 	 *
 	 * @return \IteratorAggregate
 	 */
 	public function getUsers();
+
+	/**
+	 * Returns the users model.
+	 *
+	 * @return string
+	 */
+	public static function getUsersModel();
+
+	/**
+	 * Set the users model.
+	 *
+	 * @param  string  $usersModel
+	 * @return void
+	 */
+	public static function setUsersModel($usersModel);
 
 }

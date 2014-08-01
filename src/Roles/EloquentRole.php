@@ -34,26 +34,26 @@ class EloquentRole extends Model implements RoleInterface, PermissibleInterface 
 	 * {@inheritDoc}
 	 */
 	protected $fillable = [
-		'slug',
 		'name',
+		'slug',
 		'permissions',
 	];
 
 	/**
-	 * The users model name.
+	 * The Eloquent users model name.
 	 *
 	 * @var string
 	 */
 	protected static $usersModel = 'Cartalyst\Sentinel\Users\EloquentUser';
 
 	/**
-	 * Users relationship.
+	 * The Users relationship.
 	 *
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
 	 */
 	public function users()
 	{
-		return $this->belongsToMany(static::$usersModel, 'roles_users', 'role_id', 'user_id')->withTimestamps();
+		return $this->belongsToMany(static::$usersModel, 'role_users', 'role_id', 'user_id')->withTimestamps();
 	}
 
 	/**
@@ -105,26 +105,13 @@ class EloquentRole extends Model implements RoleInterface, PermissibleInterface 
 	/**
 	 * {@inheritDoc}
 	 */
-	protected function createPermissions()
-	{
-		return new static::$permissionsClass($this->permissions);
-	}
-
-	/**
-	 * Get the users model.
-	 *
-	 * @return string
-	 */
 	public static function getUsersModel()
 	{
 		return static::$usersModel;
 	}
 
 	/**
-	 * Set the users model.
-	 *
-	 * @param  string  $usersModel
-	 * @return void
+	 * {@inheritDoc}
 	 */
 	public static function setUsersModel($usersModel)
 	{
@@ -132,10 +119,10 @@ class EloquentRole extends Model implements RoleInterface, PermissibleInterface 
 	}
 
 	/**
-	 * Dynamically pass missing methods to the role.
+	 * Dynamically pass missing methods to the permissions.
 	 *
 	 * @param  string  $method
-	 * @param  array   $parameters
+	 * @param  array  $parameters
 	 * @return mixed
 	 */
 	public function __call($method, $parameters)
@@ -150,6 +137,14 @@ class EloquentRole extends Model implements RoleInterface, PermissibleInterface 
 		}
 
 		return parent::__call($method, $parameters);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected function createPermissions()
+	{
+		return new static::$permissionsClass($this->permissions);
 	}
 
 }

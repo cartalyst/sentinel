@@ -29,19 +29,37 @@ class MigrationCartalystSentinel extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('users', function(Blueprint $table)
+		Schema::create('activations', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->string('email');
-			$table->string('password');
-			$table->text('permissions')->nullable();
-			$table->timestamp('last_login')->nullable();
-			$table->string('first_name')->nullable();
-			$table->string('last_name')->nullable();
+			$table->integer('user_id')->unsigned();
+			$table->string('code');
+			$table->boolean('completed')->default(0);
+			$table->timestamp('completed_at')->nullable();
 			$table->timestamps();
 
 			$table->engine = 'InnoDB';
-			$table->unique('email');
+		});
+
+		Schema::create('persistences', function(Blueprint $table)
+		{
+			$table->increments('id');
+			$table->integer('user_id')->unsigned();
+			$table->string('code');
+			$table->timestamps();
+
+			$table->engine = 'InnoDB';
+			$table->unique('code');
+		});
+
+		Schema::create('reminders', function(Blueprint $table)
+		{
+			$table->increments('id');
+			$table->integer('user_id')->unsigned();
+			$table->string('code');
+			$table->boolean('completed')->default(0);
+			$table->timestamp('completed_at')->nullable();
+			$table->timestamps();
 		});
 
 		Schema::create('roles', function(Blueprint $table)
@@ -56,7 +74,7 @@ class MigrationCartalystSentinel extends Migration {
 			$table->unique('slug');
 		});
 
-		Schema::create('roles_users', function(Blueprint $table)
+		Schema::create('role_users', function(Blueprint $table)
 		{
 			$table->integer('user_id')->unsigned();
 			$table->integer('role_id')->unsigned();
@@ -64,17 +82,6 @@ class MigrationCartalystSentinel extends Migration {
 
 			$table->engine = 'InnoDB';
 			$table->primary(['user_id', 'role_id']);
-		});
-
-		Schema::create('persistences', function(Blueprint $table)
-		{
-			$table->increments('id');
-			$table->integer('user_id')->unsigned();
-			$table->string('code');
-			$table->timestamps();
-
-			$table->engine = 'InnoDB';
-			$table->unique('code');
 		});
 
 		Schema::create('throttle', function(Blueprint $table)
@@ -89,24 +96,19 @@ class MigrationCartalystSentinel extends Migration {
 			$table->index('user_id');
 		});
 
-		Schema::create('activations', function(Blueprint $table)
+		Schema::create('users', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->integer('user_id')->unsigned();
-			$table->string('code');
-			$table->boolean('completed')->default(0);
-			$table->timestamp('completed_at')->nullable();
+			$table->string('email');
+			$table->string('password');
+			$table->text('permissions')->nullable();
+			$table->timestamp('last_login')->nullable();
+			$table->string('first_name')->nullable();
+			$table->string('last_name')->nullable();
 			$table->timestamps();
-		});
 
-		Schema::create('reminders', function(Blueprint $table)
-		{
-			$table->increments('id');
-			$table->integer('user_id')->unsigned();
-			$table->string('code');
-			$table->boolean('completed')->default(0);
-			$table->timestamp('completed_at')->nullable();
-			$table->timestamps();
+			$table->engine = 'InnoDB';
+			$table->unique('email');
 		});
 	}
 
@@ -117,12 +119,12 @@ class MigrationCartalystSentinel extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('reminders');
 		Schema::drop('activations');
-		Schema::drop('throttle');
 		Schema::drop('persistences');
-		Schema::drop('roles_users');
+		Schema::drop('reminders');
 		Schema::drop('roles');
+		Schema::drop('role_users');
+		Schema::drop('throttle');
 		Schema::drop('users');
 	}
 
