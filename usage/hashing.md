@@ -75,7 +75,7 @@ Sentinel::setHasher(new Cartalyst\Sentinel\Hashing\NativeHasher($hasher, $checke
 
 #### Other Hashers
 
-Other hashers, such as the **whirlpool hasher** and the **SHA256 hasher** are supported by Sentinel, however we do not encourage their use as these algorithms are open to vulnerabilities. We would encourage people to use the [callback hahser](#callback-hasher) and implement their own logic for moving away from such systems.
+Other hashers, such as the **whirlpool hasher** and the **SHA256 hasher** are supported by Sentinel, however we do not encourage their use as these algorithms are open to vulnerabilities. We would encourage people to use the [callback hasher](#callback-hasher) and implement their own logic for moving away from such systems.
 
 We understand that not every system needs to move away from these strategies however. Telling Sentinel to use these strategies is straight forward:
 
