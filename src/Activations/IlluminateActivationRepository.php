@@ -83,11 +83,14 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface {
 	 */
 	public function exists(UserInterface $user)
 	{
+		$expires = $this->expires();
+
 		$activation = $this
 			->createModel()
 			->newQuery()
 			->where('user_id', $user->getUserId())
 			->where('completed', false)
+			->where('created_at', '<', $expires)
 			->first();
 
 		return $activation ?: false;
@@ -98,12 +101,15 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface {
 	 */
 	public function complete(UserInterface $user, $code)
 	{
+		$expires = $this->expires();
+
 		$activation = $this
 			->createModel()
 			->newQuery()
 			->where('user_id', $user->getUserId())
 			->where('code', $code)
 			->where('completed', false)
+			->where('created_at', '<', $expires)
 			->first();
 
 		if ($activation === null)
@@ -156,7 +162,7 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface {
 	 */
 	public function removeExpired()
 	{
-		$expires = Carbon::now()->subSeconds($this->expires);
+		$expires = $this->expires();
 
 		return $this
 			->createModel()
@@ -164,6 +170,16 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface {
 			->where('completed', false)
 			->where('created_at', '<', $expires)
 			->delete();
+	}
+
+	/**
+	 * Returns the expiration date.
+	 *
+	 * @return \Carbon\Carbon
+	 */
+	protected function expires()
+	{
+		return Carbon::now()->subSeconds($this->expires);
 	}
 
 	/**

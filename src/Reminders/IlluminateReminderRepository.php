@@ -97,11 +97,14 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface {
 	 */
 	public function exists(UserInterface $user)
 	{
+		$expires = $this->expires();
+
 		$reminder = $this
 			->createModel()
 			->newQuery()
 			->where('user_id', $user->getUserId())
 			->where('completed', false)
+			->where('created_at', '<', $expires)
 			->first();
 
 		return $reminder ?: null;
@@ -112,12 +115,15 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface {
 	 */
 	public function complete(UserInterface $user, $code, $password)
 	{
+		$expires = $this->expires();
+
 		$reminder = $this
 			->createModel()
 			->newQuery()
 			->where('user_id', $user->getUserId())
 			->where('code', $code)
 			->where('completed', false)
+			->where('created_at', '<', $expires)
 			->first();
 
 		if ($reminder === null)
@@ -151,7 +157,7 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface {
 	 */
 	public function removeExpired()
 	{
-		$expires = Carbon::now()->subSeconds($this->expires);
+		$expires = $this->expires();
 
 		return $this
 			->createModel()
@@ -159,6 +165,16 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface {
 			->where('completed', false)
 			->where('created_at', '<', $expires)
 			->delete();
+	}
+
+	/**
+	 * Returns the expiration date.
+	 *
+	 * @return \Carbon\Carbon
+	 */
+	protected function expires()
+	{
+		return Carbon::now()->subSeconds($this->expires);
 	}
 
 	/**

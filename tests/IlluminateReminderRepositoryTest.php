@@ -65,6 +65,9 @@ class IlluminateReminderRepositoryTest extends PHPUnit_Framework_TestCase {
 
 		$query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
 		$query->shouldReceive('where')->with('completed', false)->andReturn($query);
+
+		$this->shouldReceiveExpires($query);
+
 		$query->shouldReceive('first')->once();
 
 		$user = $this->getUserMock();
@@ -82,6 +85,9 @@ class IlluminateReminderRepositoryTest extends PHPUnit_Framework_TestCase {
 		$query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
 		$query->shouldReceive('where')->with('code', 'foobar')->andReturn($query);
 		$query->shouldReceive('where')->with('completed', false)->andReturn($query);
+
+		$this->shouldReceiveExpires($query);
+
 		$query->shouldReceive('first')->once()->andReturn($activation = m::mock('Cartalyst\Sentinel\Reminders\EloquentReminder'));
 
 		$activation->shouldReceive('fill')->once();
@@ -101,6 +107,9 @@ class IlluminateReminderRepositoryTest extends PHPUnit_Framework_TestCase {
 		$query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
 		$query->shouldReceive('where')->with('code', 'foobar')->andReturn($query);
 		$query->shouldReceive('where')->with('completed', false)->andReturn($query);
+
+		$this->shouldReceiveExpires($query);
+
 		$query->shouldReceive('first')->once()->andReturn($activation = m::mock('Cartalyst\Sentinel\Reminders\EloquentReminder'));
 
 		$user = $this->getUserMock();
@@ -115,6 +124,9 @@ class IlluminateReminderRepositoryTest extends PHPUnit_Framework_TestCase {
 		$query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
 		$query->shouldReceive('where')->with('code', 'foobar')->andReturn($query);
 		$query->shouldReceive('where')->with('completed', false)->andReturn($query);
+
+		$this->shouldReceiveExpires($query);
+
 		$query->shouldReceive('first')->once();
 
 		$user = $this->getUserMock();
@@ -128,12 +140,7 @@ class IlluminateReminderRepositoryTest extends PHPUnit_Framework_TestCase {
 
 		$query->shouldReceive('where')->with('completed', false)->andReturn($query);
 
-		$query->shouldReceive('where')->with('created_at', '<', m::on(function($timestamp)
-		{
-			$expires = 259200;
-			$this->assertEquals(time() - $expires, $timestamp->getTimestamp(), '', 3);
-			return true;
-		}))->andReturn($query);
+		$this->shouldReceiveExpires($query);
 
 		$query->shouldReceive('delete')->once();
 
@@ -159,6 +166,16 @@ class IlluminateReminderRepositoryTest extends PHPUnit_Framework_TestCase {
 		$user->shouldReceive('getUserId')->once()->andReturn(1);
 
 		return $user;
+	}
+
+	protected function shouldReceiveExpires($query)
+	{
+		$query->shouldReceive('where')->with('created_at', '<', m::on(function($timestamp)
+		{
+			$expires = 259200;
+			$this->assertEquals(time() - $expires, $timestamp->getTimestamp(), '', 3);
+			return true;
+		}))->andReturn($query);
 	}
 
 }
