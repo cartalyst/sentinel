@@ -71,12 +71,37 @@ class PermissibleTraitTest extends PHPUnit_Framework_TestCase {
 
 		$permissible->addPermission('test');
 		$permissible->addPermission('test1');
-
 		$permissible->updatePermission('test1', false);
 
 		$permissions = [
 			'test'  => true,
 			'test1' => false,
+		];
+
+		$this->assertEquals($permissions, $permissible->getPermissions());
+	}
+
+	public function testUpdateOrCreatePermission()
+	{
+		$permissible = new PermissibleStub;
+
+		$permissible->addPermission('test1');
+		$permissible->updatePermission('test2', false);
+
+		$permissions = [
+			'test1' => true,
+		];
+
+		$this->assertEquals($permissions, $permissible->getPermissions());
+
+		$permissible = new PermissibleStub;
+
+		$permissible->addPermission('test1');
+		$permissible->updatePermission('test2', false, true);
+
+		$permissions = [
+			'test1' => true,
+			'test2' => false,
 		];
 
 		$this->assertEquals($permissions, $permissible->getPermissions());
@@ -88,7 +113,6 @@ class PermissibleTraitTest extends PHPUnit_Framework_TestCase {
 
 		$permissible->addPermission('test');
 		$permissible->addPermission('test1');
-
 		$permissible->removePermission('test1');
 
 		$permissions = [

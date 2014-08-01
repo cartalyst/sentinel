@@ -111,7 +111,7 @@ trait PermissibleTrait {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function updatePermission($permission, $value = true)
+	public function updatePermission($permission, $value = true, $create = false)
 	{
 		if (array_key_exists($permission, $this->permissions))
 		{
@@ -120,6 +120,10 @@ trait PermissibleTrait {
 			$permissions[$permission] = $value;
 
 			$this->permissions = $permissions;
+		}
+		else if ($create)
+		{
+			$this->addPermission($permission, $value);
 		}
 
 		return $this;
