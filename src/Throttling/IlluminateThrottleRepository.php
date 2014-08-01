@@ -498,4 +498,5 @@ class IlluminateThrottleRepository implements ThrottleRepositoryInterface {
 	{
 		return $this->userThresholds;
 	}
+
 }
