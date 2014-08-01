@@ -47,18 +47,12 @@ class IlluminateReminderRepositoryTest extends PHPUnit_Framework_TestCase {
 
 	public function testCreate()
 	{
-		$reminders = m::mock('Cartalyst\Sentinel\Reminders\IlluminateReminderRepository[createModel]', [$users = m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository')]);
+		list($reminders, $users, $model, $query) = $this->getReminderMock();
 
-		$reminders->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Reminders\EloquentReminder[newQuery]'));
-
-		$this->addMockConnection($model);
-
-		$model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
 		$model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
 		$query->shouldReceive('insertGetId')->once();
 
-		$user = m::mock('Cartalyst\Sentinel\Users\EloquentUser');
-		$user->shouldReceive('getUserId')->once()->andReturn(1);
+		$user = $this->getUserMock();
 
 		$activation = $reminders->create($user);
 
@@ -67,32 +61,23 @@ class IlluminateReminderRepositoryTest extends PHPUnit_Framework_TestCase {
 
 	public function testExists()
 	{
-		$reminders = m::mock('Cartalyst\Sentinel\Reminders\IlluminateReminderRepository[createModel]', [$users = m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository')]);
-
-		$reminders->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Reminders\EloquentReminder[newQuery]'));
-
-		$model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
+		list($reminders, $users, $model, $query) = $this->getReminderMock();
 
 		$query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
 		$query->shouldReceive('where')->with('completed', false)->andReturn($query);
 		$query->shouldReceive('first')->once();
 
-		$user = m::mock('Cartalyst\Sentinel\Users\EloquentUser');
-		$user->shouldReceive('getUserId')->once()->andReturn(1);
+		$user = $this->getUserMock();
 
 		$reminders->exists($user);
 	}
 
 	public function testCompleteValidReminder()
 	{
-		$reminders = m::mock('Cartalyst\Sentinel\Reminders\IlluminateReminderRepository[createModel]', [$users = m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository')]);
+		list($reminders, $users, $model, $query) = $this->getReminderMock();
 
 		$users->shouldReceive('validForUpdate')->once()->andReturn(true);
 		$users->shouldReceive('update')->once()->andReturn(true);
-
-		$reminders->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Reminders\EloquentReminder[newQuery]'));
-
-		$model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
 
 		$query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
 		$query->shouldReceive('where')->with('code', 'foobar')->andReturn($query);
@@ -102,73 +87,78 @@ class IlluminateReminderRepositoryTest extends PHPUnit_Framework_TestCase {
 		$activation->shouldReceive('fill')->once();
 		$activation->shouldReceive('save')->once();
 
-		$user = m::mock('Cartalyst\Sentinel\Users\EloquentUser');
-		$user->shouldReceive('getUserId')->once()->andReturn(1);
+		$user = $this->getUserMock();
 
 		$reminders->complete($user, 'foobar', 'secret');
 	}
 
 	public function testCompleteInValidReminder1()
 	{
-		$reminders = m::mock('Cartalyst\Sentinel\Reminders\IlluminateReminderRepository[createModel]', [$users = m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository')]);
+		list($reminders, $users, $model, $query) = $this->getReminderMock();
 
 		$users->shouldReceive('validForUpdate')->once()->andReturn(false);
-
-		$reminders->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Reminders\EloquentReminder[newQuery]'));
-
-		$model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
 
 		$query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
 		$query->shouldReceive('where')->with('code', 'foobar')->andReturn($query);
 		$query->shouldReceive('where')->with('completed', false)->andReturn($query);
 		$query->shouldReceive('first')->once()->andReturn($activation = m::mock('Cartalyst\Sentinel\Reminders\EloquentReminder'));
 
-		$user = m::mock('Cartalyst\Sentinel\Users\EloquentUser');
-		$user->shouldReceive('getUserId')->once()->andReturn(1);
+		$user = $this->getUserMock();
 
 		$reminders->complete($user, 'foobar', 'secret');
 	}
 
 	public function testCompleteInValidReminder2()
 	{
-		$reminders = m::mock('Cartalyst\Sentinel\Reminders\IlluminateReminderRepository[createModel]', [$users = m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository')]);
-
-		$reminders->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Reminders\EloquentReminder[newQuery]'));
-
-		$model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
+		list($reminders, $users, $model, $query) = $this->getReminderMock();
 
 		$query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
 		$query->shouldReceive('where')->with('code', 'foobar')->andReturn($query);
 		$query->shouldReceive('where')->with('completed', false)->andReturn($query);
 		$query->shouldReceive('first')->once();
 
-		$user = m::mock('Cartalyst\Sentinel\Users\EloquentUser');
-		$user->shouldReceive('getUserId')->once()->andReturn(1);
+		$user = $this->getUserMock();
 
 		$reminders->complete($user, 'foobar', 'secret');
 	}
 
 	public function testRemoveExpired()
 	{
-		$reminders = m::mock('Cartalyst\Sentinel\Reminders\IlluminateReminderRepository[createModel]', [$users = m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository')]);
-
-		$reminders->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Reminders\EloquentReminder[newQuery]'));
-
-		$model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
+		list($reminders, $users, $model, $query) = $this->getReminderMock();
 
 		$query->shouldReceive('where')->with('completed', false)->andReturn($query);
-		$query->shouldReceive('where')->andReturn($query);
+
+		$query->shouldReceive('where')->with('created_at', '<', m::on(function($timestamp)
+		{
+			$expires = 259200;
+			$this->assertEquals(time() - $expires, $timestamp->getTimestamp(), '', 3);
+			return true;
+		}))->andReturn($query);
+
 		$query->shouldReceive('delete')->once();
 
 		$reminders->removeExpired();
 	}
 
-	protected function addMockConnection($model)
+	protected function getReminderMock()
 	{
-		$model->setConnectionResolver($resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'));
-		$resolver->shouldReceive('connection')->andReturn(m::mock('Illuminate\Database\Connection'));
-		$model->getConnection()->shouldReceive('getQueryGrammar')->andReturn(m::mock('Illuminate\Database\Query\Grammars\Grammar'));
-		$model->getConnection()->shouldReceive('getPostProcessor')->andReturn(m::mock('Illuminate\Database\Query\Processors\Processor'));
+		$users     = m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository');
+		$reminders = m::mock('Cartalyst\Sentinel\Reminders\IlluminateReminderRepository[createModel]', [$users]);
+
+		$reminders->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Reminders\EloquentReminder[newQuery]'));
+
+		$model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
+
+		return [$reminders, $users, $model, $query];
+	}
+
+	protected function getUserMock()
+	{
+		$user = m::mock('Cartalyst\Sentinel\Users\EloquentUser');
+
+		$user->shouldReceive('getUserId')->once()->andReturn(1);
+
+		return $user;
 	}
 
 }

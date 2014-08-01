@@ -34,7 +34,7 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface {
 	protected $model = 'Cartalyst\Sentinel\Activations\EloquentActivation';
 
 	/**
-	 * Time, in seconds, in which activation codes expire.
+	 * Expiration time in seconds.
 	 *
 	 * @var int
 	 */
@@ -159,7 +159,7 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface {
 	 */
 	public function removeExpired()
 	{
-		$expires = Carbon::now()->subMinutes($this->expires);
+		$expires = Carbon::now()->subSeconds($this->expires);
 
 		return $this
 			->createModel()

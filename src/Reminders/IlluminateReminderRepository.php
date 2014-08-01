@@ -42,7 +42,7 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface {
 	protected $model = 'Cartalyst\Sentinel\Reminders\EloquentReminder';
 
 	/**
-	 * Time, in seconds, in which reminder codes expire.
+	 * Expiration time in seconds.
 	 *
 	 * @var int
 	 */
@@ -51,7 +51,7 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface {
 	/**
 	 * Create a new Illuminate reminder repository.
 	 *
-	 * @param  \Cartalyst\Sentinel\Users\UserRepositoryInterface
+	 * @param  \Cartalyst\Sentinel\Users\UserRepositoryInterface  $users
 	 * @param  string  $model
 	 * @param  int  $expires
 	 * @return void
@@ -151,7 +151,7 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface {
 	 */
 	public function removeExpired()
 	{
-		$expires = Carbon::now()->subMinutes($this->expires);
+		$expires = Carbon::now()->subSeconds($this->expires);
 
 		return $this
 			->createModel()
