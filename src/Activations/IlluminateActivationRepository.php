@@ -90,7 +90,7 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface {
 			->newQuery()
 			->where('user_id', $user->getUserId())
 			->where('completed', false)
-			->where('created_at', '<', $expires)
+			->where('created_at', '>', $expires)
 			->first();
 
 		return $activation ?: false;
@@ -109,7 +109,7 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface {
 			->where('user_id', $user->getUserId())
 			->where('code', $code)
 			->where('completed', false)
-			->where('created_at', '<', $expires)
+			->where('created_at', '>', $expires)
 			->first();
 
 		if ($activation === null)

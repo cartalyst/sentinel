@@ -104,7 +104,7 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface {
 			->newQuery()
 			->where('user_id', $user->getUserId())
 			->where('completed', false)
-			->where('created_at', '<', $expires)
+			->where('created_at', '>', $expires)
 			->first();
 
 		return $reminder ?: null;
@@ -123,7 +123,7 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface {
 			->where('user_id', $user->getUserId())
 			->where('code', $code)
 			->where('completed', false)
-			->where('created_at', '<', $expires)
+			->where('created_at', '>', $expires)
 			->first();
 
 		if ($reminder === null)

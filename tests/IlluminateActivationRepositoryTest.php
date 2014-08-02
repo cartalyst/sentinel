@@ -157,7 +157,9 @@ class IlluminateActivationRepositoryTest extends PHPUnit_Framework_TestCase {
 		list($activations, $model, $query) = $this->getActivationMock();
 
 		$query->shouldReceive('where')->with('completed', false)->andReturn($query);
-		$query->shouldReceive('where')->andReturn($query);
+
+		$this->shouldReceiveExpires($query, '<');
+
 		$query->shouldReceive('delete')->once();
 
 		$activations->removeExpired();
@@ -183,9 +185,9 @@ class IlluminateActivationRepositoryTest extends PHPUnit_Framework_TestCase {
 		return $user;
 	}
 
-	protected function shouldReceiveExpires($query)
+	protected function shouldReceiveExpires($query, $operator = '>')
 	{
-		$query->shouldReceive('where')->with('created_at', '<', m::on(function($timestamp)
+		$query->shouldReceive('where')->with('created_at', $operator, m::on(function($timestamp)
 		{
 			$expires = 259200;
 			$this->assertEquals(time() - $expires, $timestamp->getTimestamp(), '', 3);
