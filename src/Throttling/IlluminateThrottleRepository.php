@@ -215,6 +215,132 @@ class IlluminateThrottleRepository implements ThrottleRepositoryInterface {
 	}
 
 	/**
+	 * Sets the global interval.
+	 *
+	 * @param  int  $globalInterval
+	 * @return void
+	 */
+	public function setGlobalInterval($globalInterval)
+	{
+		$this->globalInterval = (int) $globalInterval;
+	}
+
+	/**
+	 * Returns the global interval.
+	 *
+	 * @return int
+	 */
+	public function getGlobalInterval()
+	{
+		return $this->globalInterval;
+	}
+
+	/**
+	 * Sets the global thresholds.
+	 *
+	 * @param  int|array  $globalThresholds
+	 * @return void
+	 */
+	public function setGlobalThresholds($globalThresholds)
+	{
+		$this->globalThresholds = is_array($globalThresholds) ? $globalThresholds : (int) $globalThresholds;
+	}
+
+	/**
+	 * Returns the global thresholds.
+	 *
+	 * @return int|array
+	 */
+	public function getGlobalThresholds()
+	{
+		return $this->globalThresholds;
+	}
+
+	/**
+	 * Sets the IP address interval.
+	 *
+	 * @param  int  $globalThresholds
+	 * @return void
+	 */
+	public function setIpInterval($ipInterval)
+	{
+		$this->ipInterval = (int) $ipInterval;
+	}
+
+	/**
+	 * Returns the IP address interval.
+	 *
+	 * @return int
+	 */
+	public function getIpInterval()
+	{
+		return $this->ipInterval;
+	}
+
+	/**
+	 * Sets the IP address thresholds.
+	 *
+	 * @param  int|array  $ipThresholds
+	 * @return void
+	 */
+	public function setIpThresholds($ipThresholds)
+	{
+		$this->ipThresholds = is_array($ipThresholds) ? $ipThresholds : (int) $ipThresholds;
+	}
+
+	/**
+	 * Returns the IP address thresholds.
+	 *
+	 * @return int|array
+	 */
+	public function getIpThresholds()
+	{
+		return $this->ipThresholds;
+	}
+
+	/**
+	 * Sets the user interval.
+	 *
+	 * @param  int  $globalThresholds
+	 * @return void
+	 */
+	public function setUserInterval($userInterval)
+	{
+		$this->userInterval = (int) $userInterval;
+	}
+
+	/**
+	 * Returns the user interval.
+	 *
+	 * @return int
+	 */
+	public function getUserInterval()
+	{
+		return $this->userInterval;
+	}
+
+	/**
+	 * Sets the user thresholds.
+	 *
+	 * @param  int|array  $userThresholds
+	 * @return void
+	 */
+	public function setUserThresholds($userThresholds)
+	{
+		$this->userThresholds = is_array($userThresholds) ? $userThresholds : (int) $userThresholds;
+	}
+
+	/**
+	 * Returns the user thresholds.
+	 *
+	 * @return int|array
+	 */
+	public function getUserThresholds()
+	{
+		return $this->userThresholds;
+	}
+
+		/**
 	 * Returns a delay for the given type.
 	 *
 	 * @param  string  $type
@@ -384,132 +510,6 @@ class IlluminateThrottleRepository implements ThrottleRepositoryInterface {
 			->addSeconds($interval);
 
 		return $free->diffInSeconds();
-	}
-
-	/**
-	 * Sets the global interval.
-	 *
-	 * @param  int  $globalInterval
-	 * @return void
-	 */
-	public function setGlobalInterval($globalInterval)
-	{
-		$this->globalInterval = (int) $globalInterval;
-	}
-
-	/**
-	 * Returns the global interval.
-	 *
-	 * @return int
-	 */
-	public function getGlobalInterval()
-	{
-		return $this->globalInterval;
-	}
-
-	/**
-	 * Sets the global thresholds.
-	 *
-	 * @param  int|array  $globalThresholds
-	 * @return void
-	 */
-	public function setGlobalThresholds($globalThresholds)
-	{
-		$this->globalThresholds = is_array($globalThresholds) ? $globalThresholds : (int) $globalThresholds;
-	}
-
-	/**
-	 * Returns the global thresholds.
-	 *
-	 * @return int|array
-	 */
-	public function getGlobalThresholds()
-	{
-		return $this->globalThresholds;
-	}
-
-	/**
-	 * Sets the IP address interval.
-	 *
-	 * @param  int  $globalThresholds
-	 * @return void
-	 */
-	public function setIpInterval($ipInterval)
-	{
-		$this->ipInterval = (int) $ipInterval;
-	}
-
-	/**
-	 * Returns the IP address interval.
-	 *
-	 * @return int
-	 */
-	public function getIpInterval()
-	{
-		return $this->ipInterval;
-	}
-
-	/**
-	 * Sets the IP address thresholds.
-	 *
-	 * @param  int|array  $ipThresholds
-	 * @return void
-	 */
-	public function setIpThresholds($ipThresholds)
-	{
-		$this->ipThresholds = is_array($ipThresholds) ? $ipThresholds : (int) $ipThresholds;
-	}
-
-	/**
-	 * Returns the IP address thresholds.
-	 *
-	 * @return int|array
-	 */
-	public function getIpThresholds()
-	{
-		return $this->ipThresholds;
-	}
-
-	/**
-	 * Sets the user interval.
-	 *
-	 * @param  int  $globalThresholds
-	 * @return void
-	 */
-	public function setUserInterval($userInterval)
-	{
-		$this->userInterval = (int) $userInterval;
-	}
-
-	/**
-	 * Returns the user interval.
-	 *
-	 * @return int
-	 */
-	public function getUserInterval()
-	{
-		return $this->userInterval;
-	}
-
-	/**
-	 * Sets the user thresholds.
-	 *
-	 * @param  int|array  $userThresholds
-	 * @return void
-	 */
-	public function setUserThresholds($userThresholds)
-	{
-		$this->userThresholds = is_array($userThresholds) ? $userThresholds : (int) $userThresholds;
-	}
-
-	/**
-	 * Returns the user thresholds.
-	 *
-	 * @return int|array
-	 */
-	public function getUserThresholds()
-	{
-		return $this->userThresholds;
 	}
 
 }

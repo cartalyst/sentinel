@@ -204,4 +204,35 @@ class EloquentUserTest extends PHPUnit_Framework_TestCase {
 		$this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $user->getRoles());
 	}
 
+	public function testDeleteUser()
+	{
+		$user = m::mock('Cartalyst\Sentinel\Users\EloquentUser[roles,persistences,activations,reminders,throttle]');
+		$user->exists = true;
+
+		$user->getConnection()->getQueryGrammar()->shouldReceive('compileDelete');
+		$user->getConnection()->shouldReceive('delete')->once();
+
+		$user->shouldReceive('roles')->once()->andReturn($roles = m::mock('Illuminate\Database\Eloquent\Relations\BelongsToMany'));
+
+		$user->shouldReceive('persistences')->once()->andReturn($persistences = m::mock('Illuminate\Database\Eloquent\Relations\HasMany'));
+
+		$user->shouldReceive('activations')->once()->andReturn($activations = m::mock('Illuminate\Database\Eloquent\Relations\HasMany'));
+
+		$user->shouldReceive('reminders')->once()->andReturn($reminders = m::mock('Illuminate\Database\Eloquent\Relations\HasMany'));
+
+		$user->shouldReceive('throttle')->once()->andReturn($throttle = m::mock('Illuminate\Database\Eloquent\Relations\HasMany'));
+
+		$persistences->shouldReceive('delete')->once();
+
+		$activations->shouldReceive('delete')->once();
+
+		$roles->shouldReceive('detach')->once();
+
+		$reminders->shouldReceive('delete')->once();
+
+		$throttle->shouldReceive('delete')->once();
+
+		$user->delete();
+	}
+
 }

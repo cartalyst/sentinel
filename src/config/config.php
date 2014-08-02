@@ -124,7 +124,7 @@ return [
 	| When logging in, checking for existing sessions and failed logins occur,
 	| you may configure an indefinite number of "checkpoints". These are
 	| classes which may respond to each event and handle accordingly.
-	| We ship with two, an activation checkpoint and a throttling
+	| We ship with two, a throttling checkpoint and an activation
 	| checkpoint. Feel free to add, remove or re-order
 	| these.
 	|
@@ -132,8 +132,8 @@ return [
 
 	'checkpoints' => [
 
-		'activation',
 		'throttle',
+		'activation',
 
 	],
 

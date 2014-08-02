@@ -76,6 +76,27 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 	protected static $persistencesModel = 'Cartalyst\Sentinel\Persistences\EloquentPersistence';
 
 	/**
+	 * The Eloquent activations model name.
+	 *
+	 * @var string
+	 */
+	protected static $activationsModel = 'Cartalyst\Sentinel\Activations\EloquentActivation';
+
+	/**
+	 * The Eloquent reminders model name.
+	 *
+	 * @var string
+	 */
+	protected static $remindersModel = 'Cartalyst\Sentinel\Reminders\EloquentReminder';
+
+	/**
+	 * The Eloquent throttling model name.
+	 *
+	 * @var string
+	 */
+	protected static $throttlingModel = 'Cartalyst\Sentinel\Throttling\EloquentThrottle';
+
+	/**
 	 * Returns an array of login column names.
 	 *
 	 * @return array
@@ -86,7 +107,7 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 	}
 
 	/**
-	 * Returns the Roles relationship.
+	 * Returns the roles relationship.
 	 *
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
 	 */
@@ -96,13 +117,43 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 	}
 
 	/**
-	 * Returns the Persistences relationship.
+	 * Returns the persistences relationship.
 	 *
 	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
 	 */
 	public function persistences()
 	{
 		return $this->hasMany(static::$persistencesModel, 'user_id');
+	}
+
+	/**
+	 * Returns the activations relationship.
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
+	public function activations()
+	{
+		return $this->hasMany(static::$activationsModel, 'user_id');
+	}
+
+	/**
+	 * Returns the reminders relationship.
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
+	public function reminders()
+	{
+		return $this->hasMany(static::$remindersModel, 'user_id');
+	}
+
+	/**
+	 * Returns the throttle relationship.
+	 *
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
+	public function throttle()
+	{
+		return $this->hasMany(static::$throttlingModel, 'user_id');
 	}
 
 	/**
@@ -278,6 +329,86 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 	public static function setPersistencesModel($persistencesModel)
 	{
 		static::$persistencesModel = $persistencesModel;
+	}
+
+	/**
+	 * Get the activations model.
+	 *
+	 * @return string
+	 */
+	public static function getActivationsModel()
+	{
+		return static::$activationsModel;
+	}
+
+	/**
+	 * Set the activations model.
+	 *
+	 * @param  string  $activationsModel
+	 * @return void
+	 */
+	public static function setActivationsModel($activationsModel)
+	{
+		static::$activationsModel = $activationsModel;
+	}
+
+	/**
+	 * Get the reminders model.
+	 *
+	 * @return string
+	 */
+	public static function getRemindersModel()
+	{
+		return static::$remindersModel;
+	}
+
+	/**
+	 * Set the reminders model.
+	 *
+	 * @param  string  $remindersModel
+	 * @return void
+	 */
+	public static function setRemindersModel($remindersModel)
+	{
+		static::$remindersModel = $remindersModel;
+	}
+
+	/**
+	 * Get the throttling model.
+	 *
+	 * @return string
+	 */
+	public static function getThrottlingModel()
+	{
+		return static::$throttlingModel;
+	}
+
+	/**
+	 * Set the throttling model.
+	 *
+	 * @param  string  $throttlingModel
+	 * @return void
+	 */
+	public static function setThrottlingModel($throttlingModel)
+	{
+		static::$throttlingModel = $throttlingModel;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function delete()
+	{
+		if ($this->exists)
+		{
+			$this->roles()->detach();
+			$this->persistences()->delete();
+			$this->activations()->delete();
+			$this->reminders()->delete();
+			$this->throttle()->delete();
+		}
+
+		parent::delete();
 	}
 
 	/**
