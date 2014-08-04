@@ -8,8 +8,7 @@
 		"auth",
 		"security",
 		"codeigniter",
-		"fuelphp",
-		"kohana"
+		"fuelphp"
 	],
 	"license": "proprietary",
 	"authors": [
