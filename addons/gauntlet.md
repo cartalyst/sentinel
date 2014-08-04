@@ -1,6 +1,6 @@
-### Unique Passwords
+### Sentinel Gauntlet
 
-Sentinel Unique Passwords is a Sentinel addon that prevents users from setting the same password more than once.
+Sentinel Gauntlet is a Sentinel addon that prevents users from setting the same password more than once.
 
 #### Installation
 
@@ -10,9 +10,7 @@ The best and easiest way to install Sentinel Unique Passwords is with [Composer]
 
 Open your `composer.json` file and add the following to the `require` array:
 
-	"cartalyst/sentinel-unique-passwords": "dev-master"
-
-> **Note:** This version is still in development, make sure that you set `min-stability` to `dev` on your `composer.json` file.
+	"cartalyst/sentinel-gauntlet": "1.0.*"
 
 > **Note:** Make sure that after the required changes your `composer.json` file is valid by running `composer validate`.
 
@@ -26,30 +24,30 @@ or
 
 	php composer update
 
-Now you are able to require the `vendor/autoload.php` file to autoload the package.
+Now you are able to require the `vendor/autoload.php` file to autoload the addon.
 
 #### Integration
 
 ##### Laravel 4
 
-The Sentinel Unique Passwords package has optional support for Laravel 4 and it comes bundled with a Service Provider for easy integration.
+The Sentinel Unique Passwords addon has optional support for Laravel 4 and it comes bundled with a Service Provider for easy integration.
 
-After installing the package, open your Laravel config file located at `app/config/app.php` and add the following.
+After installing the addon, open your Laravel config file located at `app/config/app.php` and add the following.
 
-In the `$providers` array add the following service provider for this package.
+In the `$providers` array add the following service provider for this addon.
 
-	'Cartalyst\SentinelUniquePasswords\Laravel\SentinelUniquePasswordsServiceProvider',
+	'Cartalyst\SentinelGauntlet\Laravel\SentinelGauntletServiceProvider',
 
 ##### Migrations
 
 Run the following command to migrate Sentinel Unique Passwords.
 
-`php artisan migrate --package=cartalyst/sentinel-unique-passwords`
+`php artisan migrate --package=cartalyst/sentinel-gauntlet`
 
 #### Native
 
 ```php
-use Cartalyst\SentinelUniquePasswords\UniquePasswords;
+use Cartalyst\SentinelGauntlet\UniquePasswords;
 
 $uniquePasswords = new UniquePasswords(Sentinel::getUserRepository());
 
@@ -63,13 +61,16 @@ Sentinel::getEventDispatcher()->listen('sentinel.user.filled', function($user, $
 	$uniquePasswords->filled($user, $credentials);
 });
 
+
+#### Usage
+
 $user = Sentinel::findById(1);
 
 try
 {
 	Sentinel::update($user, ['password' => 'foobar']);
 }
-catch (Cartalyst\SentinelUniquePasswords\Exceptions\NotUniquePasswordException $e)
+catch (Cartalyst\SentinelGauntlet\Exceptions\NotUniquePasswordException $e)
 {
 	// Generate your error here
 }

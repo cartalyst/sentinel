@@ -1,10 +1,10 @@
-## Roles
+### Roles
 
 The role repository can be accessed using `Sentinel::getRoleRepository()` and allows you to manage roles using Sentinel.
 
 > **Note** You can add the word `Role` between `find` and the method name and drop the `getRoleRepository` call. Example `Sentinel::findRoleBySlug` instead of `Sentinel::getRoleRepository()->findBySlug`.
 
-### Sentinel::findRoleById($id)
+#### Sentinel::findRoleById($id)
 
 Find a role by id.
 
@@ -12,7 +12,7 @@ Find a role by id.
 $role = Sentinel::findRoleById(1);
 ```
 
-### Sentinel::findRoleBySlug($slug)
+#### Sentinel::findRoleBySlug($slug)
 
 Find a role by slug.
 
@@ -20,7 +20,7 @@ Find a role by slug.
 $role = Sentinel::findRoleBySlug('the-role-slug');
 ```
 
-### Sentinel::findRoleByName($name)
+#### Sentinel::findRoleByName($name)
 
 Find a role by name.
 
@@ -28,7 +28,7 @@ Find a role by name.
 $role = Sentinel::findRoleByName('The Role Name');
 ```
 
-### Sentinel::getRoleRepository()->createModel()
+#### Sentinel::getRoleRepository()->createModel()
 
 Creates a new role model instance.
 
@@ -36,7 +36,7 @@ Creates a new role model instance.
 $role = Sentinel::getRoleRepository()->createModel();
 ```
 
-### Sentinel::getRoleRepository()->setModel($model)
+#### Sentinel::getRoleRepository()->setModel($model)
 
 Sets the role model.
 
@@ -44,7 +44,7 @@ Sets the role model.
 Sentinel::getRoleRepository()->setModel('Your\Role\Model');
 ```
 
-### Examples
+#### Examples
 
 The `$roles` variable throughout the examples refers to the role repository.
 

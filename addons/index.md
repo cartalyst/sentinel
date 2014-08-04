@@ -1,3 +1,3 @@
 ## Addons
 
-Addons extend the functionality and features of Sentinel.
+Addons extends the functionality and features of Sentinel.
