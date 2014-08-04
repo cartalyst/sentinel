@@ -19,12 +19,11 @@
 
 use Carbon\Carbon;
 use Cartalyst\Sentinel\Users\UserInterface;
-use Cartalyst\Support\Traits\EventTrait;
 use Cartalyst\Support\Traits\RepositoryTrait;
 
 class IlluminateActivationRepository implements ActivationRepositoryInterface {
 
-	use EventTrait, RepositoryTrait;
+	use RepositoryTrait;
 
 	/**
 	 * The Eloquent activation model name.

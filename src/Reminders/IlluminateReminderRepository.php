@@ -20,12 +20,11 @@
 use Carbon\Carbon;
 use Cartalyst\Sentinel\Users\UserInterface;
 use Cartalyst\Sentinel\Users\UserRepositoryInterface;
-use Cartalyst\Support\Traits\EventTrait;
 use Cartalyst\Support\Traits\RepositoryTrait;
 
 class IlluminateReminderRepository implements ReminderRepositoryInterface {
 
-	use EventTrait, RepositoryTrait;
+	use RepositoryTrait;
 
 	/**
 	 * The user repository.

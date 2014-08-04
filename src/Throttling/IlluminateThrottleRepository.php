@@ -19,12 +19,11 @@
 
 use Carbon\Carbon;
 use Cartalyst\Sentinel\Users\UserInterface;
-use Cartalyst\Support\Traits\EventTrait;
 use Cartalyst\Support\Traits\RepositoryTrait;
 
 class IlluminateThrottleRepository implements ThrottleRepositoryInterface {
 
-	use EventTrait, RepositoryTrait;
+	use RepositoryTrait;
 
 	/**
 	 * The interval which failed logins are checked, to prevent brute force.

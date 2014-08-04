@@ -17,12 +17,11 @@
  * @link       http://cartalyst.com
  */
 
-use Cartalyst\Support\Traits\EventTrait;
 use Cartalyst\Support\Traits\RepositoryTrait;
 
 class IlluminateRoleRepository implements RoleRepositoryInterface {
 
-	use EventTrait, RepositoryTrait;
+	use RepositoryTrait;
 
 	/**
 	 * The Eloquent role model name.

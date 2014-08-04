@@ -401,10 +401,10 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 	{
 		if ($this->exists)
 		{
-			$this->roles()->detach();
-			$this->persistences()->delete();
 			$this->activations()->delete();
+			$this->persistences()->delete();
 			$this->reminders()->delete();
+			$this->roles()->detach();
 			$this->throttle()->delete();
 		}
 
@@ -415,7 +415,7 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 	 * Dynamically pass missing methods to the user.
 	 *
 	 * @param  string  $method
-	 * @param  array   $parameters
+	 * @param  array  $parameters
 	 * @return mixed
 	 */
 	public function __call($method, $parameters)
