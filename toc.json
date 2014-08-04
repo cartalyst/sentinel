@@ -21,6 +21,10 @@
 	],
 	"addons": [
 		"index",
-		"gauntlet"
+		"social",
+		"gauntlet",
+		"shield",
+		"lance",
+		"visor"
 	]
 }
