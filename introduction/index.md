@@ -1,6 +1,6 @@
 ## Introduction
 
-A modern and framework agnostic authorization and authentication package featuring groups, permissions, custom hashing algorithms and additional security features.
+A modern and framework agnostic authorization and authentication package featuring roles, permissions, custom hashing algorithms and additional security features.
 
 The package follows the FIG standard PSR-4 to ensure a high level of interoperability between shared PHP code.
 
@@ -30,7 +30,6 @@ Sentinel::authenticate(array(
 
 Sentinel is a complete refactor of our popular Sentry authentication & authorization library. Everything you admired plus a whole lot more.
 
-
 - Allow for custom hashing strategies.
 - Refactor permissions out into a driver-based system.
 - Refactor *Provider and *Interface implementations into single *Repository classes.
@@ -42,4 +41,3 @@ Sentinel is a complete refactor of our popular Sentry authentication & authoriza
 - Allow use of implementations (such as Eloquent and Kohana ORM) to take place on the ORM level.
 - Allow more flexible activation scenarios.
 - Groups renamed to roles bringing us in-line with RBAC terminology.
-

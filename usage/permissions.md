@@ -2,20 +2,20 @@
 
 Permissions can be broken down into two types and two implementations. Depending on the used implementation, these permission types will behave differently.
 
-- Group Permissions
+- Role Permissions
 - User Permissions
 
-*Standard* - This implementation will reject a permission as soon as one rejected permission is found on either the user or any of the assigned groups, granting a user a permission that is rejected on a group he is assigned to will not grant that user this permission.
+*Standard* - This implementation will reject a permission as soon as one rejected permission is found on either the user or any of the assigned roles, granting a user a permission that is rejected on a role he is assigned to will not grant that user this permission.
 
-*Strict* - This implementation will give the user-based permissions a higher priority and will override group-based permissions, any permissions granted/rejected on the user will always take precendece over any group-based permissions assigned.
+*Strict* - This implementation will give the user-based permissions a higher priority and will override role-based permissions, any permissions granted/rejected on the user will always take precendece over any role-based permissions assigned.
 
-Group-based permissions that define the same permission with different access rights will be rejected in case of any rejections on any group.
+Role-based permissions that define the same permission with different access rights will be rejected in case of any rejections on any role.
 
-If a user is not assigned a permission, the user will inherit permissions from the group. If a user is assigned a permission of false or true, then the user's permission will override the group permission.
+If a user is not assigned a permission, the user will inherit permissions from the role. If a user is assigned a permission of false or true, then the user's permission will override the role permission.
 
 > **Note** The permission type is seto to `SentinelPermissions` by default, it can be changed on the `config` file.
 
-###### Administrator Group
+###### Administrator Role
 
 	{
 		"name" : "Administrator",
@@ -27,7 +27,7 @@ If a user is not assigned a permission, the user will inherit permissions from t
 		}
 	}
 
-###### Moderator Group
+###### Moderator Role
 
 	{
 		"name" : "Moderator",
@@ -39,7 +39,7 @@ If a user is not assigned a permission, the user will inherit permissions from t
 		}
 	}
 
-And you have these three users, one as an Administrator, one as a Moderator and the last one has both the Administrator and Moderator groups assigned.
+And you have these three users, one as an Administrator, one as a Moderator and the last one has both the Administrator and Moderator roles assigned.
 
 ###### User - John Doe
 
@@ -47,7 +47,7 @@ And you have these three users, one as an Administrator, one as a Moderator and 
 		"id" : 1,
 		"first_name" : "John",
 		"last_name" : "Doe",
-		"groups" : ["administrator"],
+		"roles" : ["administrator"],
 		"permissions" : null
 	}
 
@@ -59,7 +59,7 @@ This user has access to everything and can execute every action on your applicat
 		"id" : 2,
 		"first_name" : "Jane",
 		"last_name" : "Smith",
-		"groups" : ["moderator"],
+		"roles" : ["moderator"],
 		"permissions" : {
 			"user.update" : false
 		}
@@ -68,7 +68,7 @@ This user has access to everything and can execute every action on your applicat
 - Can view users.
 - Cannot create, update or delete users.
 
-> **Note:** We are using `Permission Inheritance` here, hence the `user.update : false` which means whatever you define on your group permission this user permission will inherit that permission, which means that in this case the user is denied access to update users.
+> **Note:** We are using `Permission Inheritance` here, hence the `user.update : false` which means whatever you define on your role permission this user permission will inherit that permission, which means that in this case the user is denied access to update users.
 
 ###### User - Bruce Wayne
 
@@ -76,7 +76,7 @@ This user has access to everything and can execute every action on your applicat
 		"id" : 3,
 		"first_name" : "Bruce",
 		"last_name" : "Wayne",
-		"groups" : ["administrator", "moderator"],
+		"roles" : ["administrator", "moderator"],
 		"permissions" : {
 			"user.create" : true
 		}
@@ -85,19 +85,25 @@ This user has access to everything and can execute every action on your applicat
 - Can create, update and view users.
 - Cannot execute delete users.
 
-Since this is a special user, mainly because this user has two assigned groups, there are some things that you should know when assigning multiple groups to a user.
+Since this is a special user, mainly because this user has two assigned roles, there are some things that you should know when assigning multiple roles to a user.
 
-When a user has two or more groups assigned, if those groups have the same permissions but different permission access's are assigned, once any of those group permissions are denied, the user will be denied access to that permission no matter what the other groups have as a permission value and no matter with permission type is being used.
+When a user has two or more roles assigned, if those roles have the same permissions but different permission access's are assigned, once any of those role permissions are denied, the user will be denied access to that permission no matter what the other roles have as a permission value and no matter with permission type is being used.
 
 Which means for you to allow a permission to this specific user, you have to be using `strict` permissions and you have to change the user permission to grant access.
 
 #### Usage
 
-Permissions live on permissible models, users and groups.
+Permissions live on permissible models, users and roles.
 
 You can add, modify, update or delete permissions right on the objects.
 
 ##### Storing Permissions
+
+Permissions can either be stored as associative arrays on the Eloquent `user` or `role` by assigning it to the `permissions` attribute or using designated permission methods which make the process easier.
+
+**Array**
+
+Grant the user `user.create` and reject `user.delete`.
 
 ```php
 $user = Sentinel::findById(1);
@@ -110,14 +116,55 @@ $user->permissions = [
 $user->save();
 ```
 
-```php
-$group = Sentinel::findGroupById(1);
+Grant the role `user.update` and `user.view` permissions.
 
-$group->permissions = [
+```php
+$role = Sentinel::findRoleById(1);
+
+$role->permissions = [
 	'user.update' => true,
 	'user.view' => true,
 ];
+
+$role->save();
 ```
+
+**Designated methods**
+
+> **Note** `addPermission` and `updatePermission` will default to true, calling addPermission('x') will grant the user or role that permission, passing false as a second parameter will deny that permission.
+
+Grant the user `user.create` and reject `user.update`.
+
+```php
+$user = Sentinel::findById(1);
+
+$user->addPermission('user.create');
+$user->addPermission('user.update', false);
+
+$user->save();
+```
+
+Remove `user.delete` from the user.
+
+> **Note** Removing a permission does not explicitly mean rejection, it will fallback to permission inheritance.
+
+```php
+$user = Sentinel::findById(1);
+
+$user->removePermission('user.delete')->save();
+```
+
+Update existing `user.create` and reject `user.update`
+
+```php
+$role = Sentinel::findRoleById(1);
+
+$role->updatePermission('user.create');
+$role->updatePermission('user.update', false, true)->save();
+```
+
+> **Note 1:** `addPermission`, `updatePermission` and `removePermission` are chainable.
+> **Note 2:** On `updatePermission`, passing `true` as a third argument will create the permission if it does not already exist.
 
 ##### Checking for Permissions
 
@@ -184,7 +231,7 @@ else
 
 You can easily implement permission checks based on controller methods, consider the following example implemented as a Laravel filter.
 
-Permissions can be stored as action names on users and groups, then simply perform checks on the action before executing it and redirect on failure with an error message.
+Permissions can be stored as action names on users and roles, then simply perform checks on the action before executing it and redirect on failure with an error message.
 
 ```php
 Route::filter('permissions', function($route, $request)

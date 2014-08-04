@@ -11,7 +11,7 @@
 		"registration",
 		"login",
 		"users",
-		"groups",
+		"roles",
 		"permissions",
 		"activation",
 		"reminder",

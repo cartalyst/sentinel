@@ -6,7 +6,7 @@ The user repository can be accessed using `Sentinel::getUserRepository()` and al
 
 > **Note 2** You can add the word `User` between `find` and the method name and drop the `getUserRepository` call. Example `Sentinel::findUserByCredentials` instead of `Sentinel::getUserRepository()->findByCredentials`.
 
-#### Sentinel::findById($id)
+#### Sentinel::findById()
 
 Find a user by id.
 
@@ -14,7 +14,7 @@ Find a user by id.
 $user = Sentinel::findById(1);
 ```
 
-#### Sentinel::findByCredentials(array $credentials)
+#### Sentinel::findByCredentials()
 
 Find a user by credentials.
 
@@ -27,7 +27,7 @@ $credentials = [
 $user = Sentinel::findByCredentials($credentials);
 ```
 
-#### Sentinel::findByPersistenceCode($code)
+#### Sentinel::findByPersistenceCode()
 
 Find a user by persistence code.
 
@@ -35,7 +35,7 @@ Find a user by persistence code.
 $user = Sentinel::findByPersistenceCode('persistence_code_here');
 ```
 
-#### Sentinel::validateCredentials(UserInterface $user, array $credentials)
+#### Sentinel::validateCredentials()
 
 Validates a user's credentials.
 
@@ -48,7 +48,7 @@ $credentials = [
 $user = Sentinel::validateCredentials($credentials);
 ```
 
-#### Sentinel::validForCreation(array $credentials)
+#### Sentinel::validForCreation()
 
 Validates a user for creation.
 
@@ -61,7 +61,7 @@ $credentials = [
 $user = Sentinel::validForCreation($credentials);
 ```
 
-#### Sentinel::validForUpdate($user, array $credentials)
+#### Sentinel::validForUpdate()
 
 Validates a user for update.
 
@@ -75,7 +75,7 @@ $credentials = [
 $user = Sentinel::validForUpdate($user, $credentials);
 ```
 
-#### Sentinel::create(array $credentials, Closure $callback = null)
+#### Sentinel::create()
 
 Creates a new user.
 
@@ -88,7 +88,7 @@ $credentials = [
 $user = Sentinel::create($credentials);
 ```
 
-#### Sentinel::update($user, array $credentials)
+#### Sentinel::update()
 
 Updates an existing user.
 
@@ -102,7 +102,7 @@ $credentials = [
 $user = Sentinel::update($user, $credentials);
 ```
 
-#### Sentinel::setHasher(HasherInterface $hasher)
+#### Sentinel::setHasher()
 
 Sets the hasher.
 
@@ -118,7 +118,7 @@ Creates a new user model instance.
 $user = Sentinel::createModel();
 ```
 
-#### Sentinel::setModel($model)
+#### Sentinel::setModel()
 
 Sets the user model.
 
