@@ -248,20 +248,22 @@ class SentinelBootstrapper {
 	 */
 	protected function createCheckpoints(IlluminateActivationRepository $activations, $ipAddress)
 	{
-		$checkpoints = $this->config['checkpoints'];
+		$activeCheckpoints = $this->config['checkpoints'];
 
 		$activation = $this->createActivationCheckpoint($activations);
 
 		$throttle = $this->createThrottleCheckpoint($ipAddress);
 
-		foreach ($checkpoints as $index => $checkpoint)
+		$checkpoints = [];
+
+		foreach ($activeCheckpoints as $checkpoint)
 		{
 			if ( ! isset($$checkpoint))
 			{
 				throw new InvalidArgumentException("Invalid checkpoint [{$checkpoint}] given.");
 			}
 
-			$checkpoints[$index] = $$checkpoint;
+			$checkpoints[$checkpoint] = $$checkpoint;
 		}
 
 		return $checkpoints;
