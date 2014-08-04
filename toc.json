@@ -21,6 +21,6 @@
 	],
 	"addons": [
 		"index",
-		"unique-passwords"
+		"gauntlet"
 	]
 }
