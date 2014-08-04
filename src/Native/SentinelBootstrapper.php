@@ -91,9 +91,9 @@ class SentinelBootstrapper {
 
 		$checkpoints = $this->createCheckpoints($activations, $ipAddress);
 
-		foreach ($checkpoints as $checkpoint)
+		foreach ($checkpoints as $key => $checkpoint)
 		{
-			$sentinel->addCheckpoint($checkpoint);
+			$sentinel->addCheckpoint($key, $checkpoint);
 		}
 
 		$reminders = $this->createReminders($users);

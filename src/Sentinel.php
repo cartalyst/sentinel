@@ -89,7 +89,7 @@ class Sentinel {
 	 *
 	 * @var bool
 	 */
-	protected $checkpointsEnabled = true;
+	protected $checkpointsStatus = true;
 
 	/**
 	 * The Reminders repository.
@@ -551,20 +551,31 @@ class Sentinel {
 	 * Pass a closure to Sentinel to bypass checkpoints.
 	 *
 	 * @param  \Closure  $callback
+	 * @param  array  $checkpoints
 	 * @return mixed
 	 */
-	public function bypassCheckpoints(Closure $callback)
+	public function bypassCheckpoints(Closure $callback, $checkpoints = [])
 	{
-		// Temporarily remove the array of registered checkpoints
-		$checkpoints = $this->checkpoints;
+		$originalCheckpoints = $this->checkpoints;
 
-		$this->checkpoints = [];
+		$activeCheckpoints = [];
+
+		foreach (array_keys($originalCheckpoints) as $checkpoint)
+		{
+			if (in_array($checkpoint, $checkpoints))
+			{
+				$activeCheckpoints[$checkpoint] = $originalCheckpoints[$checkpoint];
+			}
+		}
+
+		// Temporarily replace the registered checkpoints
+		$this->checkpoints = $activeCheckpoints;
 
 		// Fire the callback
 		$result = $callback($this);
 
 		// Reset checkpoints
-		$this->checkpoints = $checkpoints;
+		$this->checkpoints = $originalCheckpoints;
 
 		return $result;
 	}
@@ -574,9 +585,9 @@ class Sentinel {
 	 *
 	 * @return bool
 	 */
-	public function checkpointsEnabled()
+	public function checkpointsStatus()
 	{
-		return $this->checkpointsEnabled;
+		return $this->checkpointsStatus;
 	}
 
 	/**
@@ -586,7 +597,7 @@ class Sentinel {
 	 */
 	public function enableCheckpoints()
 	{
-		$this->checkpointsEnabled = true;
+		$this->checkpointsStatus = true;
 	}
 
 	/**
@@ -596,18 +607,33 @@ class Sentinel {
 	 */
 	public function disableCheckpoints()
 	{
-		$this->checkpointsEnabled = false;
+		$this->checkpointsStatus = false;
 	}
 
 	/**
 	 * Add a new checkpoint to Sentinel.
 	 *
+	 * @param  string  $key
 	 * @param  \Cartalyst\Sentinel\Checkpoints\CheckpointInterface  $checkpoint
 	 * @return void
 	 */
-	public function addCheckpoint(CheckpointInterface $checkpoint)
+	public function addCheckpoint($key, CheckpointInterface $checkpoint)
 	{
-		$this->checkpoints[] = $checkpoint;
+		$this->checkpoints[$key] = $checkpoint;
+	}
+
+	/**
+	 * Add a new checkpoint to Sentinel.
+	 *
+	 * @param  string  $key
+	 * @return void
+	 */
+	public function removeCheckpoint($key)
+	{
+		if (isset($this->checkpoints[$key]))
+		{
+			unset($this->checkpoints[$key]);
+		}
 	}
 
 	/**
@@ -622,7 +648,7 @@ class Sentinel {
 	 */
 	protected function cycleCheckpoints($method, UserInterface $user = null, $halt = true)
 	{
-		if ( ! $this->checkpointsEnabled)
+		if ( ! $this->checkpointsStatus)
 		{
 			return true;
 		}

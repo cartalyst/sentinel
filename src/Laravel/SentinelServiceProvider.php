@@ -189,17 +189,19 @@ class SentinelServiceProvider extends ServiceProvider {
 
 		$this->app['sentinel.checkpoints'] = $this->app->share(function($app)
 		{
-			$checkpoints = $app['config']['cartalyst/sentinel::checkpoints'];
+			$activeCheckpoints = $app['config']['cartalyst/sentinel::checkpoints'];
 
-			$checkpoints = array_map(function($checkpoint) use ($app)
+			$checkpoints = [];
+
+			foreach ($activeCheckpoints as $checkpoint)
 			{
 				if ( ! $app->offsetExists("sentinel.checkpoint.{$checkpoint}"))
 				{
 					throw new InvalidArgumentException("Invalid checkpoint [$checkpoint] given.");
 				}
 
-				return $app["sentinel.checkpoint.{$checkpoint}"];
-			}, $checkpoints);
+				$checkpoints[$checkpoint] = $app["sentinel.checkpoint.{$checkpoint}"];
+			}
 
 			return $checkpoints;
 		});
@@ -318,9 +320,9 @@ class SentinelServiceProvider extends ServiceProvider {
 
 			if (isset($app['sentinel.checkpoints']))
 			{
-				foreach ($app['sentinel.checkpoints'] as $checkpoint)
+				foreach ($app['sentinel.checkpoints'] as $key => $checkpoint)
 				{
-					$sentinel->addCheckpoint($checkpoint);
+					$sentinel->addCheckpoint($key, $checkpoint);
 				}
 			}
 

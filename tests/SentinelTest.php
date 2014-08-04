@@ -17,6 +17,7 @@
  * @link       http://cartalyst.com
  */
 
+use Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint;
 use Cartalyst\Sentinel\Sentinel;
 use Cartalyst\Sentinel\Users\EloquentUser;
 use Mockery as m;
@@ -205,9 +206,11 @@ class SentinelTest extends PHPUnit_Framework_TestCase {
 		$persistences->shouldReceive('check')->once();
 		$persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser);
 
-		$checkpoint = new \Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint($activations);
-		$sentinel->addCheckpoint($checkpoint);
-		$valid = $sentinel->check();
+		$checkpoint = new ActivationCheckpoint($activations);
+
+		$sentinel->addCheckpoint('activation', $checkpoint);
+
+		$valid = $sentinel->forceCheck();
 
 		$this->assertFalse($valid);
 	}
@@ -318,11 +321,11 @@ class SentinelTest extends PHPUnit_Framework_TestCase {
 
 		$sentinel->disableCheckpoints();
 
-		$this->assertFalse($sentinel->checkpointsEnabled());
+		$this->assertFalse($sentinel->checkpointsStatus());
 
 		$sentinel->enableCheckpoints();
 
-		$this->assertTrue($sentinel->checkpointsEnabled());
+		$this->assertTrue($sentinel->checkpointsStatus());
 	}
 
 	public function testSetAndGetRepositories()
@@ -419,9 +422,9 @@ class SentinelTest extends PHPUnit_Framework_TestCase {
 
 		$user = m::mock('Cartalyst\Sentinel\Users\EloquentUser');
 
-		$checkpoint = new \Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint($activations);
+		$checkpoint = new ActivationCheckpoint($activations);
 
-		$sentinel->addCheckpoint($checkpoint);
+		$sentinel->addCheckpoint('activation', $checkpoint);
 
 		$sentinel->check();
 	}
@@ -432,8 +435,9 @@ class SentinelTest extends PHPUnit_Framework_TestCase {
 
 		$user = m::mock('Cartalyst\Sentinel\Users\EloquentUser');
 
-		$checkpoint = new \Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint($activations);
-		$sentinel->addCheckpoint($checkpoint);
+		$checkpoint = new ActivationCheckpoint($activations);
+
+		$sentinel->addCheckpoint('activation', $checkpoint);
 
 		$persistences->shouldReceive('check')->once()->andReturn('foobar');
 		$persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser);

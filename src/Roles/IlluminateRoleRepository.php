@@ -53,7 +53,6 @@ class IlluminateRoleRepository implements RoleRepositoryInterface {
 		return $this
 			->createModel()
 			->newQuery()
-			->with('users')
 			->find($id);
 	}
 
@@ -65,7 +64,6 @@ class IlluminateRoleRepository implements RoleRepositoryInterface {
 		return $this
 			->createModel()
 			->newQuery()
-			->with('users')
 			->where('slug', $slug)
 			->first();
 	}
@@ -78,7 +76,6 @@ class IlluminateRoleRepository implements RoleRepositoryInterface {
 		return $this
 			->createModel()
 			->newQuery()
-			->with('users')
 			->where('name', $name)
 			->first();
 	}

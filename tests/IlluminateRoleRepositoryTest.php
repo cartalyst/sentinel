@@ -49,8 +49,6 @@ class IlluminateRoleRepositoryTest extends PHPUnit_Framework_TestCase {
 		$roles->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Roles\EloquentRole[newQuery]'));
 
 		$model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
-
-		$query->shouldReceive('with')->with('users')->once()->andReturn($query);
 		$query->shouldReceive('find')->with(1)->andReturn($query);
 
 		$roles->findById(1);
@@ -63,8 +61,6 @@ class IlluminateRoleRepositoryTest extends PHPUnit_Framework_TestCase {
 		$roles->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Roles\EloquentRole[newQuery]'));
 
 		$model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
-
-		$query->shouldReceive('with')->with('users')->once()->andReturn($query);
 		$query->shouldReceive('where')->with('slug', 'foo')->andReturn($query);
 		$query->shouldReceive('first')->once();
 
@@ -78,8 +74,6 @@ class IlluminateRoleRepositoryTest extends PHPUnit_Framework_TestCase {
 		$roles->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Roles\EloquentRole[newQuery]'));
 
 		$model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
-
-		$query->shouldReceive('with')->with('users')->once()->andReturn($query);
 		$query->shouldReceive('where')->with('name', 'foo')->andReturn($query);
 		$query->shouldReceive('first')->once();
 

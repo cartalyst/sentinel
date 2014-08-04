@@ -128,7 +128,7 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase {
 
 	public function testRecordLogin()
 	{
-		list($users, $hasher, $model, $query) = $this->getUsersMock(false);
+		list($users, $hasher, $model, $query) = $this->getUsersMock();
 
 		$model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
 		$query->shouldReceive('insertGetId')->once();
@@ -138,7 +138,7 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase {
 
 	public function testRecordLogout()
 	{
-		list($users, $hasher, $model, $query) = $this->getUsersMock(false);
+		list($users, $hasher, $model, $query) = $this->getUsersMock();
 
 		$model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
 		$query->shouldReceive('insertGetId')->once();
@@ -148,7 +148,7 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase {
 
 	public function testValidateCredentials()
 	{
-		list($users, $hasher, $model, $query) = $this->getUsersMock(false);
+		list($users, $hasher, $model, $query) = $this->getUsersMock();
 
 		$model->password = 'secret';
 
@@ -166,7 +166,7 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase {
 	{
 		$user = new EloquentUser;
 
-		list($users, $hasher, $model, $query) = $this->getUsersMock(false);
+		list($users, $hasher, $model, $query) = $this->getUsersMock();
 
 		$credetials = [
 			'email'    => 'foo@example.com',
@@ -185,7 +185,7 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase {
 	{
 		$user = new EloquentUser;
 
-		list($users, $hasher, $model, $query) = $this->getUsersMock(false);
+		list($users, $hasher, $model, $query) = $this->getUsersMock();
 
 		$credetials = [
 			'password' => 'secret',
@@ -201,7 +201,7 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase {
 	{
 		$user = new EloquentUser;
 
-		list($users, $hasher, $model, $query) = $this->getUsersMock(false);
+		list($users, $hasher, $model, $query) = $this->getUsersMock();
 
 		$credetials = [
 			'email' => 'foo@example.com',
@@ -214,7 +214,7 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase {
 	{
 		$user = $this->fakeUser();
 
-		list($users, $hasher, $model, $query) = $this->getUsersMock(false);
+		list($users, $hasher, $model, $query) = $this->getUsersMock();
 
 		$credetials = [
 			'email'    => 'foo@example.com',
@@ -228,7 +228,7 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase {
 
 	public function testCreate()
 	{
-		list($users, $hasher, $model, $query) = $this->getUsersMock(false);
+		list($users, $hasher, $model, $query) = $this->getUsersMock();
 
 		$model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
 		$query->shouldReceive('insertGetId')->once();
@@ -245,7 +245,7 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase {
 
 	public function testCreateWithValidCallback()
 	{
-		list($users, $hasher, $model, $query) = $this->getUsersMock(false);
+		list($users, $hasher, $model, $query) = $this->getUsersMock();
 
 		$model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
 		$query->shouldReceive('insertGetId')->once();
@@ -265,7 +265,7 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase {
 
 	public function testCreateWithInvalidCallback()
 	{
-		list($users, $hasher, $model, $query) = $this->getUsersMock(false);
+		list($users, $hasher, $model, $query) = $this->getUsersMock();
 
 		$model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
 
@@ -284,7 +284,7 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase {
 
 	public function testUpdate1()
 	{
-		list($users, $hasher, $model, $query) = $this->getUsersMock(false);
+		list($users, $hasher, $model, $query) = $this->getUsersMock();
 
 		$model->setConnectionResolver($resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'));
 		$resolver->shouldReceive('connection')->andReturn(m::mock('Illuminate\Database\Connection'));
@@ -324,7 +324,7 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase {
 
 	public function testHasherSetterAndGetter()
 	{
-		list($users, $hasher, $model, $query) = $this->getUsersMock(false);
+		list($users, $hasher, $model, $query) = $this->getUsersMock();
 
 		$this->assertInstanceOf('Cartalyst\Sentinel\Hashing\NativeHasher', $users->getHasher());
 
@@ -343,7 +343,7 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase {
 		return $user;
 	}
 
-	protected function getUsersMock($roles = true)
+	protected function getUsersMock()
 	{
 		$users = m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository[createModel]', [
 			$hasher = m::mock('Cartalyst\Sentinel\Hashing\NativeHasher')
@@ -352,11 +352,6 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase {
 		$users->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Users\EloquentUser[newQuery]'));
 
 		$model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
-
-		if ($roles)
-		{
-			$query->shouldReceive('with')->with('roles')->once()->andReturn($query);
-		}
 
 		return [$users, $hasher, $model, $query];
 	}
