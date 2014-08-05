@@ -41,4 +41,25 @@ class EloquentPersistence extends Model implements PersistenceInterface {
 		return $this->belongsTo(static::$usersModel);
 	}
 
+	/**
+	 * Get the users model.
+	 *
+	 * @return string
+	 */
+	public static function getUsersModel()
+	{
+		return static::$usersModel;
+	}
+
+	/**
+	 * Set the users model.
+	 *
+	 * @param  string  $usersModel
+	 * @return void
+	 */
+	public static function setUsersModel($usersModel)
+	{
+		static::$usersModel = $usersModel;
+	}
+
 }
