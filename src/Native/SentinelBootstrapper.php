@@ -152,9 +152,16 @@ class SentinelBootstrapper {
 
 		$roles = $this->config['roles']['model'];
 
+		$persistences = $this->config['persistences']['model'];
+
 		if (class_exists($roles) && method_exists($roles, 'setUsersModel'))
 		{
 			forward_static_call_array([$roles, 'setUsersModel'], [$model]);
+		}
+
+		if (class_exists($persistences) && method_exists($persistences, 'setUsersModel'))
+		{
+			forward_static_call_array([$persistences, 'setUsersModel'], [$model]);
 		}
 
 		return new IlluminateUserRepository($hasher, $this->getEventDispatcher(), $model);

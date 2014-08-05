@@ -30,13 +30,13 @@ It also provides additional features such as user roles and additional security 
 
 Sentinel is installable with Composer. Read further information on how to install.
 
-[Installation Guide](http://cartalyst.com/manual/sentinel/introduction/installation)
+[Installation Guide](https://cartalyst.com/manual/sentinel#installation)
 
 ## Documentation
 
 Refer to the following guide on how to use the Sentinel package.
 
-[Documentation](http://cartalyst.com/manual/sentinel)
+[Documentation](https://cartalyst.com/manual/sentinel)
 
 ## Versioning
 

@@ -30,7 +30,7 @@ interface PersistenceRepositoryInterface {
 	 * Finds a persistence by persistence code.
 	 *
 	 * @param  string  $code
-	 * @return \Cartalyst\Sentinel\Persistences\PersistableInterface|false
+	 * @return \Cartalyst\Sentinel\Persistences\PersistenceInterface|false
 	 */
 	public function findByPersistenceCode($code);
 
@@ -45,8 +45,9 @@ interface PersistenceRepositoryInterface {
 	/**
 	 * Adds a new user persistence to the current session and attaches the user.
 	 *
-	 * @param  \Cartalyst\Sentinel\Persistence\PersistableInterface  $persistable
-	 * @return void
+	 * @param  \Cartalyst\Sentinel\Persistence\PersistenceInterface  $persistable
+	 * @param  bool  $remember
+	 * @return bool
 	 */
 	public function persist(PersistableInterface $persistable, $remember = false);
 
@@ -54,7 +55,7 @@ interface PersistenceRepositoryInterface {
 	 * Adds a new user persistence, to remember.
 	 *
 	 * @param  \Cartalyst\Sentinel\Persistence\PersistableInterface  $persistable
-	 * @return void
+	 * @return bool
 	 */
 	public function persistAndRemember(PersistableInterface $persistable);
 
