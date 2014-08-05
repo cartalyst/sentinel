@@ -41,11 +41,14 @@ This will publish the config file to `app/config/packages/cartalyst/sentinel/con
 Sentinel ships with default implementations for `illuminate/database`, in order to use it, make sure you require it on your `composer.json` file.
 
 ```php
+// Import the necessary classes
 use Cartalyst\Sentinel\Native\Facades\Sentinel;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
+// Include the composer autoload file
 require 'vendor/autoload.php';
 
+// Setup a new Eloquent Capsule instance
 $capsule = new Capsule;
 
 $capsule->addConnection([
@@ -59,7 +62,12 @@ $capsule->addConnection([
 ]);
 
 $capsule->bootEloquent();
+```
 
+The integration is done and you can now use all the available methods, here's an example:
+
+```php
+// Register a new user
 Sentinel::register([
 	'email'    => 'test@example.com',
 	'password' => 'foobar',

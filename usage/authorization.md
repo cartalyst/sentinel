@@ -6,7 +6,9 @@ In this section, we will cover authorization methods.
 
 Check if a user is logged in.
 
-Returns the user object or false.
+Returns: `Cartalyst\Sentinel\Users\UserInterface` or `false`.
+
+##### Example
 
 ```php
 if ($user = Sentinel::check())
@@ -15,7 +17,28 @@ if ($user = Sentinel::check())
 }
 else
 {
-	// No user is logged in.
+	// User is not logged in
+}
+```
+
+##### Example Response
+
+```
+{
+	id: "1",
+	email: "john.doe@example.com",
+	permissions: {
+		admin: true
+	},
+	last_login: {
+		date: "2014-02-17 03:44:31",
+		timezone_type: 3,
+		timezone: "UTC"
+	},
+	first_name: "John",
+	last_name: "Doe",
+	created_at: "2014-02-17 02:43:01",
+	updated_at: "2014-02-17 02:43:37"
 }
 ```
 
@@ -23,16 +46,39 @@ else
 
 Check if a user is logged in, bypassing all checkpoints.
 
-Returns the user object or false.
+Returns: `Cartalyst\Sentinel\Users\UserInterface` or `false`.
+
+##### Example
 
 ```php
 if ($user = Sentinel::forceCheck())
 {
-	// Authentication and login successful and the user is assigned to the `$user` variable.
+	// User is logged in and assigned to the `$user` variable.
 }
 else
 {
-	// No user is logged in.
+	// User is not logged in
+}
+```
+
+##### Example Response
+
+```
+{
+	id: "1",
+	email: "john.doe@example.com",
+	permissions: {
+		admin: true
+	},
+	last_login: {
+		date: "2014-02-17 03:44:31",
+		timezone_type: 3,
+		timezone: "UTC"
+	},
+	first_name: "John",
+	last_name: "Doe",
+	created_at: "2014-02-17 02:43:01",
+	updated_at: "2014-02-17 02:43:37"
 }
 ```
 
@@ -40,11 +86,19 @@ else
 
 Check if no user is currently logged in.
 
-Returns bool.
+Returns `true` if the user is not logged in and `false` otherwise.
+
+##### Example
 
 ```php
 if (Sentinel::guest())
 {
-	// No user is logged in.
+	// User is not logged in
 }
+```
+
+##### Example Response
+
+```
+true
 ```

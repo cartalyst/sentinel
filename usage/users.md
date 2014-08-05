@@ -2,21 +2,62 @@
 
 The user repository can be accessed using `Sentinel::getUserRepository()` and allows you to manage users using Sentinel.
 
-> **Note 1** You can use the following methods directly on the Sentinel facade without the `getUserRepository` part. Example `Sentinel::findById(1)` instead of `Sentinel::getUserRepository()->findById(1)`.
+> **Note 1** You can use the methods below directly on the Sentinel facade without the `getUserRepository` part. Example `Sentinel::findById(1)` instead of `Sentinel::getUserRepository()->findById(1)`.
 
-> **Note 2** You can add the word `User` between `find` and the method name and drop the `getUserRepository` call. Example `Sentinel::findUserByCredentials` instead of `Sentinel::getUserRepository()->findByCredentials`.
+> **Note 2** You can add the word `User` between `find` and the method name and drop the `getUserRepository` call. Example `Sentinel::findUserByCredentials($credentials)` instead of `Sentinel::getUserRepository()->findByCredentials($credentials)`.
 
 #### Sentinel::findById()
 
-Find a user by id.
+Finds a user using it's id.
+
+Returns: `Cartalyst\Sentinel\Users\UserInterface` or `null`.
+
+##### Arguments
+
+Key | Required | Type  | Default | Description
+--- | -------- | ----- | ------- | ---------------------------------------------
+$id | true     | int   | null    | The user unique identifier.
+
+##### Example
 
 ```php
 $user = Sentinel::findById(1);
 ```
 
+##### Example Response
+
+```
+{
+	id: "1",
+	email: "john.doe@example.com",
+	permissions: {
+		admin: true
+	},
+	last_login: {
+		date: "2014-02-17 03:44:31",
+		timezone_type: 3,
+		timezone: "UTC"
+	},
+	first_name: "John",
+	last_name: "Doe",
+	created_at: "2014-02-17 02:43:01",
+	updated_at: "2014-02-17 02:43:37"
+}
+```
+
 #### Sentinel::findByCredentials()
 
-Find a user by credentials.
+Finds a user by it's credentials.
+
+Returns: `Cartalyst\Sentinel\Users\UserInterface` or `null`.
+
+##### Arguments
+
+Key          | Required | Type  | Default | Description
+------------ | -------- | ----- | ------- | ------------------------------------
+$credentials | true     | array | null    | The user credentials.
+
+##### Example
 
 ```php
 $credentials = [
@@ -27,17 +68,79 @@ $credentials = [
 $user = Sentinel::findByCredentials($credentials);
 ```
 
+##### Example Response
+
+```
+{
+	id: "1",
+	email: "john.doe@example.com",
+	permissions: {
+		admin: true
+	},
+	last_login: {
+		date: "2014-02-17 03:44:31",
+		timezone_type: 3,
+		timezone: "UTC"
+	},
+	first_name: "John",
+	last_name: "Doe",
+	created_at: "2014-02-17 02:43:01",
+	updated_at: "2014-02-17 02:43:37"
+}
+```
+
 #### Sentinel::findByPersistenceCode()
 
-Find a user by persistence code.
+Finds a user by persistence code.
+
+Returns: `Cartalyst\Sentinel\Users\UserInterface` or `null`.
+
+##### Arguments
+
+Key   | Required | Type  | Default | Description
+----- | -------- | ----- | ------- | -------------------------------------------
+$code | true     | string | null   | The persistence code.
+
+##### Example
 
 ```php
 $user = Sentinel::findByPersistenceCode('persistence_code_here');
 ```
 
+##### Example Response
+
+```
+{
+	id: "1",
+	email: "john.doe@example.com",
+	permissions: {
+		admin: true
+	},
+	last_login: {
+		date: "2014-02-17 03:44:31",
+		timezone_type: 3,
+		timezone: "UTC"
+	},
+	first_name: "John",
+	last_name: "Doe",
+	created_at: "2014-02-17 02:43:01",
+	updated_at: "2014-02-17 02:43:37"
+}
+```
+
 #### Sentinel::validateCredentials()
 
-Validates a user's credentials.
+Validates the user credentials.
+
+This is useful when you want to verify if the current user password matches the given password.
+
+##### Arguments
+
+Key          | Required | Type  | Default | Description
+------------ | -------- | ----- | ------- | ------------------------------------
+$credentials | true     | array | null    | The user credentials.
+
+##### Example
 
 ```php
 $credentials = [
@@ -45,12 +148,28 @@ $credentials = [
 	'password' => 'password',
 ];
 
-$user = Sentinel::validateCredentials($credentials);
+$user = Sentinel::findUserById(1);
+
+$user = Sentinel::validateCredentials($user, $credentials);
+```
+
+###### Example Response
+
+```
+true
 ```
 
 #### Sentinel::validForCreation()
 
 Validates a user for creation.
+
+##### Arguments
+
+Key          | Required | Type  | Default | Description
+------------ | -------- | ----- | ------- | ------------------------------------
+$credentials | true     | array | null    | The user credentials.
+
+##### Example
 
 ```php
 $credentials = [
@@ -61,23 +180,53 @@ $credentials = [
 $user = Sentinel::validForCreation($credentials);
 ```
 
+###### Example Response
+
+```
+true
+```
+
 #### Sentinel::validForUpdate()
 
 Validates a user for update.
+
+##### Arguments
+
+Key          | Required | Type                                   | Default | Description
+------------ | -------- | -------------------------------------- | ------- | ------------------------------------
+$user        | true     | Cartalyst\Sentinel\Users\UserInterface | null    | The Sentinel user object.
+$credentials | true     | array                                  | null    | The user credentials.
+
+##### Example
 
 ```php
 $user = Sentinel::findById(1);
 
 $credentials = [
-	'email'    => 'new.john.doe@example.com',
+	'email' => 'johnathan.doe@example.com',
 ];
 
 $user = Sentinel::validForUpdate($user, $credentials);
 ```
 
+###### Example Response
+
+```
+true
+```
+
 #### Sentinel::create()
 
 Creates a new user.
+
+##### Arguments
+
+Key          | Required | Type           | Default | Description
+------------ | -------- | -------------- | ------- | ------------------------------------
+$credentials | true     | array          | null    | The user credentials.
+$callback    | false    | bool ; Closure | null    | This argument is used for two things, either pass in `true` to activate the user or a `Closure` that would be executed before the user is created and can prevent user creation if it returns false.
+
+##### Example
 
 ```php
 $credentials = [
@@ -88,23 +237,92 @@ $credentials = [
 $user = Sentinel::create($credentials);
 ```
 
+##### Example Response
+
+```
+{
+	id: "1",
+	email: "john.doe@example.com",
+	permissions: {
+		admin: true
+	},
+	last_login: {
+		date: "2014-02-17 03:44:31",
+		timezone_type: 3,
+		timezone: "UTC"
+	},
+	first_name: "John",
+	last_name: "Doe",
+	created_at: "2014-02-17 02:43:01",
+	updated_at: "2014-02-17 02:43:37"
+}
+```
+
 #### Sentinel::update()
 
 Updates an existing user.
+
+##### Arguments
+
+Key          | Required | Type                                   | Default | Description
+------------ | -------- | -------------------------------------- | ------- | ------------------------------------
+$user        | true     | Cartalyst\Sentinel\Users\UserInterface | null    | The Sentinel user object.
+$credentials | true     | array                                  | null    | The user credentials.
+
+##### Example
 
 ```php
 $user = Sentinel::findById(1);
 
 $credentials = [
-	'email'    => 'new.john.doe@example.com',
+	'email' => 'new.john.doe@example.com',
 ];
 
 $user = Sentinel::update($user, $credentials);
 ```
 
+##### Example Response
+
+```
+{
+	id: "1",
+	email: "john.doe@example.com",
+	permissions: {
+		admin: true
+	},
+	last_login: {
+		date: "2014-02-17 03:44:31",
+		timezone_type: 3,
+		timezone: "UTC"
+	},
+	first_name: "John",
+	last_name: "Doe",
+	created_at: "2014-02-17 02:43:01",
+	updated_at: "2014-02-17 02:43:37"
+}
+```
+
+#### Sentinel::getHash()
+
+Returns the current hasher.
+
+##### Example
+
+```php
+$hasher = Sentinel::getHasher();
+```
+
 #### Sentinel::setHasher()
 
 Sets the hasher.
+
+##### Arguments
+
+Key     | Required | Type                                        | Default | Description
+------- | -------- | ------------------------------------------- | ------- | -------------------
+$hasher | true     | Cartalyst\Sentinel\Hashing\HasherInterface  | null    | The hasher object.
+
+##### Example
 
 ```php
 Sentinel::setHasher(new Cartalyst\Sentinel\Hashing\WhirlpoolHasher);
@@ -122,6 +340,16 @@ $user = Sentinel::createModel();
 
 Sets the user model.
 
+Your new model needs to extend the `Cartalyst\Sentinel\Users\EloquentUser` class.
+
+##### Arguments
+
+Key    | Required | Type   | Default | Description
+------ | -------- | ------ | ------- | -----------------------------------------
+$model | true     | string | null    | The users model class name.
+
+##### Example
+
 ```php
-Sentinel::setModel('Your\User\Model');
+Sentinel::setModel('Acme\Models\User');
 ```

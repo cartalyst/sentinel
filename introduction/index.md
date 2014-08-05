@@ -30,14 +30,18 @@ Sentinel::authenticate(array(
 
 Sentinel is a complete refactor of our popular Sentry authentication & authorization library. Everything you admired plus a whole lot more.
 
-- Allow for custom hashing strategies.
-- Refactor permissions out into a driver-based system.
-- Refactor *Provider and *Interface implementations into single *Repository classes.
+- Authentication.
+- Authorization.
+- Registration.
+- Users & Roles Management.
+- Driver based permission system.
+- Flexible activation scenarios.
+- Reminders (password reset).
+- Inter-account throttling with DDoS protection.
+- Custom hashing strategies.
 - Multiple sessions.
 - Multiple login columns.
-- Inter-account throttling and improved DDoS protection.
-- Improved integration with Laravel (Sentinel::basic(), easy email integration with queues).
-- Improved speed - make use of eager loading.
-- Allow use of implementations (such as Eloquent and Kohana ORM) to take place on the ORM level.
-- Allow more flexible activation scenarios.
-- Groups renamed to roles bringing us in-line with RBAC terminology.
+- Integration with Laravel.
+- Allow use of multiple ORM implementations.
+- Native facade for easy usage outside Laravel.
+- Interface driven (your own implementations at will).

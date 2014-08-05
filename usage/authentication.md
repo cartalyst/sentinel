@@ -1,17 +1,19 @@
 ### Authentication
 
-In this section, we will cover authentication methods.
+In this section, we will cover the Sentinel authentication methods.
 
 #### Sentinel::authenticate()
 
-This method uthenticates a user against the given `$credentials`, you pass a `boolean` on the second argument to set the remember me flag on / off.
+This method authenticates a user against the given `$credentials`, additionally a second `bool` argument of `true` can be passed to set the remember state on the user.
+
+Returns: `Cartalyst\Sentinel\Users\UserInterface` or `false`.
 
 ##### Arguments
 
 Key          | Required | Type  | Default | Description
 ------------ | -------- | ----- | ------- | ------------------------------------
 $credentials | true     | array | null    | The user credentials.
-$remember    | false    | bool  | false   | The remember me flag.
+$remember    | false    | bool  | false   | Flag to set the remember cookie.
 
 ##### Example
 
@@ -24,9 +26,32 @@ $credentials = [
 Sentinel::authenticate($credentials);
 ```
 
+##### Example Response
+
+```
+{
+	id: "1",
+	email: "john.doe@example.com",
+	permissions: {
+		admin: true
+	},
+	last_login: {
+		date: "2014-02-17 03:44:31",
+		timezone_type: 3,
+		timezone: "UTC"
+	},
+	first_name: "John",
+	last_name: "Doe",
+	created_at: "2014-02-17 02:43:01",
+	updated_at: "2014-02-17 02:43:37"
+}
+```
+
 #### Sentinel::authenticateAndRemember()
 
-This method authenticates and remembers the user, it acts more like an alias to the `authenticate()` but it sets the `$remember` flag to `true`.
+This method authenticates and remembers the user, it's an alias fore the `authenticate()` method but it sets the `$remember` flag to `true`.
+
+Returns: `Cartalyst\Sentinel\Users\UserInterface` or `false`.
 
 ##### Arguments
 
@@ -45,16 +70,39 @@ $credentials = [
 Sentinel::authenticateAndRemember($credentials);
 ```
 
-#### Sentinel::forceAuthenticate($credentials)
+##### Example Response
+
+```
+{
+	id: "1",
+	email: "john.doe@example.com",
+	permissions: {
+		admin: true
+	},
+	last_login: {
+		date: "2014-02-17 03:44:31",
+		timezone_type: 3,
+		timezone: "UTC"
+	},
+	first_name: "John",
+	last_name: "Doe",
+	created_at: "2014-02-17 02:43:01",
+	updated_at: "2014-02-17 02:43:37"
+}
+```
+
+#### Sentinel::forceAuthenticate()
 
 Authenticates a user bypassing all checkpoints.
+
+Returns: `Cartalyst\Sentinel\Users\UserInterface` or `false`.
 
 ##### Arguments
 
 Key          | Required | Type  | Default | Description
 ------------ | -------- | ----- | ------- | ------------------------------------
 $credentials | true     | array | null    | The user credentials.
-$remember    | false    | bool  | false   | The remember me flag.
+$remember    | false    | bool  | false   | Flag to set the remember cookie.
 
 ##### Example
 
@@ -67,9 +115,32 @@ $credentials = [
 Sentinel::forceAuthenticate($credentials);
 ```
 
-#### Sentinel::forceAuthenticateAndRemember($credentials)
+##### Example Response
+
+```
+{
+	id: "1",
+	email: "john.doe@example.com",
+	permissions: {
+		admin: true
+	},
+	last_login: {
+		date: "2014-02-17 03:44:31",
+		timezone_type: 3,
+		timezone: "UTC"
+	},
+	first_name: "John",
+	last_name: "Doe",
+	created_at: "2014-02-17 02:43:01",
+	updated_at: "2014-02-17 02:43:37"
+}
+```
+
+#### Sentinel::forceAuthenticateAndRemember()
 
 Authenticates and remembers a user bypassing all checkpoints.
+
+Returns: `Cartalyst\Sentinel\Users\UserInterface` or `false`.
 
 ##### Arguments
 
@@ -88,11 +159,32 @@ $credentials = [
 Sentinel::forceAuthenticateAndRemember($credentials);
 ```
 
-#### Sentinel::stateless($credentials)
+##### Example Response
+
+```
+{
+	id: "1",
+	email: "john.doe@example.com",
+	permissions: {
+		admin: true
+	},
+	last_login: {
+		date: "2014-02-17 03:44:31",
+		timezone_type: 3,
+		timezone: "UTC"
+	},
+	first_name: "John",
+	last_name: "Doe",
+	created_at: "2014-02-17 02:43:01",
+	updated_at: "2014-02-17 02:43:37"
+}
+```
+
+#### Sentinel::stateless()
 
 Performs stateless authentication.
 
-Returns the user object or false.
+Returns: `Cartalyst\Sentinel\Users\UserInterface` or `false`.
 
 ##### Arguments
 
@@ -118,9 +210,30 @@ else
 }
 ```
 
+##### Example Response
+
+```
+{
+	id: "1",
+	email: "john.doe@example.com",
+	permissions: {
+		admin: true
+	},
+	last_login: {
+		date: "2014-02-17 03:44:31",
+		timezone_type: 3,
+		timezone: "UTC"
+	},
+	first_name: "John",
+	last_name: "Doe",
+	created_at: "2014-02-17 02:43:01",
+	updated_at: "2014-02-17 02:43:37"
+}
+```
+
 #### Sentinel::basic()
 
-Authenticate using `HTTP` basic auth.
+Authenticates using the `HTTP` basic auth.
 
 Returns the auth response.
 

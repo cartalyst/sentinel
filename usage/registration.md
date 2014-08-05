@@ -15,7 +15,7 @@ The second argument is a boolean, that when set to `true` will automatically act
 Key          | Required | Type           | Default | Description
 ------------ | -------- | -------------- | ------- | ---------------------------
 $credentials | true     | array          | null    | The user credentials.
-$callback    | false    | bool, Closure  | false   | This argument is used for two things, activation and custom registration. If set to true, it will automatically activate the user account.
+$callback    | false    | bool ; Closure | null    | This argument is used for two things, either pass in `true` to activate the user or a `Closure` that would be executed before the user is created and can prevent user creation if it returns false.
 
 ##### Example
 
@@ -28,15 +28,26 @@ $credentials = [
 $user = Sentinel::register($credentials);
 ```
 
+##### Example Response
+
+```
+{
+	email: "john.doe@example.com",
+	created_at: "2014-02-17 02:43:01",
+	updated_at: "2014-02-17 02:43:01"
+	id: 2
+}
+```
+
 #### Sentinel::registerAndActivate()
 
-This method registers and activates the user, it acts more like an alias to the `register()` but it sets the `$callback` flag to `true`.
+This method registers and activates the user, it's an alias for the `register()` method but it sets the `$callback` flag to `true`.
 
 ##### Arguments
 
-Key          | Required | Type           | Default | Description
------------- | -------- | -------------- | ------- | ---------------------------
-$credentials | true     | array          | null    | The user credentials.
+Key          | Required | Type  | Default | Description
+------------ | -------- | ----- | ------- | ------------------------------------
+$credentials | true     | array | null    | The user credentials.
 
 ##### Example
 
@@ -47,4 +58,15 @@ $credentials = [
 ];
 
 $user = Sentinel::registerAndActivate($credentials);
+```
+
+##### Example Response
+
+```
+{
+	email: "john.doe@example.com",
+	created_at: "2014-02-17 02:43:01",
+	updated_at: "2014-02-17 02:43:01"
+	id: 2
+}
 ```

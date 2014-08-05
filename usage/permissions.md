@@ -13,7 +13,7 @@ Role-based permissions that define the same permission with different access rig
 
 If a user is not assigned a permission, the user will inherit permissions from the role. If a user is assigned a permission of false or true, then the user's permission will override the role permission.
 
-> **Note** The permission type is seto to `SentinelPermissions` by default, it can be changed on the `config` file.
+> **Note** The permission type is set to `SentinelPermissions` by default, it can be changed on the `config` file.
 
 ###### Administrator Role
 
