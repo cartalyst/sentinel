@@ -126,11 +126,17 @@ class SentinelServiceProvider extends ServiceProvider {
 		{
 			$users = $app['config']['cartalyst/sentinel::users.model'];
 			$roles = $app['config']['cartalyst/sentinel::roles.model'];
+			$persistences = $app['config']['cartalyst/sentinel::persistences.model'];
 			$permissions = $app['config']['cartalyst/sentinel::permissions.class'];
 
 			if (class_exists($roles) && method_exists($roles, 'setUsersModel'))
 			{
 				forward_static_call_array([$roles, 'setUsersModel'], [$users]);
+			}
+
+			if (class_exists($persistences) && method_exists($persistences, 'setUsersModel'))
+			{
+				forward_static_call_array([$persistences, 'setUsersModel'], [$users]);
 			}
 
 			if (class_exists($users) && method_exists($users, 'setPermissionsClass'))
