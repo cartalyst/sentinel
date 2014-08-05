@@ -6,7 +6,7 @@ Activation allows you to manage activations through Sentinel.
 
 Creates a new activation record for the user.
 
-Returns the activation object.
+Returns: `Cartalyst\Sentinel\Activations\EloquentActivation`.
 
 ##### Arguments
 
@@ -22,11 +22,23 @@ $user = Sentinel::findById(1);
 $activation = Activation::create($user);
 ```
 
+##### Example Response
+
+```
+{
+	code: "HNjOSGWoVHCNx70UAnbphnAJVIttFvot",
+	user_id: "1",
+	created_at: "2014-02-17 02:43:01",
+	updated_at: "2014-02-17 02:43:37",
+	id: 1
+}
+```
+
 #### Activation::exists()
 
 Check if an activation record exists for the user.
 
-Returns the activation object or boolean `false`.
+Returns: `Cartalyst\Sentinel\Activations\EloquentActivation` or `false`.
 
 ##### Arguments
 
@@ -39,14 +51,28 @@ $user | true     | Cartalyst\Sentinel\Users\UserInterface | null    | The Sentin
 ```php
 $user = Sentinel::findById(1);
 
-Activation::exists($user);
+$activation = Activation::exists($user);
+```
+
+###### Example Response
+
+```
+{
+	id: "1",
+	user_id: "1",
+	code: "HNjOSGWoVHCNx70UAnbphnAJVIttFvot",
+	completed: false,
+	completed_at: null,
+	created_at: "2014-02-17 02:43:01",
+	updated_at: "2014-02-17 02:43:37"
+}
 ```
 
 #### Activation::complete()
 
 Attempt to complete activation for the user using the code passed.
 
-Returns bool.
+Returns: `bool`
 
 ##### Arguments
 
@@ -70,11 +96,17 @@ else
 }
 ```
 
+##### Example Response
+
+```
+true
+```
+
 #### Activation::completed()
 
 Check if activation has been completed for the user.
 
-Returns the activation object or bool.
+Returns: `Cartalyst\Sentinel\Activations\EloquentActivation` or `false`.
 
 ##### Arguments
 
@@ -97,11 +129,25 @@ else
 }
 ```
 
+##### Example Response
+
+```
+{
+	id: "1",
+	user_id: "1",
+	code: "HiaVCzyLb6XFeZcVFpfUlCoLGZfhddHs",
+	completed: true,
+	completed_at: "2014-02-17 02:44:13",
+	created_at: "2014-02-17 02:43:01",
+	updated_at: "2014-02-17 02:43:37"
+}
+```
+
 #### Activation::remove()
 
 Remove the activation for the user.
 
-Returns true or null.
+Returns: `true` or `null`.
 
 ##### Arguments
 
@@ -117,12 +163,18 @@ $user = Sentinel::findById(1);
 Activation::remove($user);
 ```
 
-#### Activation::deleteExpired()
+##### Example Response
 
-Remove all expired activations.
+```
+true
+```
+
+#### Activation::removeExpired()
+
+Removes all the expired activations.
 
 ```php
-Activation::deleteExpired();
+Activation::removeExpired();
 ```
 
 #### Activation::createModel()
@@ -148,12 +200,3 @@ $model | true     | string | null    | The new activation model.
 ```php
 Activation::setModel('Your\Activation\Model');
 ```
-
-#### Exceptions
-
-- `Cartalyst\Sentinel\Checkpoints\NotActivatedException`
-
-Methods | Parameters                             | Description
-------- | -------------------------------------- | -----------------------------
-setUser | Cartalyst\Sentinel\Users\UserInterface | Sets a user object on the exception.
-getUser | ..                                     | Retrieves the user object that caused the exception.
