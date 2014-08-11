@@ -8,19 +8,24 @@ Sentinel is a framework agnostic set of interfaces with default implementations,
 
 ## Package Story
 
-It also provides additional features such as user roles and additional security features:
+Package history and capabilities.
 
-- Configurable authentication (can use any type of authentication required, such as username or email)
-- Authorization
-- Activation of user *(optional)*
-- Roles and role permissions
-- "Remember me"
-- User suspension
-- Login throttling *(optional)*
-- User banning
-- Password resetting
-- User data
-- Interface driven - switch out your own implementations at will
+#### 07-Aug-14 - v1.0.1
+
+- Addresses a bug where user model overriding was ignored.
+
+#### 05-Aug-14 - v1.0.0
+
+- Authentication.
+- Authorization.
+- Registration.
+- Driver based permission system.
+- Flexible activation scenarios.
+- Reminders. (password reset)
+- Inter-account throttling with DDoS protection.
+- Roles and role permissions.
+- Remember me.
+- Interface driven. (your own implementations at will)
 
 ## Requirements
 
