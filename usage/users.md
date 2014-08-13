@@ -302,7 +302,7 @@ $user = Sentinel::update($user, $credentials);
 }
 ```
 
-#### Sentinel::getHash()
+#### Sentinel::getHasher()
 
 Returns the current hasher.
 
@@ -326,6 +326,22 @@ $hasher | true     | Cartalyst\Sentinel\Hashing\HasherInterface  | null    | The
 
 ```php
 Sentinel::setHasher(new Cartalyst\Sentinel\Hashing\WhirlpoolHasher);
+```
+
+#### Sentinel::inRole($role)
+
+Check if the current user belongs to the given role.
+
+##### Arguments
+
+Key          | Required | Type   | Default | Description
+------------ | -------- | ------ | ------- | ------------------------------------
+$role        | true     | string | null    | The role to check against.
+
+##### Example
+
+```php
+$admin = Sentinel::inRole('admin');
 ```
 
 #### Sentinel::createModel()
