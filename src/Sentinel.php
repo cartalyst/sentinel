@@ -623,7 +623,7 @@ class Sentinel {
 	}
 
 	/**
-	 * Add a new checkpoint to Sentinel.
+	 * Removes a checkpoint.
 	 *
 	 * @param  string  $key
 	 * @return void
