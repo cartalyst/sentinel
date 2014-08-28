@@ -65,10 +65,10 @@ $checker = function($value, $hashedValue)
 }
 
 // Native PHP
-$sentinel->setHasher(new Cartalyst\Sentinel\Hashing\NativeHasher($hasher, $checker));
+$sentinel->setHasher(new Cartalyst\Sentinel\Hashing\CallbackHasher($hasher, $checker));
 
 // In Laravel
-Sentinel::setHasher(new Cartalyst\Sentinel\Hashing\NativeHasher($hasher, $checker));
+Sentinel::setHasher(new Cartalyst\Sentinel\Hashing\CallbackHasher($hasher, $checker));
 ```
 
 <div name="other-hashers" data-unique="other-hashers"></div>
