@@ -45,3 +45,15 @@ Sentinel is a complete refactor of our popular Sentry authentication & authoriza
 - Allow use of multiple ORM implementations.
 - Native facade for easy usage outside Laravel.
 - Interface driven (your own implementations at will).
+
+### Sentry vs Sentinel
+
+Feature                                       | Sentry               | Sentinel
+--------------------------------------------- | -------------------- | -------------------------------------------
+Persistences                                  | Single               | Single/Multiple
+Store additional data on persistences         | No                   | Yes
+Login attributes                              | Single               | Multiple (ex. email, username)
+Custom checkpoints                            | No                   | Yes
+Custom hashing strategies                     | No                   | Yes
+Driver-based permissions                      | No                   | Yes
+Inter-account throttling with DDoS protection | Basic                | Advanced
