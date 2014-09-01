@@ -359,6 +359,8 @@ class SentinelServiceProvider extends ServiceProvider {
 
 			return $sentinel;
 		});
+
+		$this->app->alias('sentinel', 'Cartalyst\Sentinel\Sentinel');
 	}
 
 	/**
