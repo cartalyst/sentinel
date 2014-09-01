@@ -21,10 +21,10 @@
 	],
 	"addons": [
 		"index",
-		"expired-permissions"
+		"expired-permissions",
 		"multi-tenancy",
 		"oauth-server",
 		"social",
-		"unique-passwords",
+		"unique-passwords"
 	]
 }
