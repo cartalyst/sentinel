@@ -339,7 +339,7 @@ class IlluminateThrottleRepository implements ThrottleRepositoryInterface {
 		return $this->userThresholds;
 	}
 
-		/**
+	/**
 	 * Returns a delay for the given type.
 	 *
 	 * @param  string  $type
