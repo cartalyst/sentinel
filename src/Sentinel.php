@@ -99,7 +99,7 @@ class Sentinel {
 	protected $reminders;
 
 	/**
-	 * The closure to retrieve request credentials.
+	 * The closure to retrieve the request credentials.
 	 *
 	 * @var \Closure
 	 */
@@ -269,7 +269,7 @@ class Sentinel {
 	}
 
 	/**
-	 * Returns if we are currently a guest.
+	 * Checks if we are currently a guest.
 	 *
 	 * @return \Cartalyst\Sentinel\Users\UserInterface|bool
 	 */
@@ -438,7 +438,7 @@ class Sentinel {
 	}
 
 	/**
-	 * Set the closure which resolves request credentials.
+	 * Sets the closure which resolves the request credentials.
 	 *
 	 * @param  \Closure  $requestCredentials
 	 * @return void
@@ -480,7 +480,7 @@ class Sentinel {
 	}
 
 	/**
-	 * Set the callback which creates a basic response.
+	 * Sets the callback which creates a basic response.
 	 *
 	 * @param  \Closure  $basicResonse
 	 * @return void
@@ -525,7 +525,7 @@ class Sentinel {
 	}
 
 	/**
-	 * Log the current user out.
+	 * Logs the current user out.
 	 *
 	 * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
 	 * @param  bool  $everywhere
@@ -581,7 +581,7 @@ class Sentinel {
 	}
 
 	/**
-	 * Returns if checkpoints are enabled.
+	 * Checks if checkpoints are enabled.
 	 *
 	 * @return bool
 	 */
@@ -683,7 +683,7 @@ class Sentinel {
 	}
 
 	/**
-	 * Set the user associated with Sentinel (does not log in).
+	 * Sets the user associated with Sentinel (does not log in).
 	 *
 	 * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
 	 * @return void
@@ -704,7 +704,7 @@ class Sentinel {
 	}
 
 	/**
-	 * Set the user repository.
+	 * Sets the user repository.
 	 *
 	 * @param  \Cartalyst\Sentinel\Users\UserRepositoryInterface  $users
 	 * @return void
@@ -727,7 +727,7 @@ class Sentinel {
 	}
 
 	/**
-	 * Set the role repository.
+	 * Sets the role repository.
 	 *
 	 * @param  \Cartalyst\Sentinel\Roles\RoleRepositoryInterface  $roles
 	 * @return void
@@ -748,7 +748,7 @@ class Sentinel {
 	}
 
 	/**
-	 * Set the persistences repository.
+	 * Sets the persistences repository.
 	 *
 	 * @param  \Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface  $persistences
 	 * @return void
@@ -769,7 +769,7 @@ class Sentinel {
 	}
 
 	/**
-	 * Set the activations repository.
+	 * Sets the activations repository.
 	 *
 	 * @param  \Cartalyst\Sentinel\Activations\ActivationRepositoryInterface  $activations
 	 * @return void
@@ -790,7 +790,7 @@ class Sentinel {
 	}
 
 	/**
-	 * Set the reminders repository.
+	 * Sets the reminders repository.
 	 *
 	 * @param  \Cartalyst\Sentinel\Reminders\ReminderRepositoryInterface  $reminders
 	 * @return void

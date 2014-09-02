@@ -48,7 +48,7 @@ interface RoleInterface {
 	public static function getUsersModel();
 
 	/**
-	 * Set the users model.
+	 * Sets the users model.
 	 *
 	 * @param  string  $usersModel
 	 * @return void

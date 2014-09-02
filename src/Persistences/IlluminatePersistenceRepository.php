@@ -57,11 +57,18 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface 
 	/**
 	 * Create a new Sentinel persistence repository.
 	 *
-	 * @param  Cartalyst\Sentinel\Sessions\SessionInterface  $session
-	 * @param  Cartalyst\Sentinel\Cookies\CookieInterface  $cookie
+	 * @param  \Cartalyst\Sentinel\Sessions\SessionInterface  $session
+	 * @param  \Cartalyst\Sentinel\Cookies\CookieInterface  $cookie
+	 * @param  string  $model
+	 * @param  bool  $single
 	 * @return void
 	 */
-	public function __construct(SessionInterface $session, CookieInterface $cookie, $model = null, $single = false)
+	public function __construct(
+		SessionInterface $session,
+		CookieInterface $cookie,
+		$model = null,
+		$single = false
+	)
 	{
 		if (isset($model))
 		{

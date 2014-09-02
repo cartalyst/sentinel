@@ -290,7 +290,7 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 	}
 
 	/**
-	 * Get the roles model.
+	 * Returns the roles model.
 	 *
 	 * @return string
 	 */
@@ -300,7 +300,7 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 	}
 
 	/**
-	 * Set the roles model.
+	 * Sets the roles model.
 	 *
 	 * @param  string  $rolesModel
 	 * @return void
@@ -311,7 +311,7 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 	}
 
 	/**
-	 * Get the persistences model.
+	 * Returns the persistences model.
 	 *
 	 * @return string
 	 */
@@ -321,7 +321,7 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 	}
 
 	/**
-	 * Set the persistences model.
+	 * Sets the persistences model.
 	 *
 	 * @param  string  $persistencesModel
 	 * @return void
@@ -332,7 +332,7 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 	}
 
 	/**
-	 * Get the activations model.
+	 * Returns the activations model.
 	 *
 	 * @return string
 	 */
@@ -342,7 +342,7 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 	}
 
 	/**
-	 * Set the activations model.
+	 * Sets the activations model.
 	 *
 	 * @param  string  $activationsModel
 	 * @return void
@@ -353,7 +353,7 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 	}
 
 	/**
-	 * Get the reminders model.
+	 * Returns the reminders model.
 	 *
 	 * @return string
 	 */
@@ -363,7 +363,7 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 	}
 
 	/**
-	 * Set the reminders model.
+	 * Sets the reminders model.
 	 *
 	 * @param  string  $remindersModel
 	 * @return void
@@ -374,7 +374,7 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 	}
 
 	/**
-	 * Get the throttling model.
+	 * Returns the throttling model.
 	 *
 	 * @return string
 	 */
@@ -384,7 +384,7 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
 	}
 
 	/**
-	 * Set the throttling model.
+	 * Sets the throttling model.
 	 *
 	 * @param  string  $throttlingModel
 	 * @return void
