@@ -41,7 +41,7 @@ interface UserInterface {
 	public function getUserLoginName();
 
 	/**
-	 * Returns the user passwrd.
+	 * Returns the user password.
 	 *
 	 * @return string
 	 */
