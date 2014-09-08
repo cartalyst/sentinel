@@ -199,6 +199,8 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface 
 		if ($forget)
 		{
 			$this->forget($persistable);
+			$persistable->{$persistable->getPersistableRelationship()}()->delete();
+			return;
 		}
 
 		foreach($persistable->{$persistable->getPersistableRelationship()}()->get() as $persistence)
