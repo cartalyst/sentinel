@@ -205,7 +205,7 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface 
 		{
 			if ($persistence->code !== $this->check())
 			{
-				$persistence->delete();
+				$this->remove($persistence->code);
 			}
 		}
 	}
