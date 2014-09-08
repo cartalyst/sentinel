@@ -201,14 +201,14 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface 
 			$this->forget($persistable);
 		}
 
-        $persistences = $persistable->{$persistable->getPersistableRelationship()}();
+		$persistences = $persistable->{$persistable->getPersistableRelationship()}();
 
-        if ($this->check() !== null)
-        {
-            $persistences->whereNotIn('code', [$this->check()]);
-        }
+		if ($this->check() !== null)
+		{
+			$persistences->whereNotIn('code', [$this->check()]);
+		}
 
-        $persistences->delete();
+		$persistences->delete();
 	}
 
 }
