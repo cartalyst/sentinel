@@ -10,6 +10,12 @@ Sentinel is a framework agnostic set of interfaces with default implementations,
 
 Package history and capabilities.
 
+#### 10-Sep-14 - v1.0.2
+
+- Fixed some doc blocks typos
+- Loosened the requirements on the composer.json
+- Added an IoC Container alias for the Sentinel class.
+
 #### 07-Aug-14 - v1.0.1
 
 - Addresses a bug where user model overriding was ignored.
