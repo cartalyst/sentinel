@@ -121,7 +121,7 @@ trait PermissibleTrait {
 
 			$this->permissions = $permissions;
 		}
-		else if ($create)
+		elseif ($create)
 		{
 			$this->addPermission($permission, $value);
 		}
