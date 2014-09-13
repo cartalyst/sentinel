@@ -40,9 +40,10 @@ interface PermissibleInterface {
 	 *
 	 * @param  string  $permission
 	 * @param  bool  $value
+	 * @param  bool  $create
 	 * @return \Cartalyst\Sentinel\Permissions\PermissibleInterface
 	 */
-	public function updatePermission($permission, $value = true);
+	public function updatePermission($permission, $value = true, $create = false);
 
 	/**
 	 * Removes a permission.
