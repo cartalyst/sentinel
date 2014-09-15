@@ -38,21 +38,21 @@
 		}
 	],
 	"repositories": [
-        {
-            "type": "composer",
-            "url": "http://packages.cartalyst.com"
-        }
-    ],
+		{
+			"type": "composer",
+			"url": "http://packages.cartalyst.com"
+		}
+	],
 	"require": {
 		"php": ">=5.4.0",
 		"cartalyst/support": "~1.0",
-		"illuminate/support": "~4.1"
+		"illuminate/support": "~4.1|5.0*"
 	},
 	"require-dev": {
-		"illuminate/cookie": "~4.1",
-		"illuminate/database": "~4.1",
-		"illuminate/http": "~4.1",
-		"illuminate/session": "~4.1",
+		"illuminate/cookie": "~4.1|5.0*",
+		"illuminate/database": "~4.1|5.0*",
+		"illuminate/http": "~4.1|5.0*",
+		"illuminate/session": "~4.1|5.0*",
 		"ircmaxell/password-compat": "~1.0",
 		"mockery/mockery": "~0.9",
 		"phpunit/phpunit": "~4.0"
@@ -73,7 +73,7 @@
 	"extra": {
 		"component": "package",
 		"branch-alias": {
-			"dev-master": "1.0.x-dev"
+			"dev-master": "1.1.x-dev"
 		}
 	},
 	"minimum-stability": "dev"
