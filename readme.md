@@ -10,6 +10,18 @@ Sentinel is a framework agnostic set of interfaces with default implementations,
 
 Package history and capabilities.
 
+#### 16-Sep-14 - v1.0.5
+
+- Fixed a minor issue when deleting a user, the method wasn't returning the expected boolean only null.
+
+#### 15-Sep-14 - v1.0.4
+
+- Improved the requirements to allow the installation on Laravel 5.0.
+
+#### 13-Sep-14 - v1.0.3
+
+- Updated the updatePermission method signature on the PermissibleInterface due to a PHP bug on older versions.
+
 #### 10-Sep-14 - v1.0.2
 
 - Fixed some doc blocks typos
