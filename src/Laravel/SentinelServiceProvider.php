@@ -29,6 +29,7 @@ use Cartalyst\Sentinel\Sentinel;
 use Cartalyst\Sentinel\Sessions\IlluminateSession;
 use Cartalyst\Sentinel\Throttling\IlluminateThrottleRepository;
 use Cartalyst\Sentinel\Users\IlluminateUserRepository;
+use Exception;
 use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Response;
@@ -412,7 +413,11 @@ class SentinelServiceProvider extends ServiceProvider {
 	{
 		if ($this->configHitsLottery($lottery))
 		{
-			$repository->removeExpired();
+			try
+			{
+				$repository->removeExpired();
+			}
+			catch (Exception $e) {}
 		}
 	}
 
