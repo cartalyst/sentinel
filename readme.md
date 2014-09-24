@@ -10,6 +10,10 @@ Sentinel is a framework agnostic set of interfaces with default implementations,
 
 Package history and capabilities.
 
+#### 24-Sep-14 - v1.0.6
+
+- Wrap garbageCollect into a try catch block to prevent an exception from being thrown if the database is not setup.
+
 #### 16-Sep-14 - v1.0.5
 
 - Fixed a minor issue when deleting a user, the method wasn't returning the expected boolean only null.
