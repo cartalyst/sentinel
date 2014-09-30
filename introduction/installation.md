@@ -13,7 +13,7 @@ Add the following lines after the `require` array on your `composer.json` file:
 	"repositories": [
 		{
 			"type": "composer",
-			"url": "http://packages.cartalyst.com"
+			"url": "https://packages.cartalyst.com"
 		}
 	],
 
