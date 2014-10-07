@@ -308,7 +308,7 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 	 * @param  array  $credentials
 	 * @return void
 	 */
-	protected function fill(UserInterface $user, array $credentials)
+	public function fill(UserInterface $user, array $credentials)
 	{
 		$this->fireEvent('sentinel.user.filling', compact('user', 'credentials'));
 
@@ -339,6 +339,8 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 		}
 
 		$this->fireEvent('sentinel.user.filled', compact('user', 'credentials'));
+
+		return $user;
 	}
 
 	/**
