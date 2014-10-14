@@ -61,8 +61,7 @@ $credentials | true     | array | null    | The user credentials.
 
 ```php
 $credentials = [
-	'email'    => 'john.doe@example.com',
-	'password' => 'password',
+	'login' => 'john.doe@example.com',
 ];
 
 $user = Sentinel::findByCredentials($credentials);
