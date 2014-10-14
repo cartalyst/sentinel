@@ -80,7 +80,7 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function exists(UserInterface $user)
+	public function exists(UserInterface $user, $code = null)
 	{
 		$expires = $this->expires();
 
@@ -89,10 +89,14 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface {
 			->newQuery()
 			->where('user_id', $user->getUserId())
 			->where('completed', false)
-			->where('created_at', '>', $expires)
-			->first();
+			->where('created_at', '>', $expires);
 
-		return $activation ?: false;
+		if ($code)
+		{
+			$activation->where('code', $code);
+		}
+
+		return $activation->first() ?: false;
 	}
 
 	/**

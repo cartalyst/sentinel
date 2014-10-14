@@ -94,7 +94,7 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface {
 	/**
 	 * {@inheritDoc}
 	 */
-	public function exists(UserInterface $user)
+	public function exists(UserInterface $user, $code = null)
 	{
 		$expires = $this->expires();
 
@@ -103,10 +103,14 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface {
 			->newQuery()
 			->where('user_id', $user->getUserId())
 			->where('completed', false)
-			->where('created_at', '>', $expires)
-			->first();
+			->where('created_at', '>', $expires);
 
-		return $reminder ?: null;
+		if ($code)
+		{
+			$reminder->where('code', $code);
+		}
+
+		return $reminder->first() ?: false;
 	}
 
 	/**

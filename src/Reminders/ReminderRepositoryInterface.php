@@ -33,9 +33,10 @@ interface ReminderRepositoryInterface {
 	 * Check if a valid reminder exists.
 	 *
 	 * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
+	 * @param  string  $code
 	 * @return bool
 	 */
-	public function exists(UserInterface $user);
+	public function exists(UserInterface $user, $code = null);
 
 	/**
 	 * Complete reminder for the given user.

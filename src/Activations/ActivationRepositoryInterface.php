@@ -33,9 +33,10 @@ interface ActivationRepositoryInterface {
 	 * Checks if a valid activation for the given user exists.
 	 *
 	 * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
+	 * @param  string  $code
 	 * @return bool
 	 */
-	public function exists(UserInterface $user);
+	public function exists(UserInterface $user, $code = null);
 
 	/**
 	 * Completes the activation for the given user.
