@@ -10,6 +10,10 @@ Sentinel is a framework agnostic set of interfaces with default implementations,
 
 Package history and capabilities.
 
+#### 21-Oct-14 - v1.0.7
+
+- Added the `$hidden` property to the user model with the password field being hidden by default.
+
 #### 24-Sep-14 - v1.0.6
 
 - Wrap garbageCollect into a try catch block to prevent an exception from being thrown if the database is not setup.
