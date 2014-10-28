@@ -79,8 +79,8 @@ return [
 	| Here you may specify the permissions class. Sentinel ships with two
 	| permission types.
 	|
-	| 'Cartalyst\Sentinel\Permissions\StrictPermissions'
 	| 'Cartalyst\Sentinel\Permissions\StandardPermissions'
+	| 'Cartalyst\Sentinel\Permissions\StrictPermissions'
 	|
 	| "StandardPermissions" will assign a higher priority to the user
 	| permissions over role permissions, once a user is allowed or denied
