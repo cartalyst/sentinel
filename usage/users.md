@@ -303,7 +303,7 @@ $user = Sentinel::update($user, $credentials);
 
 #### $user->delete()
 
-Deletes an existing user.
+Deletes an existing user and also removes the records from related Sentinel tables.
 
 ##### Example
 
