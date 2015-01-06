@@ -102,3 +102,24 @@ if (Sentinel::guest())
 ```
 true
 ```
+
+#### Sentinel::getUser()
+
+Retrieves the currently logged in user.
+
+Returns: `Cartalyst\Sentinel\Users\UserInterface` or `null`.
+
+##### Arguments
+
+Key     | Required | Type | Default | Description
+------- | -------- | ---- | ------- | ------------------------------------
+$check  | false    | bool | true    | A flag to instruct sentinel whether it should perform a check for a logged in user if it hasn't been checked yet on the given request.
+
+##### Example
+
+```php
+if ($user = Sentinel::getUser())
+{
+	// User is logged in and assigned to the `$user` variable.
+}
+```
