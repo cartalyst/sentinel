@@ -10,7 +10,7 @@
  * bundled with this package in the license.txt file.
  *
  * @package    Sentinel
- * @version    1.0.7
+ * @version    1.0.8
  * @author     Cartalyst LLC
  * @license    Cartalyst PSL
  * @copyright  (c) 2011-2015, Cartalyst LLC
