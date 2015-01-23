@@ -116,6 +116,13 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase {
 		]);
 	}
 
+	public function testFindByCredentials6()
+	{
+		list($users, $hasher, $model, $query) = $this->getUsersMock();
+
+		$this->assertNull($users->findByCredentials([]));
+	}
+
 	public function testFindByPersistenceCode()
 	{
 		list($users, $hasher, $model, $query) = $this->getUsersMock();

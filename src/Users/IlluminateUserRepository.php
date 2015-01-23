@@ -83,6 +83,8 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 	 */
 	public function findByCredentials(array $credentials)
 	{
+		if (empty($credentials)) return;
+
 		$instance = $this->createModel();
 
 		$loginNames = $instance->getLoginNames();
