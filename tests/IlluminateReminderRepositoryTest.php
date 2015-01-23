@@ -50,7 +50,7 @@ class IlluminateReminderRepositoryTest extends PHPUnit_Framework_TestCase {
 		list($reminders, $users, $model, $query) = $this->getReminderMock();
 
 		$model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-		$query->shouldReceive('insertGetId')->once();
+		$model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
 
 		$user = $this->getUserMock();
 

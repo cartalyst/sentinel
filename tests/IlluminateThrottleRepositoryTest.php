@@ -362,8 +362,10 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase {
 
 		$query->shouldReceive('where')->with('type', 'global')->andReturn($query);
 		$query->shouldReceive('where')->with('id', '=', '');
-		$query->shouldReceive('insertGetId')->once();
-		$query->shouldReceive('update')->twice();
+
+		$model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
+		$model->getConnection()->getQueryGrammar()->shouldReceive('compileUpdate')->once();
+		$model->getConnection()->shouldReceive('update')->once();
 
 		$user = m::mock('Cartalyst\Sentinel\Users\EloquentUser');
 		$user->shouldReceive('getUserId')->once()->andReturn(1);

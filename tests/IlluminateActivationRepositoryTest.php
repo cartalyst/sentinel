@@ -49,7 +49,7 @@ class IlluminateActivationRepositoryTest extends PHPUnit_Framework_TestCase {
 
 		$model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
 
-		$query->shouldReceive('insertGetId')->once();
+		$model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
 
 		$user = $this->getUserMock();
 
