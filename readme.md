@@ -10,6 +10,11 @@ Sentinel is a framework agnostic set of interfaces with default implementations,
 
 Package history and capabilities.
 
+#### 23-Jan-15 - v1.0.8
+
+- Fixed a bug on the `findByCredentials` method that caused the first user to be returned when an empty array is passed.
+- Added mysql database schema.
+
 #### 21-Oct-14 - v1.0.7
 
 - Added the `$hidden` property to the user model with the password field being hidden by default.
