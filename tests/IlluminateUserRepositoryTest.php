@@ -131,7 +131,7 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase {
 		list($users, $hasher, $model, $query) = $this->getUsersMock();
 
 		$model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-		$query->shouldReceive('insertGetId')->once();
+		$model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
 
 		$users->recordLogin($model);
 	}
@@ -141,7 +141,7 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase {
 		list($users, $hasher, $model, $query) = $this->getUsersMock();
 
 		$model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-		$query->shouldReceive('insertGetId')->once();
+		$model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
 
 		$users->recordLogout($model);
 	}
@@ -231,7 +231,7 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase {
 		list($users, $hasher, $model, $query) = $this->getUsersMock();
 
 		$model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-		$query->shouldReceive('insertGetId')->once();
+		$model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
 
 		$hasher->shouldReceive('hash')->once()->with('secret')->andReturn(password_hash('secret', PASSWORD_DEFAULT));
 
@@ -248,7 +248,7 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase {
 		list($users, $hasher, $model, $query) = $this->getUsersMock();
 
 		$model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-		$query->shouldReceive('insertGetId')->once();
+		$model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
 
 		$hasher->shouldReceive('hash')->once()->with('secret')->andReturn(password_hash('secret', PASSWORD_DEFAULT));
 
