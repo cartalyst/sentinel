@@ -303,18 +303,14 @@ $user = Sentinel::update($user, $credentials);
 
 #### $user->delete()
 
-Deletes an existing user and also removes the records from related Sentinel tables.
+A user object can be deleted by calling eloquent's `delete` method on the user object. All related records for that specific user will be deleted as well.
 
 ##### Example
 
 ```php
 $user = Sentinel::findById(1);
 
-try {
-	$user->delete();
-} catch (Exception $e){
-	// Handle no existing user here
-}
+$user->delete();
 ```
 
 #### Sentinel::getHasher()
