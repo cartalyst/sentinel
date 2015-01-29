@@ -301,6 +301,22 @@ $user = Sentinel::update($user, $credentials);
 }
 ```
 
+#### $user->delete()
+
+Deletes an existing user and also removes the records from related Sentinel tables.
+
+##### Example
+
+```php
+$user = Sentinel::findById(1);
+
+try {
+	$user->delete();
+} catch (Exception $e){
+	// Handle no existing user here
+}
+```
+
 #### Sentinel::getHasher()
 
 Returns the current hasher.
