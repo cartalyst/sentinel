@@ -41,8 +41,6 @@ class SentinelServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->package('cartalyst/sentinel', 'cartalyst/sentinel', __DIR__.'/..');
-
 		$this->garbageCollect();
 	}
 
@@ -51,12 +49,29 @@ class SentinelServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
+		$this->prepareResources();
 		$this->registerPersistences();
 		$this->registerUsers();
 		$this->registerRoles();
 		$this->registerCheckpoints();
 		$this->registerReminders();
 		$this->registerSentinel();
+	}
+
+	/**
+	 * Prepare the package resources.
+	 *
+	 * @return void
+	 */
+	protected function prepareResources()
+	{
+	    $configPath = __DIR__.'/../config/config.php';
+
+	    $this->mergeConfigFrom($configPath, 'cartalyst.sentinel');
+
+	    $this->publishes([
+	        $configPath => config_path('cartalyst.sentinel.php'),
+	    ]);
 	}
 
 	/**
@@ -71,9 +86,11 @@ class SentinelServiceProvider extends ServiceProvider {
 
 		$this->app['sentinel.persistence'] = $this->app->share(function($app)
 		{
-			$model = $app['config']['cartalyst/sentinel::persistences.model'];
-			$single = $app['config']['cartalyst/sentinel::persistences.single'];
-			$users = $app['config']['cartalyst/sentinel::users.model'];
+			$config = $app['config']->get('cartalyst.sentinel');
+
+			$model  = array_get($config, 'persistences.model');
+			$single = array_get($config, 'persistences.single');
+			$users  = array_get($config, 'users.model');
 
 			if (class_exists($users) && method_exists($users, 'setPersistencesModel'))
 			{
@@ -93,7 +110,7 @@ class SentinelServiceProvider extends ServiceProvider {
 	{
 		$this->app['sentinel.session'] = $this->app->share(function($app)
 		{
-			$key = $app['config']['cartalyst/sentinel::session'];
+			$key = $app['config']->get('cartalyst.sentinel.session');
 
 			return new IlluminateSession($app['session.store'], $key);
 		});
@@ -108,7 +125,7 @@ class SentinelServiceProvider extends ServiceProvider {
 	{
 		$this->app['sentinel.cookie'] = $this->app->share(function($app)
 		{
-			$key = $app['config']['cartalyst/sentinel::cookie'];
+			$key = $app['config']->get('cartalyst.sentinel.cookie');
 
 			return new IlluminateCookie($app['request'], $app['cookie'], $key);
 		});
@@ -125,10 +142,12 @@ class SentinelServiceProvider extends ServiceProvider {
 
 		$this->app['sentinel.users'] = $this->app->share(function($app)
 		{
-			$users = $app['config']['cartalyst/sentinel::users.model'];
-			$roles = $app['config']['cartalyst/sentinel::roles.model'];
-			$persistences = $app['config']['cartalyst/sentinel::persistences.model'];
-			$permissions = $app['config']['cartalyst/sentinel::permissions.class'];
+			$config = $app['config']->get('cartalyst.sentinel');
+
+			$users        = array_get($config, 'users.model');
+			$roles        = array_get($config, 'roles.model');
+			$persistences = array_get($config, 'persistences.model');
+			$permissions  = array_get($config, 'permissions.class');
 
 			if (class_exists($roles) && method_exists($roles, 'setUsersModel'))
 			{
@@ -171,8 +190,10 @@ class SentinelServiceProvider extends ServiceProvider {
 	{
 		$this->app['sentinel.roles'] = $this->app->share(function($app)
 		{
-			$model = $app['config']['cartalyst/sentinel::roles.model'];
-			$users = $app['config']['cartalyst/sentinel::users.model'];
+			$config = $app['config']->get('cartalyst.sentinel');
+
+			$model = array_get($config, 'roles.model');
+			$users = array_get($config, 'users.model');
 
 			if (class_exists($users) && method_exists($users, 'setRolesModel'))
 			{
@@ -196,7 +217,7 @@ class SentinelServiceProvider extends ServiceProvider {
 
 		$this->app['sentinel.checkpoints'] = $this->app->share(function($app)
 		{
-			$activeCheckpoints = $app['config']['cartalyst/sentinel::checkpoints'];
+			$activeCheckpoints = $app['config']->get('cartalyst.sentinel.checkpoints');
 
 			$checkpoints = [];
 
@@ -238,8 +259,10 @@ class SentinelServiceProvider extends ServiceProvider {
 	{
 		$this->app['sentinel.activations'] = $this->app->share(function($app)
 		{
-			$model = $app['config']['cartalyst/sentinel::activations.model'];
-			$expires = $app['config']['cartalyst/sentinel::activations.expires'];
+			$config = $app['config']->get('cartalyst.sentinel');
+
+			$model   = array_get($config, 'activations.model');
+			$expires = array_get($config, 'activations.expires');
 
 			return new IlluminateActivationRepository($model, $expires);
 		});
@@ -272,12 +295,12 @@ class SentinelServiceProvider extends ServiceProvider {
 	{
 		$this->app['sentinel.throttling'] = $this->app->share(function($app)
 		{
-			$model = $app['config']['cartalyst/sentinel::throttling.model'];
+			$model = $app['config']->get('cartalyst.sentinel.throttling.model');
 
 			foreach (['global', 'ip', 'user'] as $type)
 			{
-				${"{$type}Interval"} = $app['config']["cartalyst/sentinel::throttling.{$type}.interval"];
-				${"{$type}Thresholds"} = $app['config']["cartalyst/sentinel::throttling.{$type}.thresholds"];
+				${"{$type}Interval"} = $app['config']->get("cartalyst.sentinel.throttling.{$type}.interval");
+				${"{$type}Thresholds"} = $app['config']->get("cartalyst.sentinel.throttling.{$type}.thresholds");
 			}
 
 			return new IlluminateThrottleRepository(
@@ -301,8 +324,10 @@ class SentinelServiceProvider extends ServiceProvider {
 	{
 		$this->app['sentinel.reminders'] = $this->app->share(function($app)
 		{
-			$model = $app['config']['cartalyst/sentinel::reminders.model'];
-			$expires = $app['config']['cartalyst/sentinel::reminders.expires'];
+			$config = $app['config']->get('cartalyst.sentinel');
+
+			$model   = array_get($config, 'reminders.model');
+			$expires = array_get($config, 'reminders.expires');
 
 			return new IlluminateReminderRepository($app['sentinel.users'], $model, $expires);
 		});
@@ -393,11 +418,11 @@ class SentinelServiceProvider extends ServiceProvider {
 	 */
 	protected function garbageCollect()
 	{
-		$config = $this->app['config']['cartalyst/sentinel::activations.lottery'];
+		$config = $this->app['config']->get('cartalyst.sentinel.activations.lottery');
 
 		$this->sweep($this->app['sentinel.activations'], $config);
 
-		$config = $this->app['config']['cartalyst/sentinel::reminders.lottery'];
+		$config = $this->app['config']->get('cartalyst.sentinel.reminders.lottery');
 
 		$this->sweep($this->app['sentinel.reminders'], $config);
 	}
