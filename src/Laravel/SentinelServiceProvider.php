@@ -65,15 +65,21 @@ class SentinelServiceProvider extends ServiceProvider {
 	 */
 	protected function prepareResources()
 	{
-		$config     = realpath(__DIR__.'/../config/config.php');
-		$migrations = realpath(__DIR__.'/../migrations');
+		// Publish config
+		$config = realpath(__DIR__.'/../config/config.php');
 
 		$this->mergeConfigFrom($config, 'cartalyst.sentinel');
 
 		$this->publishes([
-			$config     => config_path('cartalyst.sentinel.php'),
+			$config => config_path('cartalyst.sentinel.php'),
+		], 'config');
+
+		// Publish migrations
+		$migrations = realpath(__DIR__.'/../migrations');
+
+		$this->publishes([
 			$migrations => $this->app->databasePath().'/migrations',
-		]);
+		], 'migrations');
 	}
 
 	/**
