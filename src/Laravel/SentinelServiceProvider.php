@@ -56,6 +56,7 @@ class SentinelServiceProvider extends ServiceProvider {
 		$this->registerCheckpoints();
 		$this->registerReminders();
 		$this->registerSentinel();
+		$this->setUserResolver();
 	}
 
 	/**
@@ -463,6 +464,19 @@ class SentinelServiceProvider extends ServiceProvider {
 	protected function configHitsLottery(array $lottery)
 	{
 		return mt_rand(1, $lottery[1]) <= $lottery[0];
+	}
+
+	/**
+	 * Sets the user resolver on the request class.
+	 *
+	 * @return void
+	 */
+	protected function setUserResolver()
+	{
+		$this->app['request']->setUserResolver(function()
+		{
+			return $this->app['sentinel']->getUser();
+		});
 	}
 
 }
