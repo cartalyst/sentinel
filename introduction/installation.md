@@ -6,7 +6,7 @@ The best and easiest way to install Sentinel is with [Composer](http://getcompos
 
 Open your `composer.json` file and add the following to the `require` array:
 
-	"cartalyst/sentinel": "1.0.*"
+	"cartalyst/sentinel": "2.0.*"
 
 Add the following lines after the `require` array on your `composer.json` file:
 
