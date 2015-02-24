@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Tests;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,214 +18,213 @@
  * @link       http://cartalyst.com
  */
 
+namespace Cartalyst\Sentinel\tests;
+
 use Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint;
 use Cartalyst\Sentinel\Sentinel;
 use Cartalyst\Sentinel\Users\EloquentUser;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
 
-class CheckpointsTest extends PHPUnit_Framework_TestCase {
+class CheckpointsTest extends PHPUnit_Framework_TestCase
+{
+    /**
+     * Close mockery.
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        m::close();
+    }
 
-	/**
-	 * Close mockery.
-	 *
-	 * @return void
-	 */
-	public function tearDown()
-	{
-		m::close();
-	}
+    public function testAddCheckpoint()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testAddCheckpoint()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $persistences->shouldReceive('check')->once()->andReturn('foobar');
+        $persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser);
 
-		$persistences->shouldReceive('check')->once()->andReturn('foobar');
-		$persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser);
+        $activationCheckpoint = m::mock('Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint', [$activations]);
+        $activationCheckpoint->shouldReceive('check')->once();
 
-		$activationCheckpoint = m::mock('Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint', [$activations]);
-		$activationCheckpoint->shouldReceive('check')->once();
+        $sentinel->addCheckpoint('activation', $activationCheckpoint);
 
-		$sentinel->addCheckpoint('activation', $activationCheckpoint);
+        $sentinel->check();
+    }
 
-		$sentinel->check();
-	}
+    public function testRemoveCheckpoint()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher, $throttle) = $this->createSentinel();
 
-	public function testRemoveCheckpoint()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher, $throttle) = $this->createSentinel();
+        $persistences->shouldReceive('check')->once()->andReturn('foobar');
+        $persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser);
 
-		$persistences->shouldReceive('check')->once()->andReturn('foobar');
-		$persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser);
+        $activationCheckpoint = m::mock('Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint', [$activations]);
 
-		$activationCheckpoint = m::mock('Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint', [$activations]);
+        $throttleCheckpoint = m::mock('Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint', [$throttle]);
+        $throttleCheckpoint->shouldReceive('check')->once();
 
-		$throttleCheckpoint = m::mock('Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint', [$throttle]);
-		$throttleCheckpoint->shouldReceive('check')->once();
+        $sentinel->addCheckpoint('activation', $activationCheckpoint);
+        $sentinel->addCheckpoint('throttle', $throttleCheckpoint);
 
-		$sentinel->addCheckpoint('activation', $activationCheckpoint);
-		$sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+        $sentinel->removeCheckpoint('activation');
 
-		$sentinel->removeCheckpoint('activation');
+        $sentinel->check();
+    }
 
-		$sentinel->check();
-	}
+    public function testBypassCheckpoint()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher, $throttle) = $this->createSentinel();
 
-	public function testBypassCheckpoint()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher, $throttle) = $this->createSentinel();
+        $persistences->shouldReceive('check')->once()->andReturn('foobar');
+        $persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser);
 
-		$persistences->shouldReceive('check')->once()->andReturn('foobar');
-		$persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser);
+        $activationCheckpoint = m::mock('Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint', [$activations]);
 
-		$activationCheckpoint = m::mock('Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint', [$activations]);
+        $throttleCheckpoint = m::mock('Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint', [$throttle]);
 
-		$throttleCheckpoint = m::mock('Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint', [$throttle]);
+        $sentinel->addCheckpoint('activation', $activationCheckpoint);
+        $sentinel->addCheckpoint('throttle', $throttleCheckpoint);
 
-		$sentinel->addCheckpoint('activation', $activationCheckpoint);
-		$sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+        $sentinel->bypassCheckpoints(function ($sentinel) {
+            $sentinel->check();
+        });
+    }
 
-		$sentinel->bypassCheckpoints(function($sentinel)
-		{
-			$sentinel->check();
-		});
-	}
+    public function testBypassSpecificCheckpoint()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher, $throttle) = $this->createSentinel();
 
-	public function testBypassSpecificCheckpoint()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher, $throttle) = $this->createSentinel();
+        $persistences->shouldReceive('check')->once()->andReturn('foobar');
+        $persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser);
 
-		$persistences->shouldReceive('check')->once()->andReturn('foobar');
-		$persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser);
+        $activationCheckpoint = m::mock('Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint', [$activations]);
 
-		$activationCheckpoint = m::mock('Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint', [$activations]);
+        $throttleCheckpoint = m::mock('Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint', [$throttle]);
+        $throttleCheckpoint->shouldReceive('check')->once();
 
-		$throttleCheckpoint = m::mock('Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint', [$throttle]);
-		$throttleCheckpoint->shouldReceive('check')->once();
+        $sentinel->addCheckpoint('activation', $activationCheckpoint);
+        $sentinel->addCheckpoint('throttle', $throttleCheckpoint);
 
-		$sentinel->addCheckpoint('activation', $activationCheckpoint);
-		$sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+        $sentinel->bypassCheckpoints(function ($s) {
+            $this->assertNotNull($s->check());
+        }, ['throttle']);
+    }
 
-		$sentinel->bypassCheckpoints(function($s)
-		{
-			$this->assertNotNull($s->check());
-		}, ['throttle']);
-	}
+    public function testDisableCheckpoints()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher, $throttle) = $this->createSentinel();
 
-	public function testDisableCheckpoints()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher, $throttle) = $this->createSentinel();
+        $this->assertTrue($sentinel->checkpointsStatus());
 
-		$this->assertTrue($sentinel->checkpointsStatus());
+        $sentinel->disableCheckpoints();
 
-		$sentinel->disableCheckpoints();
+        $this->assertFalse($sentinel->checkpointsStatus());
 
-		$this->assertFalse($sentinel->checkpointsStatus());
+        $persistences->shouldReceive('check')->once()->andReturn('foobar');
+        $persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser);
 
-		$persistences->shouldReceive('check')->once()->andReturn('foobar');
-		$persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser);
+        $activationCheckpoint = m::mock('Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint', [$activations]);
+        $throttleCheckpoint   = m::mock('Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint', [$throttle]);
 
-		$activationCheckpoint = m::mock('Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint', [$activations]);
-		$throttleCheckpoint   = m::mock('Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint', [$throttle]);
+        $sentinel->addCheckpoint('activation', $activationCheckpoint);
+        $sentinel->addCheckpoint('throttle', $throttleCheckpoint);
 
-		$sentinel->addCheckpoint('activation', $activationCheckpoint);
-		$sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+        $this->assertNotNull($sentinel->check());
+    }
 
-		$this->assertNotNull($sentinel->check());
-	}
+    public function testEnableCheckpoints()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher, $throttle) = $this->createSentinel();
 
-	public function testEnableCheckpoints()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher, $throttle) = $this->createSentinel();
+        $persistences->shouldReceive('check')->once()->andReturn('foobar');
+        $persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser);
 
-		$persistences->shouldReceive('check')->once()->andReturn('foobar');
-		$persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser);
+        $this->assertTrue($sentinel->checkpointsStatus());
 
-		$this->assertTrue($sentinel->checkpointsStatus());
+        $sentinel->disableCheckpoints();
 
-		$sentinel->disableCheckpoints();
+        $this->assertFalse($sentinel->checkpointsStatus());
 
-		$this->assertFalse($sentinel->checkpointsStatus());
+        $sentinel->enableCheckpoints();
 
-		$sentinel->enableCheckpoints();
+        $this->assertTrue($sentinel->checkpointsStatus());
 
-		$this->assertTrue($sentinel->checkpointsStatus());
+        $activationCheckpoint = m::mock('Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint', [$activations]);
+        $throttleCheckpoint   = m::mock('Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint', [$throttle]);
 
-		$activationCheckpoint = m::mock('Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint', [$activations]);
-		$throttleCheckpoint   = m::mock('Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint', [$throttle]);
+        $activationCheckpoint->shouldReceive('check')->once();
+        $throttleCheckpoint->shouldReceive('check')->once();
 
-		$activationCheckpoint->shouldReceive('check')->once();
-		$throttleCheckpoint->shouldReceive('check')->once();
+        $sentinel->addCheckpoint('activation', $activationCheckpoint);
+        $sentinel->addCheckpoint('throttle', $throttleCheckpoint);
 
-		$sentinel->addCheckpoint('activation', $activationCheckpoint);
-		$sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+        $this->assertNotNull($sentinel->check());
+    }
 
-		$this->assertNotNull($sentinel->check());
-	}
+    public function testCheckCheckpoint()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher, $throttle) = $this->createSentinel();
 
-	public function testCheckCheckpoint()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher, $throttle) = $this->createSentinel();
+        $persistences->shouldReceive('check')->once()->andReturn('foobar');
+        $persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser);
 
-		$persistences->shouldReceive('check')->once()->andReturn('foobar');
-		$persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser);
+        $throttleCheckpoint = m::mock('Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint', [$throttle]);
+        $throttleCheckpoint->shouldReceive('check')->once()->andReturn(false);
 
-		$throttleCheckpoint = m::mock('Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint', [$throttle]);
-		$throttleCheckpoint->shouldReceive('check')->once()->andReturn(false);
+        $sentinel->addCheckpoint('throttle', $throttleCheckpoint);
 
-		$sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+        $this->assertFalse($sentinel->check());
+    }
 
-		$this->assertFalse($sentinel->check());
-	}
+    public function testLoginCheckpoint()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher, $throttle) = $this->createSentinel();
 
-	public function testLoginCheckpoint()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher, $throttle) = $this->createSentinel();
+        $dispatcher->shouldReceive('until')->once();
 
-		$dispatcher->shouldReceive('until')->once();
+        $throttleCheckpoint = m::mock('Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint', [$throttle]);
+        $throttleCheckpoint->shouldReceive('login')->once()->andReturn(false);
 
-		$throttleCheckpoint = m::mock('Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint', [$throttle]);
-		$throttleCheckpoint->shouldReceive('login')->once()->andReturn(false);
+        $sentinel->addCheckpoint('throttle', $throttleCheckpoint);
 
-		$sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+        $this->assertFalse($sentinel->authenticate(new EloquentUser));
+    }
 
-		$this->assertFalse($sentinel->authenticate(new EloquentUser));
-	}
+    public function testFailCheckpoint()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher, $throttle) = $this->createSentinel();
 
-	public function testFailCheckpoint()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher, $throttle) = $this->createSentinel();
+        $dispatcher->shouldReceive('until')->once();
 
-		$dispatcher->shouldReceive('until')->once();
+        $credentials = [
+            'login'    => 'foo@example.com',
+            'password' => 'secret',
+        ];
 
-		$credentials = [
-			'login'    => 'foo@example.com',
-			'password' => 'secret',
-		];
+        $users->shouldReceive('findByCredentials')->with($credentials)->once();
 
-		$users->shouldReceive('findByCredentials')->with($credentials)->once();
+        $throttleCheckpoint = m::mock('Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint', [$throttle]);
+        $throttleCheckpoint->shouldReceive('fail')->once()->andReturn(false);
 
-		$throttleCheckpoint = m::mock('Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint', [$throttle]);
-		$throttleCheckpoint->shouldReceive('fail')->once()->andReturn(false);
+        $sentinel->addCheckpoint('throttle', $throttleCheckpoint);
 
-		$sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+        $this->assertFalse($sentinel->authenticate($credentials));
+    }
 
-		$this->assertFalse($sentinel->authenticate($credentials));
-	}
+    protected function createSentinel()
+    {
+        $sentinel = new Sentinel(
+            $persistences = m::mock('Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface'),
+            $users        = m::mock('Cartalyst\Sentinel\Users\UserRepositoryInterface'),
+            $roles        = m::mock('Cartalyst\Sentinel\Roles\RoleRepositoryInterface'),
+            $activations  = m::mock('Cartalyst\Sentinel\Activations\ActivationRepositoryInterface'),
+            $dispatcher   = m::mock('Illuminate\Events\Dispatcher')
+        );
 
-	protected function createSentinel()
-	{
-		$sentinel = new Sentinel(
-			$persistences = m::mock('Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface'),
-			$users        = m::mock('Cartalyst\Sentinel\Users\UserRepositoryInterface'),
-			$roles        = m::mock('Cartalyst\Sentinel\Roles\RoleRepositoryInterface'),
-			$activations  = m::mock('Cartalyst\Sentinel\Activations\ActivationRepositoryInterface'),
-			$dispatcher   = m::mock('Illuminate\Events\Dispatcher')
-		);
+        $throttle = m::mock('Cartalyst\Sentinel\Throttling\ThrottleRepositoryInterface');
 
-		$throttle = m::mock('Cartalyst\Sentinel\Throttling\ThrottleRepositoryInterface');
-
-		return [$sentinel, $persistences, $users, $roles, $activations, $dispatcher, $throttle];
-	}
-
+        return [$sentinel, $persistences, $users, $roles, $activations, $dispatcher, $throttle];
+    }
 }

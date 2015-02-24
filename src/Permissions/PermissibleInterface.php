@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Permissions;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,40 +18,41 @@
  * @link       http://cartalyst.com
  */
 
-interface PermissibleInterface {
+namespace Cartalyst\Sentinel\Permissions;
 
-	/**
-	 * Returns the permissions instance.
-	 *
-	 * @return \Cartalyst\Sentinel\Permissions\PermissionsInterface
-	 */
-	public function getPermissionsInstance();
+interface PermissibleInterface
+{
+    /**
+     * Returns the permissions instance.
+     *
+     * @return \Cartalyst\Sentinel\Permissions\PermissionsInterface
+     */
+    public function getPermissionsInstance();
 
-	/**
-	 * Adds a permission.
-	 *
-	 * @param  string  $permission
-	 * @param  bool  $value
-	 * @return \Cartalyst\Sentinel\Permissions\PermissibleInterface
-	 */
-	public function addPermission($permission, $value = true);
+    /**
+     * Adds a permission.
+     *
+     * @param  string  $permission
+     * @param  bool  $value
+     * @return \Cartalyst\Sentinel\Permissions\PermissibleInterface
+     */
+    public function addPermission($permission, $value = true);
 
-	/**
-	 * Updates a permission.
-	 *
-	 * @param  string  $permission
-	 * @param  bool  $value
-	 * @param  bool  $create
-	 * @return \Cartalyst\Sentinel\Permissions\PermissibleInterface
-	 */
-	public function updatePermission($permission, $value = true, $create = false);
+    /**
+     * Updates a permission.
+     *
+     * @param  string  $permission
+     * @param  bool  $value
+     * @param  bool  $create
+     * @return \Cartalyst\Sentinel\Permissions\PermissibleInterface
+     */
+    public function updatePermission($permission, $value = true, $create = false);
 
-	/**
-	 * Removes a permission.
-	 *
-	 * @param  string  $permission
-	 * @return \Cartalyst\Sentinel\Permissions\PermissibleInterface
-	 */
-	public function removePermission($permission);
-
+    /**
+     * Removes a permission.
+     *
+     * @param  string  $permission
+     * @return \Cartalyst\Sentinel\Permissions\PermissibleInterface
+     */
+    public function removePermission($permission);
 }

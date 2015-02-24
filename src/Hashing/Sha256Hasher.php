@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Hashing;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,28 +18,30 @@
  * @link       http://cartalyst.com
  */
 
-class Sha256Hasher implements HasherInterface {
+namespace Cartalyst\Sentinel\Hashing;
 
-	use Hasher;
+class Sha256Hasher implements HasherInterface
+{
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function hash($value)
-	{
-		$salt = $this->createSalt();
+    use Hasher;
 
-		return $salt.hash('sha256', $salt.$value);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public function hash($value)
+    {
+        $salt = $this->createSalt();
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function check($value, $hashedValue)
-	{
-		$salt = substr($hashedValue, 0, $this->saltLength);
+        return $salt.hash('sha256', $salt.$value);
+    }
 
-		return $this->slowEquals($salt.hash('sha256', $salt.$value), $hashedValue);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public function check($value, $hashedValue)
+    {
+        $salt = substr($hashedValue, 0, $this->saltLength);
 
+        return $this->slowEquals($salt.hash('sha256', $salt.$value), $hashedValue);
+    }
 }

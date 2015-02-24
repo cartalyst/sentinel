@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Tests;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,29 +18,30 @@
  * @link       http://cartalyst.com
  */
 
+namespace Cartalyst\Sentinel\tests;
+
 use Cartalyst\Sentinel\Reminders\EloquentReminder;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
 
-class EloquentReminderTest extends PHPUnit_Framework_TestCase {
+class EloquentReminderTest extends PHPUnit_Framework_TestCase
+{
+    /**
+     * Close mockery.
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        m::close();
+    }
 
-	/**
-	 * Close mockery.
-	 *
-	 * @return void
-	 */
-	public function tearDown()
-	{
-		m::close();
-	}
+    public function testCompletedAccessAndMutator()
+    {
+        $reminder = new EloquentReminder;
 
-	public function testCompletedAccessAndMutator()
-	{
-		$reminder = new EloquentReminder;
+        $reminder->completed = 1;
 
-		$reminder->completed = 1;
-
-		$this->assertTrue($reminder->completed);
-	}
-
+        $this->assertTrue($reminder->completed);
+    }
 }

@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Throttling;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,21 +18,22 @@
  * @link       http://cartalyst.com
  */
 
+namespace Cartalyst\Sentinel\Throttling;
+
 use Illuminate\Database\Eloquent\Model;
 
-class EloquentThrottle extends Model {
+class EloquentThrottle extends Model
+{
+    /**
+     * {@inheritDoc}
+     */
+    protected $table = 'throttle';
 
-	/**
-	 * {@inheritDoc}
-	 */
-	protected $table = 'throttle';
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected $fillable = [
-		'ip',
-		'type',
-	];
-
+    /**
+     * {@inheritDoc}
+     */
+    protected $fillable = [
+        'ip',
+        'type',
+    ];
 }

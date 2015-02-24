@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,6 +18,6 @@
  * @link       http://cartalyst.com
  */
 
-class CI_Input {
-
+class CI_Input
+{
 }

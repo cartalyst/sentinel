@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Tests;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,6 +18,8 @@
  * @link       http://cartalyst.com
  */
 
+namespace Cartalyst\Sentinel\tests;
+
 use ArrayIterator;
 use Carbon\Carbon;
 use Cartalyst\Sentinel\Activations\IlluminateActivationRepository;
@@ -24,175 +27,173 @@ use Mockery as m;
 use PHPUnit_Framework_TestCase;
 use StdClass;
 
-class IlluminateActivationRepositoryTest extends PHPUnit_Framework_TestCase {
+class IlluminateActivationRepositoryTest extends PHPUnit_Framework_TestCase
+{
+    /**
+     * Close mockery.
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        m::close();
+    }
 
-	/**
-	 * Close mockery.
-	 *
-	 * @return void
-	 */
-	public function tearDown()
-	{
-		m::close();
-	}
+    public function testConstructorModel()
+    {
+        $activations = new IlluminateActivationRepository('ActivationMock', 259200);
 
-	public function testConstructorModel()
-	{
-		$activations = new IlluminateActivationRepository('ActivationMock', 259200);
+        $this->assertEquals('ActivationMock', $activations->getModel());
+    }
 
-		$this->assertEquals('ActivationMock', $activations->getModel());
-	}
+    public function testCreate()
+    {
+        list($activations, $model, $query) = $this->getActivationMock();
 
-	public function testCreate()
-	{
-		list($activations, $model, $query) = $this->getActivationMock();
+        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
 
-		$model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
+        $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
 
-		$model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
+        $user = $this->getUserMock();
 
-		$user = $this->getUserMock();
+        $activation = $activations->create($user);
 
-		$activation = $activations->create($user);
+        $this->assertInstanceOf('Cartalyst\Sentinel\Activations\EloquentActivation', $activation);
+    }
 
-		$this->assertInstanceOf('Cartalyst\Sentinel\Activations\EloquentActivation', $activation);
-	}
+    public function testExists()
+    {
+        list($activations, $model, $query) = $this->getActivationMock();
 
-	public function testExists()
-	{
-		list($activations, $model, $query) = $this->getActivationMock();
+        $query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
+        $query->shouldReceive('where')->with('completed', false)->andReturn($query);
 
-		$query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
-		$query->shouldReceive('where')->with('completed', false)->andReturn($query);
+        $this->shouldReceiveExpires($query);
 
-		$this->shouldReceiveExpires($query);
+        $query->shouldReceive('first')->once();
 
-		$query->shouldReceive('first')->once();
+        $user = $this->getUserMock();
 
-		$user = $this->getUserMock();
+        $activations->exists($user);
+    }
 
-		$activations->exists($user);
-	}
+    public function testCompleteValidActivation()
+    {
+        list($activations, $model, $query) = $this->getActivationMock();
 
-	public function testCompleteValidActivation()
-	{
-		list($activations, $model, $query) = $this->getActivationMock();
+        $query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
+        $query->shouldReceive('where')->with('code', 'foobar')->andReturn($query);
+        $query->shouldReceive('where')->with('completed', false)->andReturn($query);
 
-		$query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
-		$query->shouldReceive('where')->with('code', 'foobar')->andReturn($query);
-		$query->shouldReceive('where')->with('completed', false)->andReturn($query);
+        $this->shouldReceiveExpires($query);
 
-		$this->shouldReceiveExpires($query);
+        $query->shouldReceive('first')->once()->andReturn($activation = m::mock('Cartalyst\Sentinel\Activations\EloquentActivation'));
 
-		$query->shouldReceive('first')->once()->andReturn($activation = m::mock('Cartalyst\Sentinel\Activations\EloquentActivation'));
+        $activation->shouldReceive('fill')->once();
+        $activation->shouldReceive('save')->once();
 
-		$activation->shouldReceive('fill')->once();
-		$activation->shouldReceive('save')->once();
+        $user = $this->getUserMock();
 
-		$user = $this->getUserMock();
+        $activations->complete($user, 'foobar');
+    }
 
-		$activations->complete($user, 'foobar');
-	}
+    public function testCompleteInvalidActivation()
+    {
+        list($activations, $model, $query) = $this->getActivationMock();
 
-	public function testCompleteInvalidActivation()
-	{
-		list($activations, $model, $query) = $this->getActivationMock();
+        $query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
+        $query->shouldReceive('where')->with('code', 'foobar')->andReturn($query);
+        $query->shouldReceive('where')->with('completed', false)->andReturn($query);
 
-		$query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
-		$query->shouldReceive('where')->with('code', 'foobar')->andReturn($query);
-		$query->shouldReceive('where')->with('completed', false)->andReturn($query);
+        $this->shouldReceiveExpires($query);
 
-		$this->shouldReceiveExpires($query);
+        $query->shouldReceive('first')->once();
 
-		$query->shouldReceive('first')->once();
+        $user = $this->getUserMock();
 
-		$user = $this->getUserMock();
+        $activations->complete($user, 'foobar');
+    }
 
-		$activations->complete($user, 'foobar');
-	}
+    public function testCompleted()
+    {
+        list($activations, $model, $query) = $this->getActivationMock();
 
-	public function testCompleted()
-	{
-		list($activations, $model, $query) = $this->getActivationMock();
+        $query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
+        $query->shouldReceive('where')->with('completed', true)->andReturn($query);
+        $query->shouldReceive('first')->once();
 
-		$query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
-		$query->shouldReceive('where')->with('completed', true)->andReturn($query);
-		$query->shouldReceive('first')->once();
+        $user = $this->getUserMock();
 
-		$user = $this->getUserMock();
+        $activations->completed($user);
+    }
 
-		$activations->completed($user);
-	}
+    public function testRemoveReturnsFalseIfNoCompleteActivationIsFound()
+    {
+        list($activations, $model, $query) = $this->getActivationMock();
 
-	public function testRemoveReturnsFalseIfNoCompleteActivationIsFound()
-	{
-		list($activations, $model, $query) = $this->getActivationMock();
+        $query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
+        $query->shouldReceive('where')->with('completed', true)->andReturn($query);
+        $query->shouldReceive('first')->once()->andReturn(false);
 
-		$query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
-		$query->shouldReceive('where')->with('completed', true)->andReturn($query);
-		$query->shouldReceive('first')->once()->andReturn(false);
+        $user = $this->getUserMock();
 
-		$user = $this->getUserMock();
+        $activations->remove($user);
+    }
 
-		$activations->remove($user);
-	}
+    public function testRemoveValidActivation()
+    {
+        list($activations, $model, $query) = $this->getActivationMock();
 
-	public function testRemoveValidActivation()
-	{
-		list($activations, $model, $query) = $this->getActivationMock();
+        $query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
+        $query->shouldReceive('where')->with('completed', true)->andReturn($query);
+        $query->shouldReceive('first')->once()->andReturn($activation = m::mock('Cartalyst\Sentinel\Activations\EloquentActivation'));
 
-		$query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
-		$query->shouldReceive('where')->with('completed', true)->andReturn($query);
-		$query->shouldReceive('first')->once()->andReturn($activation = m::mock('Cartalyst\Sentinel\Activations\EloquentActivation'));
+        $activation->shouldReceive('delete')->once();
 
-		$activation->shouldReceive('delete')->once();
+        $user = $this->getUserMock();
 
-		$user = $this->getUserMock();
+        $activations->remove($user);
+    }
 
-		$activations->remove($user);
-	}
+    public function testRemoveExpired()
+    {
+        list($activations, $model, $query) = $this->getActivationMock();
 
-	public function testRemoveExpired()
-	{
-		list($activations, $model, $query) = $this->getActivationMock();
+        $query->shouldReceive('where')->with('completed', false)->andReturn($query);
 
-		$query->shouldReceive('where')->with('completed', false)->andReturn($query);
+        $this->shouldReceiveExpires($query, '<');
 
-		$this->shouldReceiveExpires($query, '<');
+        $query->shouldReceive('delete')->once();
 
-		$query->shouldReceive('delete')->once();
+        $activations->removeExpired();
+    }
 
-		$activations->removeExpired();
-	}
+    protected function getActivationMock()
+    {
+        $activations = m::mock('Cartalyst\Sentinel\Activations\IlluminateActivationRepository[createModel]');
+        $model       = m::mock('Cartalyst\Sentinel\Activations\EloquentActivation[newQuery]');
 
-	protected function getActivationMock()
-	{
-		$activations = m::mock('Cartalyst\Sentinel\Activations\IlluminateActivationRepository[createModel]');
-		$model       = m::mock('Cartalyst\Sentinel\Activations\EloquentActivation[newQuery]');
+        $activations->shouldReceive('createModel')->andReturn($model);
+        $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
 
-		$activations->shouldReceive('createModel')->andReturn($model);
-		$model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
+        return [$activations, $model, $query];
+    }
 
-		return [$activations, $model, $query];
-	}
+    protected function getUserMock()
+    {
+        $user = m::mock('Cartalyst\Sentinel\Users\EloquentUser');
 
-	protected function getUserMock()
-	{
-		$user = m::mock('Cartalyst\Sentinel\Users\EloquentUser');
+        $user->shouldReceive('getUserId')->once()->andReturn(1);
 
-		$user->shouldReceive('getUserId')->once()->andReturn(1);
+        return $user;
+    }
 
-		return $user;
-	}
-
-	protected function shouldReceiveExpires($query, $operator = '>')
-	{
-		$query->shouldReceive('where')->with('created_at', $operator, m::on(function($timestamp)
-		{
-			$expires = 259200;
-			$this->assertEquals(time() - $expires, $timestamp->getTimestamp(), '', 3);
-			return true;
-		}))->andReturn($query);
-	}
-
+    protected function shouldReceiveExpires($query, $operator = '>')
+    {
+        $query->shouldReceive('where')->with('created_at', $operator, m::on(function ($timestamp) {
+            $expires = 259200;
+            $this->assertEquals(time() - $expires, $timestamp->getTimestamp(), '', 3);
+            return true;
+        }))->andReturn($query);
+    }
 }

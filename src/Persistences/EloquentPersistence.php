@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Persistences;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,49 +18,50 @@
  * @link       http://cartalyst.com
  */
 
+namespace Cartalyst\Sentinel\Persistences;
+
 use Illuminate\Database\Eloquent\Model;
 
-class EloquentPersistence extends Model implements PersistenceInterface {
+class EloquentPersistence extends Model implements PersistenceInterface
+{
+    /**
+     * {@inheritDoc}
+     */
+    protected $table = 'persistences';
 
-	/**
-	 * {@inheritDoc}
-	 */
-	protected $table = 'persistences';
+    /**
+     * The users model name.
+     *
+     * @var string
+     */
+    protected static $usersModel = 'Cartalyst\Sentinel\Users\EloquentUser';
 
-	/**
-	 * The users model name.
-	 *
-	 * @var string
-	 */
-	protected static $usersModel = 'Cartalyst\Sentinel\Users\EloquentUser';
+    /**
+     * {@inheritDoc}
+     */
+    public function user()
+    {
+        return $this->belongsTo(static::$usersModel);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function user()
-	{
-		return $this->belongsTo(static::$usersModel);
-	}
+    /**
+     * Get the users model.
+     *
+     * @return string
+     */
+    public static function getUsersModel()
+    {
+        return static::$usersModel;
+    }
 
-	/**
-	 * Get the users model.
-	 *
-	 * @return string
-	 */
-	public static function getUsersModel()
-	{
-		return static::$usersModel;
-	}
-
-	/**
-	 * Set the users model.
-	 *
-	 * @param  string  $usersModel
-	 * @return void
-	 */
-	public static function setUsersModel($usersModel)
-	{
-		static::$usersModel = $usersModel;
-	}
-
+    /**
+     * Set the users model.
+     *
+     * @param  string  $usersModel
+     * @return void
+     */
+    public static function setUsersModel($usersModel)
+    {
+        static::$usersModel = $usersModel;
+    }
 }

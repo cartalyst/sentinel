@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Laravel\Facades;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,16 +18,17 @@
  * @link       http://cartalyst.com
  */
 
+namespace Cartalyst\Sentinel\Laravel\Facades;
+
 use Illuminate\Support\Facades\Facade;
 
-class Reminder extends Facade {
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected static function getFacadeAccessor()
-	{
-		return 'sentinel.reminders';
-	}
-
+class Reminder extends Facade
+{
+    /**
+     * {@inheritDoc}
+     */
+    protected static function getFacadeAccessor()
+    {
+        return 'sentinel.reminders';
+    }
 }

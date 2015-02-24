@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Checkpoints;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,13 +18,16 @@
  * @link       http://cartalyst.com
  */
 
+namespace Cartalyst\Sentinel\Checkpoints;
+
 use Cartalyst\Sentinel\Users\UserInterface;
 
-trait AuthenticatedCheckpoint {
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function fail(UserInterface $user = null) {}
-
+trait AuthenticatedCheckpoint
+{
+    /**
+     * {@inheritDoc}
+     */
+    public function fail(UserInterface $user = null)
+    {
+    }
 }

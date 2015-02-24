@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Tests;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,29 +18,30 @@
  * @link       http://cartalyst.com
  */
 
+namespace Cartalyst\Sentinel\tests;
+
 use Cartalyst\Sentinel\Activations\EloquentActivation;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
 
-class EloquentActivationTest extends PHPUnit_Framework_TestCase {
+class EloquentActivationTest extends PHPUnit_Framework_TestCase
+{
+    /**
+     * Close mockery.
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        m::close();
+    }
 
-	/**
-	 * Close mockery.
-	 *
-	 * @return void
-	 */
-	public function tearDown()
-	{
-		m::close();
-	}
+    public function testCompletedAccessAndMutator()
+    {
+        $activation = new EloquentActivation;
 
-	public function testCompletedAccessAndMutator()
-	{
-		$activation = new EloquentActivation;
+        $activation->completed = 1;
 
-		$activation->completed = 1;
-
-		$this->assertTrue($activation->completed);
-	}
-
+        $this->assertTrue($activation->completed);
+    }
 }

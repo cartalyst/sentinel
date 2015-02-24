@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Tests;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,29 +18,30 @@
  * @link       http://cartalyst.com
  */
 
+namespace Cartalyst\Sentinel\tests;
+
 use Cartalyst\Sentinel\Native\SentinelBootstrapper;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
 
-class SentinelBootstrapperTest extends PHPUnit_Framework_TestCase {
+class SentinelBootstrapperTest extends PHPUnit_Framework_TestCase
+{
+    /**
+     * Close mockery.
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        m::close();
+    }
 
-	/**
-	 * Close mockery.
-	 *
-	 * @return void
-	 */
-	public function tearDown()
-	{
-		m::close();
-	}
+    public function testInstantiate()
+    {
+        $bootstrapper = new SentinelBootstrapper();
 
-	public function testInstantiate()
-	{
-		$bootstrapper = new SentinelBootstrapper();
+        $sentinel = $bootstrapper->createSentinel();
 
-		$sentinel = $bootstrapper->createSentinel();
-
-		$this->assertInstanceOf('Cartalyst\Sentinel\Sentinel', $sentinel);
-	}
-
+        $this->assertInstanceOf('Cartalyst\Sentinel\Sentinel', $sentinel);
+    }
 }

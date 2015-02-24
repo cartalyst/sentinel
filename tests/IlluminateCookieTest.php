@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Tests;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,51 +18,52 @@
  * @link       http://cartalyst.com
  */
 
+namespace Cartalyst\Sentinel\tests;
+
 use Cartalyst\Sentinel\Cookies\IlluminateCookie;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
 
-class IlluminateCookieTest extends PHPUnit_Framework_TestCase {
+class IlluminateCookieTest extends PHPUnit_Framework_TestCase
+{
+    /**
+     * Close mockery.
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        m::close();
+    }
 
-	/**
-	 * Close mockery.
-	 *
-	 * @return void
-	 */
-	public function tearDown()
-	{
-		m::close();
-	}
+    public function testPut()
+    {
+        $cookie = new IlluminateCookie($request = m::mock('Illuminate\Http\Request'), $jar = m::mock('Illuminate\Cookie\CookieJar'), 'foo');
+        $jar->shouldReceive('forever')->with('foo', 'bar')->once()->andReturn('cookie');
+        $jar->shouldReceive('queue')->with('cookie')->once();
+        $cookie->put('bar');
+    }
 
-	public function testPut()
-	{
-		$cookie = new IlluminateCookie($request = m::mock('Illuminate\Http\Request'), $jar = m::mock('Illuminate\Cookie\CookieJar'), 'foo');
-		$jar->shouldReceive('forever')->with('foo', 'bar')->once()->andReturn('cookie');
-		$jar->shouldReceive('queue')->with('cookie')->once();
-		$cookie->put('bar');
-	}
+    public function testGetWithQueuedCookie()
+    {
+        $cookie = new IlluminateCookie($request = m::mock('Illuminate\Http\Request'), $jar = m::mock('Illuminate\Cookie\CookieJar'), 'foo');
+        $jar->shouldReceive('getQueuedCookies')->once()->andReturn(['foo' => 'bar']);
+        $this->assertEquals('bar', $cookie->get());
+    }
 
-	public function testGetWithQueuedCookie()
-	{
-		$cookie = new IlluminateCookie($request = m::mock('Illuminate\Http\Request'), $jar = m::mock('Illuminate\Cookie\CookieJar'), 'foo');
-		$jar->shouldReceive('getQueuedCookies')->once()->andReturn(['foo' => 'bar']);
-		$this->assertEquals('bar', $cookie->get());
-	}
+    public function testGetWithPreviousCookies()
+    {
+        $cookie = new IlluminateCookie($request = m::mock('Illuminate\Http\Request'), $jar = m::mock('Illuminate\Cookie\CookieJar'), 'foo');
+        $jar->shouldReceive('getQueuedCookies')->once()->andReturn([]);
+        $request->shouldReceive('cookie')->with('foo')->once()->andReturn('bar');
+        $this->assertEquals('bar', $cookie->get());
+    }
 
-	public function testGetWithPreviousCookies()
-	{
-		$cookie = new IlluminateCookie($request = m::mock('Illuminate\Http\Request'), $jar = m::mock('Illuminate\Cookie\CookieJar'), 'foo');
-		$jar->shouldReceive('getQueuedCookies')->once()->andReturn([]);
-		$request->shouldReceive('cookie')->with('foo')->once()->andReturn('bar');
-		$this->assertEquals('bar', $cookie->get());
-	}
-
-	public function testForget()
-	{
-		$cookie = new IlluminateCookie($request = m::mock('Illuminate\Http\Request'), $jar = m::mock('Illuminate\Cookie\CookieJar'), 'foo');
-		$jar->shouldReceive('forget')->with('foo')->once()->andReturn('cookie');
-		$jar->shouldReceive('queue')->with('cookie')->once();
-		$cookie->forget();
-	}
-
+    public function testForget()
+    {
+        $cookie = new IlluminateCookie($request = m::mock('Illuminate\Http\Request'), $jar = m::mock('Illuminate\Cookie\CookieJar'), 'foo');
+        $jar->shouldReceive('forget')->with('foo')->once()->andReturn('cookie');
+        $jar->shouldReceive('queue')->with('cookie')->once();
+        $cookie->forget();
+    }
 }

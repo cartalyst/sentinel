@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Sessions;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,28 +18,29 @@
  * @link       http://cartalyst.com
  */
 
-interface SessionInterface {
+namespace Cartalyst\Sentinel\Sessions;
 
-	/**
-	 * Put a value in the Sentinel session.
-	 *
-	 * @param  mixed  $value
-	 * @return void
-	 */
-	public function put($value);
+interface SessionInterface
+{
+    /**
+     * Put a value in the Sentinel session.
+     *
+     * @param  mixed  $value
+     * @return void
+     */
+    public function put($value);
 
-	/**
-	 * Returns the Sentinel session value.
-	 *
-	 * @return mixed
-	 */
-	public function get();
+    /**
+     * Returns the Sentinel session value.
+     *
+     * @return mixed
+     */
+    public function get();
 
-	/**
-	 * Removes the Sentinel session.
-	 *
-	 * @return void
-	 */
-	public function forget();
-
+    /**
+     * Removes the Sentinel session.
+     *
+     * @return void
+     */
+    public function forget();
 }

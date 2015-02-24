@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Laravel\Facades;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,16 +18,17 @@
  * @link       http://cartalyst.com
  */
 
+namespace Cartalyst\Sentinel\Laravel\Facades;
+
 use Illuminate\Support\Facades\Facade;
 
-class Activation extends Facade {
-
-	/**
-	 * {@inheritDoc}
-	 */
-	protected static function getFacadeAccessor()
-	{
-		return 'sentinel.activations';
-	}
-
+class Activation extends Facade
+{
+    /**
+     * {@inheritDoc}
+     */
+    protected static function getFacadeAccessor()
+    {
+        return 'sentinel.activations';
+    }
 }

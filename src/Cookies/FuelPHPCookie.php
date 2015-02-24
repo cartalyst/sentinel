@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Cookies;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,58 +18,57 @@
  * @link       http://cartalyst.com
  */
 
+namespace Cartalyst\Sentinel\Cookies;
+
 use Fuel\Core\Cookie;
 
-class FuelPHPCookie implements CookieInterface {
+class FuelPHPCookie implements CookieInterface
+{
+    /**
+     * The cookie key.
+     *
+     * @var string
+     */
+    protected $key = 'cartalyst_sentinel';
 
-	/**
-	 * The cookie key.
-	 *
-	 * @var string
-	 */
-	protected $key = 'cartalyst_sentinel';
+    /**
+     * Create a new FuelPHP cookie driver.
+     *
+     * @param  string  $key
+     * @return void
+     */
+    public function __construct($key = null)
+    {
+        if (isset($key)) {
+            $this->key = $key;
+        }
+    }
 
-	/**
-	 * Create a new FuelPHP cookie driver.
-	 *
-	 * @param  string  $key
-	 * @return void
-	 */
-	public function __construct($key = null)
-	{
-		if (isset($key))
-		{
-			$this->key = $key;
-		}
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public function put($value)
+    {
+        Cookie::set($this->key, serialize($value), 2628000);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function put($value)
-	{
-		Cookie::set($this->key, serialize($value), 2628000);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public function get()
+    {
+        $value = Cookie::get($this->key);
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function get()
-	{
-		$value = Cookie::get($this->key);
+        if ($value) {
+            return unserialize($value);
+        }
+    }
 
-		if ($value)
-		{
-			return unserialize($value);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function forget()
-	{
-		Cookie::delete($this->key);
-	}
-
+    /**
+     * {@inheritDoc}
+     */
+    public function forget()
+    {
+        Cookie::delete($this->key);
+    }
 }

@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Tests;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,57 +18,58 @@
  * @link       http://cartalyst.com
  */
 
+namespace Cartalyst\Sentinel\tests;
+
 use Cartalyst\Sentinel\Sessions\NativeSession;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
 use stdClass;
 
-class NativeSessionTest extends PHPUnit_Framework_TestCase {
+class NativeSessionTest extends PHPUnit_Framework_TestCase
+{
+    /**
+     * Close mockery.
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        m::close();
+    }
 
-	/**
-	 * Close mockery.
-	 *
-	 * @return void
-	 */
-	public function tearDown()
-	{
-		m::close();
-	}
+    public function testPut()
+    {
+        $session = new NativeSession('__sentinel');
 
-	public function testPut()
-	{
-		$session = new NativeSession('__sentinel');
+        $class = new stdClass;
+        $class->foo = 'bar';
 
-		$class = new stdClass;
-		$class->foo = 'bar';
+        $session->put($class);
+        $this->assertEquals(serialize($class), $_SESSION['__sentinel']);
+        unset($_SESSION['__sentinel']);
+    }
 
-		$session->put($class);
-		$this->assertEquals(serialize($class), $_SESSION['__sentinel']);
-		unset($_SESSION['__sentinel']);
-	}
+    public function testGet()
+    {
+        $session = new NativeSession('__sentinel');
+        $this->assertNull($session->get());
 
-	public function testGet()
-	{
-		$session = new NativeSession('__sentinel');
-		$this->assertNull($session->get());
+        $class = new stdClass;
+        $class->foo = 'bar';
+        $_SESSION['__sentinel'] = serialize($class);
 
-		$class = new stdClass;
-		$class->foo = 'bar';
-		$_SESSION['__sentinel'] = serialize($class);
+        $this->assertEquals($class, $session->get());
+        unset($_SESSION['__sentinel']);
+    }
 
-		$this->assertEquals($class, $session->get());
-		unset($_SESSION['__sentinel']);
-	}
+    public function testForget()
+    {
+        $_SESSION['__sentinel'] = 'bar';
 
-	public function testForget()
-	{
-		$_SESSION['__sentinel'] = 'bar';
+        $session = new NativeSession('__sentinel');
 
-		$session = new NativeSession('__sentinel');
-
-		$this->assertEquals('bar', $_SESSION['__sentinel']);
-		$session->forget();
-		$this->assertFalse(isset($_SESSION['__sentinel']));
-	}
-
+        $this->assertEquals('bar', $_SESSION['__sentinel']);
+        $session->forget();
+        $this->assertFalse(isset($_SESSION['__sentinel']));
+    }
 }

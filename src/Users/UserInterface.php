@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Users;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,34 +18,35 @@
  * @link       http://cartalyst.com
  */
 
-interface UserInterface {
+namespace Cartalyst\Sentinel\Users;
 
-	/**
-	 * Returns the user primary key.
-	 *
-	 * @return int
-	 */
-	public function getUserId();
+interface UserInterface
+{
+    /**
+     * Returns the user primary key.
+     *
+     * @return int
+     */
+    public function getUserId();
 
-	/**
-	 * Returns the user login.
-	 *
-	 * @return string
-	 */
-	public function getUserLogin();
+    /**
+     * Returns the user login.
+     *
+     * @return string
+     */
+    public function getUserLogin();
 
-	/**
-	 * Returns the user login attribute name.
-	 *
-	 * @return string
-	 */
-	public function getUserLoginName();
+    /**
+     * Returns the user login attribute name.
+     *
+     * @return string
+     */
+    public function getUserLoginName();
 
-	/**
-	 * Returns the user password.
-	 *
-	 * @return string
-	 */
-	public function getUserPassword();
-
+    /**
+     * Returns the user password.
+     *
+     * @return string
+     */
+    public function getUserPassword();
 }

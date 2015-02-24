@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Roles;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,42 +18,43 @@
  * @link       http://cartalyst.com
  */
 
-interface RoleInterface {
+namespace Cartalyst\Sentinel\Roles;
 
-	/**
-	 * Returns the role's primary key.
-	 *
-	 * @return int
-	 */
-	public function getRoleId();
+interface RoleInterface
+{
+    /**
+     * Returns the role's primary key.
+     *
+     * @return int
+     */
+    public function getRoleId();
 
-	/**
-	 * Returns the role's slug.
-	 *
-	 * @return string
-	 */
-	public function getRoleSlug();
+    /**
+     * Returns the role's slug.
+     *
+     * @return string
+     */
+    public function getRoleSlug();
 
-	/**
-	 * Returns all users for the role.
-	 *
-	 * @return \IteratorAggregate
-	 */
-	public function getUsers();
+    /**
+     * Returns all users for the role.
+     *
+     * @return \IteratorAggregate
+     */
+    public function getUsers();
 
-	/**
-	 * Returns the users model.
-	 *
-	 * @return string
-	 */
-	public static function getUsersModel();
+    /**
+     * Returns the users model.
+     *
+     * @return string
+     */
+    public static function getUsersModel();
 
-	/**
-	 * Sets the users model.
-	 *
-	 * @param  string  $usersModel
-	 * @return void
-	 */
-	public static function setUsersModel($usersModel);
-
+    /**
+     * Sets the users model.
+     *
+     * @param  string  $usersModel
+     * @return void
+     */
+    public static function setUsersModel($usersModel);
 }

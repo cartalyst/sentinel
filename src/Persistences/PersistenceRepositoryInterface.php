@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Persistences;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,71 +18,72 @@
  * @link       http://cartalyst.com
  */
 
-interface PersistenceRepositoryInterface {
+namespace Cartalyst\Sentinel\Persistences;
 
-	/**
-	 * Checks for a persistence code in the current session.
-	 *
-	 * @return string
-	 */
-	public function check();
+interface PersistenceRepositoryInterface
+{
+    /**
+     * Checks for a persistence code in the current session.
+     *
+     * @return string
+     */
+    public function check();
 
-	/**
-	 * Finds a persistence by persistence code.
-	 *
-	 * @param  string  $code
-	 * @return \Cartalyst\Sentinel\Persistences\PersistenceInterface|false
-	 */
-	public function findByPersistenceCode($code);
+    /**
+     * Finds a persistence by persistence code.
+     *
+     * @param  string  $code
+     * @return \Cartalyst\Sentinel\Persistences\PersistenceInterface|false
+     */
+    public function findByPersistenceCode($code);
 
-	/**
-	 * Finds a user by persistence code.
-	 *
-	 * @param  string  $code
-	 * @return \Cartalyst\Sentinel\Users\UserInterface|false
-	 */
-	public function findUserByPersistenceCode($code);
+    /**
+     * Finds a user by persistence code.
+     *
+     * @param  string  $code
+     * @return \Cartalyst\Sentinel\Users\UserInterface|false
+     */
+    public function findUserByPersistenceCode($code);
 
-	/**
-	 * Adds a new user persistence to the current session and attaches the user.
-	 *
-	 * @param  \Cartalyst\Sentinel\Persistence\PersistenceInterface  $persistable
-	 * @param  bool  $remember
-	 * @return bool
-	 */
-	public function persist(PersistableInterface $persistable, $remember = false);
+    /**
+     * Adds a new user persistence to the current session and attaches the user.
+     *
+     * @param  \Cartalyst\Sentinel\Persistence\PersistenceInterface  $persistable
+     * @param  bool  $remember
+     * @return bool
+     */
+    public function persist(PersistableInterface $persistable, $remember = false);
 
-	/**
-	 * Adds a new user persistence, to remember.
-	 *
-	 * @param  \Cartalyst\Sentinel\Persistence\PersistableInterface  $persistable
-	 * @return bool
-	 */
-	public function persistAndRemember(PersistableInterface $persistable);
+    /**
+     * Adds a new user persistence, to remember.
+     *
+     * @param  \Cartalyst\Sentinel\Persistence\PersistableInterface  $persistable
+     * @return bool
+     */
+    public function persistAndRemember(PersistableInterface $persistable);
 
-	/**
-	 * Removes the persistence bound to the current session.
-	 *
-	 * @param  \Cartalyst\Sentinel\Persistence\PersistableInterface  $persistable
-	 * @return bool|null
-	 */
-	public function forget();
+    /**
+     * Removes the persistence bound to the current session.
+     *
+     * @param  \Cartalyst\Sentinel\Persistence\PersistableInterface  $persistable
+     * @return bool|null
+     */
+    public function forget();
 
-	/**
-	 * Removes the given persistence code.
-	 *
-	 * @param  string  $code
-	 * @return bool|null
-	 */
-	public function remove($code);
+    /**
+     * Removes the given persistence code.
+     *
+     * @param  string  $code
+     * @return bool|null
+     */
+    public function remove($code);
 
-	/**
-	 * Flushes persistences for the given user.
-	 *
-	 * @param  \Cartalyst\Sentinel\Persistence\PersistableInterface  $persistable
-	 * @param  bool  $forget
-	 * @return void
-	 */
-	public function flush(PersistableInterface $persistable, $forget = true);
-
+    /**
+     * Flushes persistences for the given user.
+     *
+     * @param  \Cartalyst\Sentinel\Persistence\PersistableInterface  $persistable
+     * @param  bool  $forget
+     * @return void
+     */
+    public function flush(PersistableInterface $persistable, $forget = true);
 }

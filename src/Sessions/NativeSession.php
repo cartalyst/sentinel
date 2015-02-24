@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Sessions;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,130 +18,126 @@
  * @link       http://cartalyst.com
  */
 
-class NativeSession implements SessionInterface {
+namespace Cartalyst\Sentinel\Sessions;
 
-	/**
-	 * The session key.
-	 *
-	 * @var string
-	 */
-	protected $key = 'cartalyst_sentinel';
+class NativeSession implements SessionInterface
+{
+    /**
+     * The session key.
+     *
+     * @var string
+     */
+    protected $key = 'cartalyst_sentinel';
 
-	/**
-	 * Creates a new native session driver for Sentinel.
-	 *
-	 * @param  string  $key
-	 * @return void
-	 */
-	public function __construct($key = null)
-	{
-		if (isset($key))
-		{
-			$this->key = $key;
-		}
+    /**
+     * Creates a new native session driver for Sentinel.
+     *
+     * @param  string  $key
+     * @return void
+     */
+    public function __construct($key = null)
+    {
+        if (isset($key)) {
+            $this->key = $key;
+        }
 
-		$this->startSession();
-	}
+        $this->startSession();
+    }
 
-	/**
-	 * Called upon destruction of the native session handler.
-	 *
-	 * @return void
-	 */
-	public function __destruct()
-	{
-		$this->writeSession();
-	}
+    /**
+     * Called upon destruction of the native session handler.
+     *
+     * @return void
+     */
+    public function __destruct()
+    {
+        $this->writeSession();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function put($value)
-	{
-		$this->setSession($value);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public function put($value)
+    {
+        $this->setSession($value);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function get()
-	{
-		return $this->getSession();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public function get()
+    {
+        return $this->getSession();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function forget()
-	{
-		$this->forgetSession();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public function forget()
+    {
+        $this->forgetSession();
+    }
 
-	/**
-	 * Starts the session if it does not exist.
-	 *
-	 * @return void
-	 */
-	protected function startSession()
-	{
-		// Check that the session hasn't already been started
-		if (session_id() == '' && ! headers_sent())
-		{
-			session_start();
-		}
-	}
+    /**
+     * Starts the session if it does not exist.
+     *
+     * @return void
+     */
+    protected function startSession()
+    {
+        // Check that the session hasn't already been started
+        if (session_id() == '' && ! headers_sent()) {
+            session_start();
+        }
+    }
 
-	/**
-	 * Writes the session.
-	 *
-	 * @return void
-	 */
-	protected function writeSession()
-	{
-		session_write_close();
-	}
+    /**
+     * Writes the session.
+     *
+     * @return void
+     */
+    protected function writeSession()
+    {
+        session_write_close();
+    }
 
-	/**
-	 * Unserializes a value from the session and returns it.
-	 *
-	 * @return mixed.
-	 */
-	protected function getSession()
-	{
-		if (isset($_SESSION[$this->key]))
-		{
-			$value = $_SESSION[$this->key];
+    /**
+     * Unserializes a value from the session and returns it.
+     *
+     * @return mixed.
+     */
+    protected function getSession()
+    {
+        if (isset($_SESSION[$this->key])) {
+            $value = $_SESSION[$this->key];
 
-			if ($value)
-			{
-				return unserialize($value);
-			}
-		}
-	}
+            if ($value) {
+                return unserialize($value);
+            }
+        }
+    }
 
-	/**
-	 * Interacts with the $_SESSION global to set a property on it.
-	 * The property is serialized initially.
-	 *
-	 * @param  mixed  $value
-	 * @return void
-	 */
-	protected function setSession($value)
-	{
-		$_SESSION[$this->key] = serialize($value);
-	}
+    /**
+     * Interacts with the $_SESSION global to set a property on it.
+     * The property is serialized initially.
+     *
+     * @param  mixed  $value
+     * @return void
+     */
+    protected function setSession($value)
+    {
+        $_SESSION[$this->key] = serialize($value);
+    }
 
-	/**
-	 * Forgets the Sentinel session from the global $_SESSION.
-	 *
-	 * @return void
-	 */
-	protected function forgetSession()
-	{
-		if (isset($_SESSION[$this->key]))
-		{
-			unset($_SESSION[$this->key]);
-		}
-	}
-
+    /**
+     * Forgets the Sentinel session from the global $_SESSION.
+     *
+     * @return void
+     */
+    protected function forgetSession()
+    {
+        if (isset($_SESSION[$this->key])) {
+            unset($_SESSION[$this->key]);
+        }
+    }
 }

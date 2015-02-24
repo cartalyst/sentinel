@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Tests;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,6 +18,8 @@
  * @link       http://cartalyst.com
  */
 
+namespace Cartalyst\Sentinel\tests;
+
 use Carbon\Carbon;
 use Cartalyst\Sentinel\Hashing\NativeHasher;
 use Cartalyst\Sentinel\Users\EloquentUser;
@@ -24,336 +27,333 @@ use Cartalyst\Sentinel\Users\IlluminateUserRepository;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
 
-class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase {
-
-	/**
-	 * Close mockery.
-	 *
-	 * @return void
-	 */
-	public function tearDown()
-	{
-		m::close();
-	}
-
-	public function testConstructor()
-	{
-		$users = m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository[createModel,findById]', [
-			$hasher = m::mock('Cartalyst\Sentinel\Hashing\NativeHasher'),
-			null,
-			'UserMock'
-		]);
+class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase
+{
+    /**
+     * Close mockery.
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        m::close();
+    }
+
+    public function testConstructor()
+    {
+        $users = m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository[createModel,findById]', [
+            $hasher = m::mock('Cartalyst\Sentinel\Hashing\NativeHasher'),
+            null,
+            'UserMock'
+        ]);
+
+        $this->assertEquals('UserMock', $users->getModel());
+    }
+
+    public function testFindById()
+    {
+        list($users, $hasher, $model, $query) = $this->getUsersMock();
+
+        $query->shouldReceive('find')->with(1)->once()->andReturn($model);
 
-		$this->assertEquals('UserMock', $users->getModel());
-	}
+        $users->findById(1);
+    }
 
-	public function testFindById()
-	{
-		list($users, $hasher, $model, $query) = $this->getUsersMock();
+    public function testFindByCredentials1()
+    {
+        list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-		$query->shouldReceive('find')->with(1)->once()->andReturn($model);
+        $query->shouldReceive('where')->once()->andReturn($model);
+        $query->shouldReceive('first')->once()->andReturn($model);
 
-		$users->findById(1);
-	}
+        $users->findByCredentials([
+            'email'    => 'foo@example.com',
+            'password' => 'secret',
+        ]);
+    }
 
-	public function testFindByCredentials1()
-	{
-		list($users, $hasher, $model, $query) = $this->getUsersMock();
+    public function testFindByCredentials2()
+    {
+        list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-		$query->shouldReceive('where')->once()->andReturn($model);
-		$query->shouldReceive('first')->once()->andReturn($model);
+        $query->shouldReceive('whereNested')->once()->andReturn($model);
+        $query->shouldReceive('first')->once()->andReturn($model);
 
-		$users->findByCredentials([
-			'email'    => 'foo@example.com',
-			'password' => 'secret',
-		]);
-	}
+        $users->findByCredentials([
+            'login'    => 'foo@example.com',
+            'password' => 'secret',
+        ]);
+    }
 
-	public function testFindByCredentials2()
-	{
-		list($users, $hasher, $model, $query) = $this->getUsersMock();
+    public function testFindByCredentials3()
+    {
+        list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-		$query->shouldReceive('whereNested')->once()->andReturn($model);
-		$query->shouldReceive('first')->once()->andReturn($model);
+        $query->shouldReceive('whereNested')->once()->andReturn($model);
+        $query->shouldReceive('first')->once()->andReturn($model);
 
-		$users->findByCredentials([
-			'login'    => 'foo@example.com',
-			'password' => 'secret',
-		]);
-	}
+        $users->findByCredentials([
+            'login' => 'foo@example.com',
+        ]);
+    }
 
-	public function testFindByCredentials3()
-	{
-		list($users, $hasher, $model, $query) = $this->getUsersMock();
+    public function testFindByCredentials4()
+    {
+        list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-		$query->shouldReceive('whereNested')->once()->andReturn($model);
-		$query->shouldReceive('first')->once()->andReturn($model);
+        $query->shouldReceive('first')->once()->andReturn($model);
 
-		$users->findByCredentials([
-			'login' => 'foo@example.com',
-		]);
-	}
+        $users->findByCredentials([
+            'password' => 'secret',
+        ]);
+    }
 
-	public function testFindByCredentials4()
-	{
-		list($users, $hasher, $model, $query) = $this->getUsersMock();
+    public function testFindByCredentials5()
+    {
+        list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-		$query->shouldReceive('first')->once()->andReturn($model);
+        $query->shouldReceive('first')->once()->andReturn($model);
 
-		$users->findByCredentials([
-			'password' => 'secret',
-		]);
-	}
+        $users->findByCredentials([
+            'username' => 'foo',
+        ]);
+    }
 
-	public function testFindByCredentials5()
-	{
-		list($users, $hasher, $model, $query) = $this->getUsersMock();
+    public function testFindByPersistenceCode()
+    {
+        list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-		$query->shouldReceive('first')->once()->andReturn($model);
+        $query->shouldReceive('whereHas')->once()->andReturn($model);
+        $model->shouldReceive('first')->once()->andReturn($model);
 
-		$users->findByCredentials([
-			'username' => 'foo',
-		]);
-	}
+        $users->findByPersistenceCode('foobar');
+    }
 
-	public function testFindByPersistenceCode()
-	{
-		list($users, $hasher, $model, $query) = $this->getUsersMock();
+    public function testRecordLogin()
+    {
+        list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-		$query->shouldReceive('whereHas')->once()->andReturn($model);
-		$model->shouldReceive('first')->once()->andReturn($model);
+        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
+        $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
 
-		$users->findByPersistenceCode('foobar');
-	}
+        $users->recordLogin($model);
+    }
 
-	public function testRecordLogin()
-	{
-		list($users, $hasher, $model, $query) = $this->getUsersMock();
+    public function testRecordLogout()
+    {
+        list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-		$model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-		$model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
+        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
+        $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
 
-		$users->recordLogin($model);
-	}
+        $users->recordLogout($model);
+    }
 
-	public function testRecordLogout()
-	{
-		list($users, $hasher, $model, $query) = $this->getUsersMock();
+    public function testValidateCredentials()
+    {
+        list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-		$model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-		$model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
+        $model->password = 'secret';
 
-		$users->recordLogout($model);
-	}
+        $hasher->shouldReceive('check')->with('secret', 'secret')->once()->andReturn(true);
 
-	public function testValidateCredentials()
-	{
-		list($users, $hasher, $model, $query) = $this->getUsersMock();
+        $valid = $users->validateCredentials($model, [
+            'email'    => 'foo@example.com',
+            'password' => 'secret',
+        ]);
 
-		$model->password = 'secret';
+        $this->assertTrue($valid);
+    }
 
-		$hasher->shouldReceive('check')->with('secret', 'secret')->once()->andReturn(true);
+    public function testValidateUserForCreation()
+    {
+        $user = new EloquentUser;
 
-		$valid = $users->validateCredentials($model, [
-			'email'    => 'foo@example.com',
-			'password' => 'secret',
-		]);
+        list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-		$this->assertTrue($valid);
-	}
+        $credetials = [
+            'email'    => 'foo@example.com',
+            'password' => 'secret',
+        ];
 
-	public function testValidateUserForCreation()
-	{
-		$user = new EloquentUser;
+        $valid = $users->validForCreation($credetials);
 
-		list($users, $hasher, $model, $query) = $this->getUsersMock();
+        $this->assertTrue($valid);
+    }
 
-		$credetials = [
-			'email'    => 'foo@example.com',
-			'password' => 'secret',
-		];
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testValidateUserForCreationWithoutLogin()
+    {
+        $user = new EloquentUser;
 
-		$valid = $users->validForCreation($credetials);
+        list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-		$this->assertTrue($valid);
-	}
+        $credetials = [
+            'password' => 'secret',
+        ];
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 */
-	public function testValidateUserForCreationWithoutLogin()
-	{
-		$user = new EloquentUser;
+        $users->validForCreation($credetials);
+    }
 
-		list($users, $hasher, $model, $query) = $this->getUsersMock();
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testValidateUserForCreationWithoutPassword()
+    {
+        $user = new EloquentUser;
 
-		$credetials = [
-			'password' => 'secret',
-		];
+        list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-		$users->validForCreation($credetials);
-	}
+        $credetials = [
+            'email' => 'foo@example.com',
+        ];
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 */
-	public function testValidateUserForCreationWithoutPassword()
-	{
-		$user = new EloquentUser;
+        $users->validForCreation($credetials);
+    }
 
-		list($users, $hasher, $model, $query) = $this->getUsersMock();
+    public function testValidateUserForUpdate()
+    {
+        $user = $this->fakeUser();
 
-		$credetials = [
-			'email' => 'foo@example.com',
-		];
+        list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-		$users->validForCreation($credetials);
-	}
+        $credetials = [
+            'email'    => 'foo@example.com',
+            'password' => 'secret',
+        ];
 
-	public function testValidateUserForUpdate()
-	{
-		$user = $this->fakeUser();
+        $valid = $users->validForUpdate($user, $credetials);
 
-		list($users, $hasher, $model, $query) = $this->getUsersMock();
+        $this->assertTrue($valid);
+    }
 
-		$credetials = [
-			'email'    => 'foo@example.com',
-			'password' => 'secret',
-		];
+    public function testCreate()
+    {
+        list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-		$valid = $users->validForUpdate($user, $credetials);
+        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
+        $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
 
-		$this->assertTrue($valid);
-	}
+        $hasher->shouldReceive('hash')->once()->with('secret')->andReturn(password_hash('secret', PASSWORD_DEFAULT));
 
-	public function testCreate()
-	{
-		list($users, $hasher, $model, $query) = $this->getUsersMock();
+        $user = $users->create([
+            'email' => 'foo@example.com',
+            'password' => 'secret',
+        ]);
 
-		$model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-		$model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
+        $this->assertInstanceOf('Cartalyst\Sentinel\Users\EloquentUser', $user);
+    }
 
-		$hasher->shouldReceive('hash')->once()->with('secret')->andReturn(password_hash('secret', PASSWORD_DEFAULT));
+    public function testCreateWithValidCallback()
+    {
+        list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-		$user = $users->create([
-			'email' => 'foo@example.com',
-			'password' => 'secret',
-		]);
+        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
+        $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
 
-		$this->assertInstanceOf('Cartalyst\Sentinel\Users\EloquentUser', $user);
-	}
+        $hasher->shouldReceive('hash')->once()->with('secret')->andReturn(password_hash('secret', PASSWORD_DEFAULT));
 
-	public function testCreateWithValidCallback()
-	{
-		list($users, $hasher, $model, $query) = $this->getUsersMock();
+        $user = $users->create([
+            'email' => 'foo@example.com',
+            'password' => 'secret',
+        ], function ($user) {
+            return true;
+        });
 
-		$model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-		$model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
+        $this->assertInstanceOf('Cartalyst\Sentinel\Users\EloquentUser', $user);
+    }
 
-		$hasher->shouldReceive('hash')->once()->with('secret')->andReturn(password_hash('secret', PASSWORD_DEFAULT));
+    public function testCreateWithInvalidCallback()
+    {
+        list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-		$user = $users->create([
-			'email' => 'foo@example.com',
-			'password' => 'secret',
-		], function($user)
-		{
-			return true;
-		});
+        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
 
-		$this->assertInstanceOf('Cartalyst\Sentinel\Users\EloquentUser', $user);
-	}
+        $hasher->shouldReceive('hash')->once()->with('secret')->andReturn(password_hash('secret', PASSWORD_DEFAULT));
 
-	public function testCreateWithInvalidCallback()
-	{
-		list($users, $hasher, $model, $query) = $this->getUsersMock();
+        $user = $users->create([
+            'email' => 'foo@example.com',
+            'password' => 'secret',
+        ], function ($user) {
+            return false;
+        });
 
-		$model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
+        $this->assertFalse($user);
+    }
 
-		$hasher->shouldReceive('hash')->once()->with('secret')->andReturn(password_hash('secret', PASSWORD_DEFAULT));
+    public function testUpdate1()
+    {
+        list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-		$user = $users->create([
-			'email' => 'foo@example.com',
-			'password' => 'secret',
-		], function($user)
-		{
-			return false;
-		});
+        $model->setConnectionResolver($resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'));
+        $resolver->shouldReceive('connection')->andReturn(m::mock('Illuminate\Database\Connection'));
+        $model->getConnection()->shouldReceive('getQueryGrammar')->andReturn(m::mock('Illuminate\Database\Query\Grammars\Grammar'));
+        $model->getConnection()->shouldReceive('getPostProcessor')->andReturn($processor = m::mock('Illuminate\Database\Query\Processors\Processor'));
 
-		$this->assertFalse($user);
-	}
+        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
+        $model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
+        $processor->shouldReceive('processInsertGetId');
 
-	public function testUpdate1()
-	{
-		list($users, $hasher, $model, $query) = $this->getUsersMock();
+        $user = $this->fakeUser();
 
-		$model->setConnectionResolver($resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'));
-		$resolver->shouldReceive('connection')->andReturn(m::mock('Illuminate\Database\Connection'));
-		$model->getConnection()->shouldReceive('getQueryGrammar')->andReturn(m::mock('Illuminate\Database\Query\Grammars\Grammar'));
-		$model->getConnection()->shouldReceive('getPostProcessor')->andReturn($processor = m::mock('Illuminate\Database\Query\Processors\Processor'));
+        $updated = $users->update($user, [
+            'email' => 'foo1@example.com',
+        ]);
 
-		$model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-		$model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
-		$processor->shouldReceive('processInsertGetId');
+        $this->assertInstanceOf('Cartalyst\Sentinel\Users\EloquentUser', $user);
+    }
 
-		$user = $this->fakeUser();
+    public function testUpdate2()
+    {
+        $users = m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository[createModel,findById]', [
+            $hasher = m::mock('Cartalyst\Sentinel\Hashing\NativeHasher')
+        ]);
 
-		$updated = $users->update($user, [
-			'email' => 'foo1@example.com',
-		]);
+        $users->shouldReceive('findById')->once()->andReturn($user = $this->fakeUser());
+        $users->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Users\EloquentUser[newQuery]'));
 
-		$this->assertInstanceOf('Cartalyst\Sentinel\Users\EloquentUser', $user);
-	}
+        $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
 
-	public function testUpdate2()
-	{
-		$users = m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository[createModel,findById]', [
-			$hasher = m::mock('Cartalyst\Sentinel\Hashing\NativeHasher')
-		]);
+        $updated = $users->update(1, [
+            'email' => 'foo1@example.com',
+        ]);
 
-		$users->shouldReceive('findById')->once()->andReturn($user = $this->fakeUser());
-		$users->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Users\EloquentUser[newQuery]'));
+        $this->assertInstanceOf('Cartalyst\Sentinel\Users\EloquentUser', $user);
+    }
 
-		$model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
+    public function testHasherSetterAndGetter()
+    {
+        list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-		$updated = $users->update(1, [
-			'email' => 'foo1@example.com',
-		]);
+        $this->assertInstanceOf('Cartalyst\Sentinel\Hashing\NativeHasher', $users->getHasher());
 
-		$this->assertInstanceOf('Cartalyst\Sentinel\Users\EloquentUser', $user);
-	}
+        $users->setHasher(m::mock('Cartalyst\Sentinel\Hashing\HasherInterface'));
 
-	public function testHasherSetterAndGetter()
-	{
-		list($users, $hasher, $model, $query) = $this->getUsersMock();
+        $this->assertInstanceOf('Cartalyst\Sentinel\Hashing\HasherInterface', $users->getHasher());
+    }
 
-		$this->assertInstanceOf('Cartalyst\Sentinel\Hashing\NativeHasher', $users->getHasher());
+    protected function fakeUser()
+    {
+        $user = new EloquentUser;
 
-		$users->setHasher(m::mock('Cartalyst\Sentinel\Hashing\HasherInterface'));
+        $user->password = 'foobar';
+        $user->email = 'foo@example.com';
 
-		$this->assertInstanceOf('Cartalyst\Sentinel\Hashing\HasherInterface', $users->getHasher());
-	}
+        return $user;
+    }
 
-	protected function fakeUser()
-	{
-		$user = new EloquentUser;
+    protected function getUsersMock()
+    {
+        $users = m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository[createModel]', [
+            $hasher = m::mock('Cartalyst\Sentinel\Hashing\NativeHasher')
+        ]);
 
-		$user->password = 'foobar';
-		$user->email = 'foo@example.com';
+        $users->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Users\EloquentUser[newQuery]'));
 
-		return $user;
-	}
+        $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
 
-	protected function getUsersMock()
-	{
-		$users = m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository[createModel]', [
-			$hasher = m::mock('Cartalyst\Sentinel\Hashing\NativeHasher')
-		]);
-
-		$users->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Users\EloquentUser[newQuery]'));
-
-		$model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
-
-		return [$users, $hasher, $model, $query];
-	}
-
+        return [$users, $hasher, $model, $query];
+    }
 }

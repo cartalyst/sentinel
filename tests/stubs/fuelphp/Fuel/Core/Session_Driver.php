@@ -1,4 +1,5 @@
 <?php namespace Fuel\Core;
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,6 +18,6 @@
  * @link       http://cartalyst.com
  */
 
-class Session_Driver {
-
+class Session_Driver
+{
 }

@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Roles;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,21 +18,22 @@
  * @link       http://cartalyst.com
  */
 
-interface RoleableInterface {
+namespace Cartalyst\Sentinel\Roles;
 
-	/**
-	 * Returns all the associated roles.
-	 *
-	 * @return \IteratorAggregate
-	 */
-	public function getRoles();
+interface RoleableInterface
+{
+    /**
+     * Returns all the associated roles.
+     *
+     * @return \IteratorAggregate
+     */
+    public function getRoles();
 
-	/**
-	 * Checks if the user is in the given role.
-	 *
-	 * @param  mixed  $role
-	 * @return bool
-	 */
-	public function inRole($role);
-
+    /**
+     * Checks if the user is in the given role.
+     *
+     * @param  mixed  $role
+     * @return bool
+     */
+    public function inRole($role);
 }

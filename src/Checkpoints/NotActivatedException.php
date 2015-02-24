@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Checkpoints;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,37 +18,38 @@
  * @link       http://cartalyst.com
  */
 
+namespace Cartalyst\Sentinel\Checkpoints;
+
 use Cartalyst\Sentinel\Users\UserInterface;
 use RuntimeException;
 
-class NotActivatedException extends RuntimeException {
+class NotActivatedException extends RuntimeException
+{
+    /**
+     * The user which caused the exception.
+     *
+     * @var \Cartalyst\Sentinel\Users\UserInterface
+     */
+    protected $user;
 
-	/**
-	 * The user which caused the exception.
-	 *
-	 * @var \Cartalyst\Sentinel\Users\UserInterface
-	 */
-	protected $user;
+    /**
+     * Returns the user.
+     *
+     * @return \Cartalyst\Sentinel\Users\UserInterface
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
 
-	/**
-	 * Returns the user.
-	 *
-	 * @return \Cartalyst\Sentinel\Users\UserInterface
-	 */
-	public function getUser()
-	{
-		return $this->user;
-	}
-
-	/**
-	 * Sets the user associated with Sentinel (does not log in).
-	 *
-	 * @param  \Cartalyst\Sentinel\Users\UserInterface
-	 * @return void
-	 */
-	public function setUser(UserInterface $user)
-	{
-		$this->user = $user;
-	}
-
+    /**
+     * Sets the user associated with Sentinel (does not log in).
+     *
+     * @param  \Cartalyst\Sentinel\Users\UserInterface
+     * @return void
+     */
+    public function setUser(UserInterface $user)
+    {
+        $this->user = $user;
+    }
 }

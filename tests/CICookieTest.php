@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Tests;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,66 +18,67 @@
  * @link       http://cartalyst.com
  */
 
+namespace Cartalyst\Sentinel\tests;
+
 use Cartalyst\Sentinel\Cookies\CICookie;
 use CI_Input;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
 
-class CICookieTest extends PHPUnit_Framework_TestCase {
+class CICookieTest extends PHPUnit_Framework_TestCase
+{
+    /**
+     * Setup resources and dependencies.
+     *
+     * @return void
+     */
+    public static function setUpBeforeClass()
+    {
+        require_once __DIR__.'/stubs/ci/CI_Input.php';
+    }
 
-	/**
-	 * Setup resources and dependencies.
-	 *
-	 * @return void
-	 */
-	public static function setUpBeforeClass()
-	{
-		require_once __DIR__.'/stubs/ci/CI_Input.php';
-	}
+    /**
+     * Close mockery.
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        m::close();
+    }
 
-	/**
-	 * Close mockery.
-	 *
-	 * @return void
-	 */
-	public function tearDown()
-	{
-		m::close();
-	}
+    public function testPut()
+    {
+        $cookie = new CICookie($input = m::mock('CI_Input'), 'foo');
 
-	public function testPut()
-	{
-		$cookie = new CICookie($input = m::mock('CI_Input'), 'foo');
+        $input->shouldReceive('set_cookie')->with([
+            'name'   => 'foo',
+            'value'  => serialize('bar'),
+            'expire' => 2628000,
+            'domain' => '',
+            'path'   => '/',
+            'prefix' => '',
+            'secure' => false,
+        ]);
 
-		$input->shouldReceive('set_cookie')->with([
-			'name'   => 'foo',
-			'value'  => serialize('bar'),
-			'expire' => 2628000,
-			'domain' => '',
-			'path'   => '/',
-			'prefix' => '',
-			'secure' => false,
-		]);
+        $cookie->put('bar');
+    }
 
-		$cookie->put('bar');
-	}
+    public function testGet()
+    {
+        $cookie = new CICookie($input = m::mock('CI_Input'), 'foo');
+        $input->shouldReceive('cookie')->with('foo')->once()->andReturn(serialize('baz'));
+        $this->assertEquals('baz', $cookie->get());
+    }
 
-	public function testGet()
-	{
-		$cookie = new CICookie($input = m::mock('CI_Input'), 'foo');
-		$input->shouldReceive('cookie')->with('foo')->once()->andReturn(serialize('baz'));
-		$this->assertEquals('baz', $cookie->get());
-	}
-
-	public function testForget()
-	{
-		$cookie = new CICookie($input = m::mock('CI_Input'), 'foo');
-		$input->shouldReceive('set_cookie')->with([
-			'name'   => 'foo',
-			'value'  => '',
-			'expiry' => '',
-		])->once();
-		$cookie->forget();
-	}
-
+    public function testForget()
+    {
+        $cookie = new CICookie($input = m::mock('CI_Input'), 'foo');
+        $input->shouldReceive('set_cookie')->with([
+            'name'   => 'foo',
+            'value'  => '',
+            'expiry' => '',
+        ])->once();
+        $cookie->forget();
+    }
 }

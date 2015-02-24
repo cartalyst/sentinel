@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Cookies;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,28 +18,29 @@
  * @link       http://cartalyst.com
  */
 
-interface CookieInterface {
+namespace Cartalyst\Sentinel\Cookies;
 
-	/**
-	 * Put a value in the Sentinel cookie (to be stored until it's cleared).
-	 *
-	 * @param  mixed  $value
-	 * @return void
-	 */
-	public function put($value);
+interface CookieInterface
+{
+    /**
+     * Put a value in the Sentinel cookie (to be stored until it's cleared).
+     *
+     * @param  mixed  $value
+     * @return void
+     */
+    public function put($value);
 
-	/**
-	 * Returns the Sentinel cookie value.
-	 *
-	 * @return mixed
-	 */
-	public function get();
+    /**
+     * Returns the Sentinel cookie value.
+     *
+     * @return mixed
+     */
+    public function get();
 
-	/**
-	 * Remove the Sentinel cookie.
-	 *
-	 * @return void
-	 */
-	public function forget();
-
+    /**
+     * Remove the Sentinel cookie.
+     *
+     * @return void
+     */
+    public function forget();
 }

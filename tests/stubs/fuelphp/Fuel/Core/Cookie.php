@@ -1,4 +1,5 @@
 <?php namespace Fuel\Core;
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,27 +18,24 @@
  * @link       http://cartalyst.com
  */
 
-class Cookie {
+class Cookie
+{
+    public static function set($key, $value, $minutes)
+    {
+        $_SERVER['__cookie.set'] = [$key, $value, $minutes];
+    }
 
-	public static function set($key, $value, $minutes)
-	{
-		$_SERVER['__cookie.set'] = [$key, $value, $minutes];
-	}
+    public static function get($key)
+    {
+        if ($key == 'foo') {
+            return serialize('baz');
+        }
+    }
 
-	public static function get($key)
-	{
-		if ($key == 'foo')
-		{
-			return serialize('baz');
-		}
-	}
-
-	public static function delete($key)
-	{
-		if ($key == 'foo')
-		{
-			$_SERVER['__cookie.delete'] = true;
-		}
-	}
-
+    public static function delete($key)
+    {
+        if ($key == 'foo') {
+            $_SERVER['__cookie.delete'] = true;
+        }
+    }
 }

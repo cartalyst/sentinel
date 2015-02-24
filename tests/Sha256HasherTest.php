@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Tests;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,53 +18,54 @@
  * @link       http://cartalyst.com
  */
 
+namespace Cartalyst\Sentinel\tests;
+
 use Cartalyst\Sentinel\Hashing\Sha256Hasher;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
 
-class Sha256HasherTest extends PHPUnit_Framework_TestCase {
+class Sha256HasherTest extends PHPUnit_Framework_TestCase
+{
+    /**
+     * Close mockery.
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        m::close();
+    }
 
-	/**
-	 * Close mockery.
-	 *
-	 * @return void
-	 */
-	public function tearDown()
-	{
-		m::close();
-	}
+    public function testHashing()
+    {
+        $hasher = new Sha256Hasher;
+        $hashedValue = $hasher->hash('password');
+        $this->assertTrue($hashedValue !== 'password');
+        $this->assertTrue($hasher->check('password', $hashedValue));
+        $this->assertFalse($hasher->check('fail', $hashedValue));
+    }
 
-	public function testHashing()
-	{
-		$hasher = new Sha256Hasher;
-		$hashedValue = $hasher->hash('password');
-		$this->assertTrue($hashedValue !== 'password');
-		$this->assertTrue($hasher->check('password', $hashedValue));
-		$this->assertFalse($hasher->check('fail', $hashedValue));
-	}
+    public function testShortValue()
+    {
+        $hasher = new Sha256Hasher;
+        $hashedValue = $hasher->hash('foo');
+        $this->assertTrue($hashedValue !== 'foo');
+        $this->assertTrue($hasher->check('foo', $hashedValue));
+    }
 
-	public function testShortValue()
-	{
-		$hasher = new Sha256Hasher;
-		$hashedValue = $hasher->hash('foo');
-		$this->assertTrue($hashedValue !== 'foo');
-		$this->assertTrue($hasher->check('foo', $hashedValue));
-	}
+    public function testUtf8Value()
+    {
+        $hasher = new Sha256Hasher;
+        $hashedValue = $hasher->hash('fÄÓñ');
+        $this->assertTrue($hashedValue !== 'fÄÓñ');
+        $this->assertTrue($hasher->check('fÄÓñ', $hashedValue));
+    }
 
-	public function testUtf8Value()
-	{
-		$hasher = new Sha256Hasher;
-		$hashedValue = $hasher->hash('fÄÓñ');
-		$this->assertTrue($hashedValue !== 'fÄÓñ');
-		$this->assertTrue($hasher->check('fÄÓñ', $hashedValue));
-	}
-
-	public function testSymbolsValue()
-	{
-		$hasher = new Sha256Hasher;
-		$hashedValue = $hasher->hash('!"#$%^&*()-_,./:;<=>?@[]{}`~|');
-		$this->assertTrue($hashedValue !== '!"#$%^&*()-_,./:;<=>?@[]{}`~|');
-		$this->assertTrue($hasher->check('!"#$%^&*()-_,./:;<=>?@[]{}`~|', $hashedValue));
-	}
-
+    public function testSymbolsValue()
+    {
+        $hasher = new Sha256Hasher;
+        $hashedValue = $hasher->hash('!"#$%^&*()-_,./:;<=>?@[]{}`~|');
+        $this->assertTrue($hashedValue !== '!"#$%^&*()-_,./:;<=>?@[]{}`~|');
+        $this->assertTrue($hasher->check('!"#$%^&*()-_,./:;<=>?@[]{}`~|', $hashedValue));
+    }
 }

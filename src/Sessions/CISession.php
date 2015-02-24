@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Sessions;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,68 +18,67 @@
  * @link       http://cartalyst.com
  */
 
+namespace Cartalyst\Sentinel\Sessions;
+
 use CI_Session as Session;
 
-class CISession implements SessionInterface {
+class CISession implements SessionInterface
+{
+    /**
+     * The CodeIgniter session driver.
+     *
+     * @var \CI_Session
+     */
+    protected $store;
 
-	/**
-	 * The CodeIgniter session driver.
-	 *
-	 * @var \CI_Session
-	 */
-	protected $store;
+    /**
+     * The session key.
+     *
+     * @var string
+     */
+    protected $key = 'cartalyst_sentinel';
 
-	/**
-	 * The session key.
-	 *
-	 * @var string
-	 */
-	protected $key = 'cartalyst_sentinel';
+    /**
+     * Create a new CodeIgniter Session driver.
+     *
+     * @param  \CI_Session  $store
+     * @param  string  $key
+     * @return void
+     */
+    public function __construct(Session $store, $key = null)
+    {
+        $this->store = $store;
 
-	/**
-	 * Create a new CodeIgniter Session driver.
-	 *
-	 * @param  \CI_Session  $store
-	 * @param  string  $key
-	 * @return void
-	 */
-	public function __construct(Session $store, $key = null)
-	{
-		$this->store = $store;
+        if (isset($key)) {
+            $this->key = $key;
+        }
+    }
 
-		if (isset($key))
-		{
-			$this->key = $key;
-		}
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public function put($value)
+    {
+        $this->store->set_userdata($this->key, serialize($value));
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function put($value)
-	{
-		$this->store->set_userdata($this->key, serialize($value));
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public function get()
+    {
+        $value = $this->store->userdata($this->key);
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function get()
-	{
-		$value = $this->store->userdata($this->key);
+        if ($value) {
+            return unserialize($value);
+        }
+    }
 
-		if ($value)
-		{
-			return unserialize($value);
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function forget()
-	{
-		$this->store->unset_userdata($this->key);
-	}
-
+    /**
+     * {@inheritDoc}
+     */
+    public function forget()
+    {
+        $this->store->unset_userdata($this->key);
+    }
 }

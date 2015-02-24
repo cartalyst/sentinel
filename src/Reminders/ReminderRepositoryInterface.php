@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Reminders;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,42 +18,43 @@
  * @link       http://cartalyst.com
  */
 
+namespace Cartalyst\Sentinel\Reminders;
+
 use Cartalyst\Sentinel\Users\UserInterface;
 
-interface ReminderRepositoryInterface {
+interface ReminderRepositoryInterface
+{
+    /**
+     * Create a new reminder record and code.
+     *
+     * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
+     * @return string
+     */
+    public function create(UserInterface $user);
 
-	/**
-	 * Create a new reminder record and code.
-	 *
-	 * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
-	 * @return string
-	 */
-	public function create(UserInterface $user);
+    /**
+     * Check if a valid reminder exists.
+     *
+     * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
+     * @param  string  $code
+     * @return bool
+     */
+    public function exists(UserInterface $user, $code = null);
 
-	/**
-	 * Check if a valid reminder exists.
-	 *
-	 * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
-	 * @param  string  $code
-	 * @return bool
-	 */
-	public function exists(UserInterface $user, $code = null);
+    /**
+     * Complete reminder for the given user.
+     *
+     * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
+     * @param  string  $code
+     * @param  string  $password
+     * @return bool
+     */
+    public function complete(UserInterface $user, $code, $password);
 
-	/**
-	 * Complete reminder for the given user.
-	 *
-	 * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
-	 * @param  string  $code
-	 * @param  string  $password
-	 * @return bool
-	 */
-	public function complete(UserInterface $user, $code, $password);
-
-	/**
-	 * Remove expired reminder codes.
-	 *
-	 * @return int
-	 */
-	public function removeExpired();
-
+    /**
+     * Remove expired reminder codes.
+     *
+     * @return int
+     */
+    public function removeExpired();
 }

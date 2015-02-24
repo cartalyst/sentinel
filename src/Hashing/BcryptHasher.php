@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Hashing;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,39 +18,41 @@
  * @link       http://cartalyst.com
  */
 
-class BcryptHasher implements HasherInterface {
+namespace Cartalyst\Sentinel\Hashing;
 
-	use Hasher;
+class BcryptHasher implements HasherInterface
+{
 
-	/**
-	 * The hash strength.
-	 *
-	 * @var int
-	 */
-	public $strength = 8;
+    use Hasher;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function hash($value)
-	{
-		$salt = $this->createSalt();
+    /**
+     * The hash strength.
+     *
+     * @var int
+     */
+    public $strength = 8;
 
-		// Format the strength
-		$strength = str_pad($this->strength, 2, '0', STR_PAD_LEFT);
+    /**
+     * {@inheritDoc}
+     */
+    public function hash($value)
+    {
+        $salt = $this->createSalt();
 
-		// Create prefix - "$2y$"" fixes blowfish weakness
-		$prefix = PHP_VERSION_ID < 50307 ? '$2a$' : '$2y$';
+        // Format the strength
+        $strength = str_pad($this->strength, 2, '0', STR_PAD_LEFT);
 
-		return crypt($value, $prefix.$strength.'$'.$salt.'$');
-	}
+        // Create prefix - "$2y$"" fixes blowfish weakness
+        $prefix = PHP_VERSION_ID < 50307 ? '$2a$' : '$2y$';
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function check($value, $hashedValue)
-	{
-		return $this->slowEquals(crypt($value, $hashedValue), $hashedValue);
-	}
+        return crypt($value, $prefix.$strength.'$'.$salt.'$');
+    }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function check($value, $hashedValue)
+    {
+        return $this->slowEquals(crypt($value, $hashedValue), $hashedValue);
+    }
 }

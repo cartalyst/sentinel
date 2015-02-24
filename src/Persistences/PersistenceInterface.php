@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Persistences;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,6 +18,8 @@
  * @link       http://cartalyst.com
  */
 
-interface PersistenceInterface {
+namespace Cartalyst\Sentinel\Persistences;
 
+interface PersistenceInterface
+{
 }

@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Permissions;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,22 +18,23 @@
  * @link       http://cartalyst.com
  */
 
-interface PermissionsInterface {
+namespace Cartalyst\Sentinel\Permissions;
 
-	/**
-	 * Returns if access is available for all given permissions.
-	 *
-	 * @param  array|string  $permissions
-	 * @return bool
-	 */
-	public function hasAccess($permissions);
+interface PermissionsInterface
+{
+    /**
+     * Returns if access is available for all given permissions.
+     *
+     * @param  array|string  $permissions
+     * @return bool
+     */
+    public function hasAccess($permissions);
 
-	/**
-	 * Returns if access is available for any given permissions.
-	 *
-	 * @param  array|string  $permissions
-	 * @return bool
-	 */
-	public function hasAnyAccess($permissions);
-
+    /**
+     * Returns if access is available for any given permissions.
+     *
+     * @param  array|string  $permissions
+     * @return bool
+     */
+    public function hasAnyAccess($permissions);
 }

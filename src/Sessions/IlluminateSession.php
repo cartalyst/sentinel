@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Sessions;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,63 +18,63 @@
  * @link       http://cartalyst.com
  */
 
+namespace Cartalyst\Sentinel\Sessions;
+
 use Illuminate\Session\Store as SessionStore;
 
-class IlluminateSession implements SessionInterface {
+class IlluminateSession implements SessionInterface
+{
+    /**
+     * The session store object.
+     *
+     * @var \Illuminate\Session\Store
+     */
+    protected $session;
 
-	/**
-	 * The session store object.
-	 *
-	 * @var \Illuminate\Session\Store
-	 */
-	protected $session;
+    /**
+     * The session key.
+     *
+     * @var string
+     */
+    protected $key = 'cartalyst_sentinel';
 
-	/**
-	 * The session key.
-	 *
-	 * @var string
-	 */
-	protected $key = 'cartalyst_sentinel';
+    /**
+     * Create a new Illuminate Session driver.
+     *
+     * @param  \Illuminate\Session\Store  $session
+     * @param  string  $key
+     * @return void
+     */
+    public function __construct(SessionStore $session, $key = null)
+    {
+        $this->session = $session;
 
-	/**
-	 * Create a new Illuminate Session driver.
-	 *
-	 * @param  \Illuminate\Session\Store  $session
-	 * @param  string  $key
-	 * @return void
-	 */
-	public function __construct(SessionStore $session, $key = null)
-	{
-		$this->session = $session;
+        if (isset($key)) {
+            $this->key = $key;
+        }
+    }
 
-		if (isset($key))
-		{
-			$this->key = $key;
-		}
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public function put($value)
+    {
+        $this->session->put($this->key, $value);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function put($value)
-	{
-		$this->session->put($this->key, $value);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public function get()
+    {
+        return $this->session->get($this->key);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function get()
-	{
-		return $this->session->get($this->key);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function forget()
-	{
-		$this->session->forget($this->key);
-	}
-
+    /**
+     * {@inheritDoc}
+     */
+    public function forget()
+    {
+        $this->session->forget($this->key);
+    }
 }

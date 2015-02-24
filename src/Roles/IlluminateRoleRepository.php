@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Roles;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,66 +18,67 @@
  * @link       http://cartalyst.com
  */
 
+namespace Cartalyst\Sentinel\Roles;
+
 use Cartalyst\Support\Traits\RepositoryTrait;
 
-class IlluminateRoleRepository implements RoleRepositoryInterface {
+class IlluminateRoleRepository implements RoleRepositoryInterface
+{
 
-	use RepositoryTrait;
+    use RepositoryTrait;
 
-	/**
-	 * The Eloquent role model name.
-	 *
-	 * @var string
-	 */
-	protected $model = 'Cartalyst\Sentinel\Roles\EloquentRole';
+    /**
+     * The Eloquent role model name.
+     *
+     * @var string
+     */
+    protected $model = 'Cartalyst\Sentinel\Roles\EloquentRole';
 
-	/**
-	 * Create a new Illuminate role repository.
-	 *
-	 * @param  string  $model
-	 * @return void
-	 */
-	public function __construct($model = null)
-	{
-		if (isset($model))
-		{
-			$this->model = $model;
-		}
-	}
+    /**
+     * Create a new Illuminate role repository.
+     *
+     * @param  string  $model
+     * @return void
+     */
+    public function __construct($model = null)
+    {
+        if (isset($model)) {
+            $this->model = $model;
+        }
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function findById($id)
-	{
-		return $this
-			->createModel()
-			->newQuery()
-			->find($id);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public function findById($id)
+    {
+        return $this
+            ->createModel()
+            ->newQuery()
+            ->find($id);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function findBySlug($slug)
-	{
-		return $this
-			->createModel()
-			->newQuery()
-			->where('slug', $slug)
-			->first();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public function findBySlug($slug)
+    {
+        return $this
+            ->createModel()
+            ->newQuery()
+            ->where('slug', $slug)
+            ->first();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function findByName($name)
-	{
-		return $this
-			->createModel()
-			->newQuery()
-			->where('name', $name)
-			->first();
-	}
-
+    /**
+     * {@inheritDoc}
+     */
+    public function findByName($name)
+    {
+        return $this
+            ->createModel()
+            ->newQuery()
+            ->where('name', $name)
+            ->first();
+    }
 }

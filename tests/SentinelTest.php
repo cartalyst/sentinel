@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Tests;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,472 +18,471 @@
  * @link       http://cartalyst.com
  */
 
+namespace Cartalyst\Sentinel\tests;
+
 use Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint;
 use Cartalyst\Sentinel\Sentinel;
 use Cartalyst\Sentinel\Users\EloquentUser;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
 
-class SentinelTest extends PHPUnit_Framework_TestCase {
+class SentinelTest extends PHPUnit_Framework_TestCase
+{
+    /**
+     * Close mockery.
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        m::close();
+    }
 
-	/**
-	 * Close mockery.
-	 *
-	 * @return void
-	 */
-	public function tearDown()
-	{
-		m::close();
-	}
+    public function testValidRegister()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testValidRegister()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $users->shouldReceive('validForCreation')->once()->andReturn(true);
+        $users->shouldReceive('create')->once();
 
-		$users->shouldReceive('validForCreation')->once()->andReturn(true);
-		$users->shouldReceive('create')->once();
+        $dispatcher->shouldReceive('fire')->twice();
 
-		$dispatcher->shouldReceive('fire')->twice();
+        $sentinel->register([
+            'email' => 'foo@example.com',
+            'password' => 'secret',
+        ]);
+    }
 
-		$sentinel->register([
-			'email' => 'foo@example.com',
-			'password' => 'secret',
-		]);
-	}
+    public function testRegisterInvalidUser()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testRegisterInvalidUser()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $users->shouldReceive('validForCreation')->once()->andReturn(false);
 
-		$users->shouldReceive('validForCreation')->once()->andReturn(false);
+        $dispatcher->shouldReceive('fire')->once();
 
-		$dispatcher->shouldReceive('fire')->once();
+        $user = $sentinel->register([
+            'email' => 'foo@example.com',
+        ]);
 
-		$user = $sentinel->register([
-			'email' => 'foo@example.com',
-		]);
+        $this->assertFalse($user);
+    }
 
-		$this->assertFalse($user);
-	}
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testRegisterWithInvalidClosure()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 */
-	public function testRegisterWithInvalidClosure()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $sentinel->register([
+            'email' => 'foo@example.com',
+        ], 'invalid_closure');
+    }
 
-		$sentinel->register([
-			'email' => 'foo@example.com',
-		], 'invalid_closure');
-	}
+    public function testRegisterAndActivate()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testRegisterAndActivate()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $users->shouldReceive('validForCreation')->once()->andReturn(true);
+        $users->shouldReceive('create')->once()->andReturn(m::mock('Cartalyst\Sentinel\Users\EloquentUser'));
 
-		$users->shouldReceive('validForCreation')->once()->andReturn(true);
-		$users->shouldReceive('create')->once()->andReturn(m::mock('Cartalyst\Sentinel\Users\EloquentUser'));
+        $activations->shouldReceive('create')->once()->andReturn($activation = m::mock('Cartalyst\Sentinel\Activations\EloquentActivation'));
+        $activations->shouldReceive('complete')->once()->andReturn(true);
+        $activation->shouldReceive('getAttribute')->once();
 
-		$activations->shouldReceive('create')->once()->andReturn($activation = m::mock('Cartalyst\Sentinel\Activations\EloquentActivation'));
-		$activations->shouldReceive('complete')->once()->andReturn(true);
-		$activation->shouldReceive('getAttribute')->once();
+        $dispatcher->shouldReceive('fire')->times(4);
 
-		$dispatcher->shouldReceive('fire')->times(4);
+        $sentinel->registerAndActivate([
+            'email'    => 'foo@example.com',
+            'password' => 'secret',
+        ]);
+    }
 
-		$sentinel->registerAndActivate([
-			'email'    => 'foo@example.com',
-			'password' => 'secret',
-		]);
-	}
+    public function testActivateUserByInstance()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testActivateUserByInstance()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $user = new EloquentUser;
 
-		$user = new EloquentUser;
+        $activations->shouldReceive('create')->once()->andReturn($activation = m::mock('Cartalyst\Sentinel\Activations\EloquentActivation'));
+        $activations->shouldReceive('complete')->once()->andReturn(true);
+        $activation->shouldReceive('getAttribute')->once();
 
-		$activations->shouldReceive('create')->once()->andReturn($activation = m::mock('Cartalyst\Sentinel\Activations\EloquentActivation'));
-		$activations->shouldReceive('complete')->once()->andReturn(true);
-		$activation->shouldReceive('getAttribute')->once();
+        $dispatcher->shouldReceive('fire')->twice();
 
-		$dispatcher->shouldReceive('fire')->twice();
+        $sentinel->activate($user);
+    }
 
-		$sentinel->activate($user);
-	}
+    public function testActivateUserById()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testActivateUserById()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $user = new EloquentUser;
 
-		$user = new EloquentUser;
+        $users->shouldReceive('findById')->with('1')->once()->andReturn(new EloquentUser);
 
-		$users->shouldReceive('findById')->with('1')->once()->andReturn(new EloquentUser);
+        $activations->shouldReceive('create')->once()->andReturn($activation = m::mock('Cartalyst\Sentinel\Activations\EloquentActivation'));
+        $activations->shouldReceive('complete')->once()->andReturn(true);
+        $activation->shouldReceive('getAttribute')->once();
 
-		$activations->shouldReceive('create')->once()->andReturn($activation = m::mock('Cartalyst\Sentinel\Activations\EloquentActivation'));
-		$activations->shouldReceive('complete')->once()->andReturn(true);
-		$activation->shouldReceive('getAttribute')->once();
+        $dispatcher->shouldReceive('fire')->twice();
 
-		$dispatcher->shouldReceive('fire')->twice();
+        $sentinel->activate('1');
+    }
 
-		$sentinel->activate('1');
-	}
+    public function testActivateUserByCredentials()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testActivateUserByCredentials()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $credentials = [
+            'login'    => 'foo@example.com',
+            'password' => 'secret',
+        ];
 
-		$credentials = [
-			'login'    => 'foo@example.com',
-			'password' => 'secret',
-		];
+        $users->shouldReceive('findByCredentials')->with($credentials)->once()->andReturn(new EloquentUser);
 
-		$users->shouldReceive('findByCredentials')->with($credentials)->once()->andReturn(new EloquentUser);
+        $activations->shouldReceive('create')->once()->andReturn($activation = m::mock('Cartalyst\Sentinel\Activations\EloquentActivation'));
+        $activations->shouldReceive('complete')->once()->andReturn(true);
+        $activation->shouldReceive('getAttribute')->once();
 
-		$activations->shouldReceive('create')->once()->andReturn($activation = m::mock('Cartalyst\Sentinel\Activations\EloquentActivation'));
-		$activations->shouldReceive('complete')->once()->andReturn(true);
-		$activation->shouldReceive('getAttribute')->once();
+        $dispatcher->shouldReceive('fire')->twice();
 
-		$dispatcher->shouldReceive('fire')->twice();
+        $sentinel->activate($credentials);
+    }
 
-		$sentinel->activate($credentials);
-	}
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testActivateInvalidUserType()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 */
-	public function testActivateInvalidUserType()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $sentinel->activate(20.00);
+    }
 
-		$sentinel->activate(20.00);
-	}
+    public function testCheck1()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testCheck1()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $persistences->shouldReceive('check')->once()->andReturn('foobar');
+        $persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser);
 
-		$persistences->shouldReceive('check')->once()->andReturn('foobar');
-		$persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser);
+        $sentinel->check();
+    }
 
-		$sentinel->check();
-	}
+    public function testCheck2()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testCheck2()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $persistences->shouldReceive('check')->once()->andReturn('foobar');
+        $persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(false);
 
-		$persistences->shouldReceive('check')->once()->andReturn('foobar');
-		$persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(false);
+        $sentinel->check();
+    }
 
-		$sentinel->check();
-	}
+    public function testCheck3()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testCheck3()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $persistences->shouldReceive('check')->once();
+        $persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(false);
 
-		$persistences->shouldReceive('check')->once();
-		$persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(false);
+        $sentinel->check();
+    }
 
-		$sentinel->check();
-	}
+    public function testCheck4()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testCheck4()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $user = new EloquentUser;
 
-		$user = new EloquentUser;
+        $sentinel->setUser($user);
 
-		$sentinel->setUser($user);
+        $this->assertInstanceOf('Cartalyst\Sentinel\Users\EloquentUser', $sentinel->check());
+    }
 
-		$this->assertInstanceOf('Cartalyst\Sentinel\Users\EloquentUser', $sentinel->check());
-	}
+    public function testForceCheck()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testForceCheck()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $persistences->shouldReceive('check')->once();
+        $persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser);
 
-		$persistences->shouldReceive('check')->once();
-		$persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser);
+        $checkpoint = new ActivationCheckpoint($activations);
 
-		$checkpoint = new ActivationCheckpoint($activations);
+        $sentinel->addCheckpoint('activation', $checkpoint);
 
-		$sentinel->addCheckpoint('activation', $checkpoint);
+        $valid = $sentinel->forceCheck();
 
-		$valid = $sentinel->forceCheck();
+        $this->assertFalse($valid);
+    }
 
-		$this->assertFalse($valid);
-	}
+    public function testGuest1()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testGuest1()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $persistences->shouldReceive('check')->once();
 
-		$persistences->shouldReceive('check')->once();
+        $this->assertTrue($sentinel->guest());
+    }
 
-		$this->assertTrue($sentinel->guest());
-	}
+    public function testGuest2()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testGuest2()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $user = new EloquentUser;
 
-		$user = new EloquentUser;
+        $sentinel->setUser($user);
 
-		$sentinel->setUser($user);
+        $this->assertFalse($sentinel->guest());
+    }
 
-		$this->assertFalse($sentinel->guest());
-	}
+    public function testAuthenticate1()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testAuthenticate1()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $user = new EloquentUser;
 
-		$user = new EloquentUser;
+        $credentials = [
+            'login'    => 'foo@example.com',
+            'password' => 'secret',
+        ];
 
-		$credentials = [
-			'login'    => 'foo@example.com',
-			'password' => 'secret',
-		];
+        $persistences->shouldReceive('persist')->once();
 
-		$persistences->shouldReceive('persist')->once();
+        $users->shouldReceive('findByCredentials')->with($credentials)->once()->andReturn($user);
+        $users->shouldReceive('validateCredentials')->once()->andReturn(true);
+        $users->shouldReceive('recordLogin')->once();
 
-		$users->shouldReceive('findByCredentials')->with($credentials)->once()->andReturn($user);
-		$users->shouldReceive('validateCredentials')->once()->andReturn(true);
-		$users->shouldReceive('recordLogin')->once();
+        $dispatcher->shouldReceive('until')->once();
+        $dispatcher->shouldReceive('fire')->once();
 
-		$dispatcher->shouldReceive('until')->once();
-		$dispatcher->shouldReceive('fire')->once();
+        $sentinel->authenticate($credentials);
+    }
 
-		$sentinel->authenticate($credentials);
-	}
+    public function testAuthenticate2()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testAuthenticate2()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $user = new EloquentUser;
 
-		$user = new EloquentUser;
+        $persistences->shouldReceive('persist')->once();
 
-		$persistences->shouldReceive('persist')->once();
+        $users->shouldReceive('recordLogin')->once();
 
-		$users->shouldReceive('recordLogin')->once();
+        $dispatcher->shouldReceive('until')->once();
+        $dispatcher->shouldReceive('fire')->once();
 
-		$dispatcher->shouldReceive('until')->once();
-		$dispatcher->shouldReceive('fire')->once();
+        $sentinel->authenticate($user);
+    }
 
-		$sentinel->authenticate($user);
-	}
+    public function testAuthenticate3()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testAuthenticate3()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $user = new EloquentUser;
 
-		$user = new EloquentUser;
+        $credentials = [
+            'login'    => 'foo@example.com',
+            'password' => 'secret',
+        ];
 
-		$credentials = [
-			'login'    => 'foo@example.com',
-			'password' => 'secret',
-		];
+        $users->shouldReceive('findByCredentials')->once();
 
-		$users->shouldReceive('findByCredentials')->once();
+        $dispatcher->shouldReceive('until')->once();
 
-		$dispatcher->shouldReceive('until')->once();
+        $sentinel->authenticate($credentials);
+    }
 
-		$sentinel->authenticate($credentials);
-	}
+    public function testAuthenticateAndRemember()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testAuthenticateAndRemember()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $user = new EloquentUser;
 
-		$user = new EloquentUser;
+        $credentials = [
+            'login'    => 'foo@example.com',
+            'password' => 'secret',
+        ];
 
-		$credentials = [
-			'login'    => 'foo@example.com',
-			'password' => 'secret',
-		];
+        $persistences->shouldReceive('persistAndRemember')->once();
 
-		$persistences->shouldReceive('persistAndRemember')->once();
+        $users->shouldReceive('findByCredentials')->with($credentials)->once()->andReturn($user);
+        $users->shouldReceive('validateCredentials')->once()->andReturn(true);
+        $users->shouldReceive('recordLogin')->once();
 
-		$users->shouldReceive('findByCredentials')->with($credentials)->once()->andReturn($user);
-		$users->shouldReceive('validateCredentials')->once()->andReturn(true);
-		$users->shouldReceive('recordLogin')->once();
+        $dispatcher->shouldReceive('until')->once();
+        $dispatcher->shouldReceive('fire')->once();
 
-		$dispatcher->shouldReceive('until')->once();
-		$dispatcher->shouldReceive('fire')->once();
+        $sentinel->authenticateAndRemember($credentials);
+    }
 
-		$sentinel->authenticateAndRemember($credentials);
-	}
+    public function testCheckpoints()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testCheckpoints()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $sentinel->disableCheckpoints();
 
-		$sentinel->disableCheckpoints();
+        $this->assertFalse($sentinel->checkpointsStatus());
 
-		$this->assertFalse($sentinel->checkpointsStatus());
+        $sentinel->enableCheckpoints();
 
-		$sentinel->enableCheckpoints();
+        $this->assertTrue($sentinel->checkpointsStatus());
+    }
 
-		$this->assertTrue($sentinel->checkpointsStatus());
-	}
+    public function testSetAndGetRepositories()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testSetAndGetRepositories()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $sentinel->setPersistenceRepository(m::mock('Cartalyst\Sentinel\Persistences\IlluminatePersistenceRepository'));
+        $sentinel->setUserRepository(m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository'));
+        $sentinel->setRoleRepository(m::mock('Cartalyst\Sentinel\Roles\IlluminateRoleRepository'));
+        $sentinel->setActivationRepository(m::mock('Cartalyst\Sentinel\Activations\IlluminateActivationRepository'));
+        $sentinel->setReminderRepository(m::mock('Cartalyst\Sentinel\Reminders\IlluminateReminderRepository'));
 
-		$sentinel->setPersistenceRepository(m::mock('Cartalyst\Sentinel\Persistences\IlluminatePersistenceRepository'));
-		$sentinel->setUserRepository(m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository'));
-		$sentinel->setRoleRepository(m::mock('Cartalyst\Sentinel\Roles\IlluminateRoleRepository'));
-		$sentinel->setActivationRepository(m::mock('Cartalyst\Sentinel\Activations\IlluminateActivationRepository'));
-		$sentinel->setReminderRepository(m::mock('Cartalyst\Sentinel\Reminders\IlluminateReminderRepository'));
+        $this->assertInstanceOf('Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface', $sentinel->getPersistenceRepository());
+        $this->assertInstanceOf('Cartalyst\Sentinel\Users\UserRepositoryInterface', $sentinel->getUserRepository());
+        $this->assertInstanceOf('Cartalyst\Sentinel\Roles\RoleRepositoryInterface', $sentinel->getRoleRepository());
+        $this->assertInstanceOf('Cartalyst\Sentinel\Activations\ActivationRepositoryInterface', $sentinel->getActivationRepository());
+        $this->assertInstanceOf('Cartalyst\Sentinel\Reminders\ReminderRepositoryInterface', $sentinel->getReminderRepository());
+    }
 
-		$this->assertInstanceOf('Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface', $sentinel->getPersistenceRepository());
-		$this->assertInstanceOf('Cartalyst\Sentinel\Users\UserRepositoryInterface', $sentinel->getUserRepository());
-		$this->assertInstanceOf('Cartalyst\Sentinel\Roles\RoleRepositoryInterface', $sentinel->getRoleRepository());
-		$this->assertInstanceOf('Cartalyst\Sentinel\Activations\ActivationRepositoryInterface', $sentinel->getActivationRepository());
-		$this->assertInstanceOf('Cartalyst\Sentinel\Reminders\ReminderRepositoryInterface', $sentinel->getReminderRepository());
-	}
+    public function testLogin()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testLogin()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $user = new EloquentUser;
 
-		$user = new EloquentUser;
+        $persistences->shouldReceive('persist')->once();
 
-		$persistences->shouldReceive('persist')->once();
+        $users->shouldReceive('recordLogin')->once();
 
-		$users->shouldReceive('recordLogin')->once();
+        $this->assertInstanceOf('Cartalyst\Sentinel\Users\EloquentUser', $sentinel->login($user));
+    }
 
-		$this->assertInstanceOf('Cartalyst\Sentinel\Users\EloquentUser', $sentinel->login($user));
-	}
+    public function testLoginFailure()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testLoginFailure()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $user = new EloquentUser;
 
-		$user = new EloquentUser;
+        $persistences->shouldReceive('persist')->once();
 
-		$persistences->shouldReceive('persist')->once();
+        $users->shouldReceive('recordLogin')->once()->andReturn(false);
 
-		$users->shouldReceive('recordLogin')->once()->andReturn(false);
+        $this->assertFalse($sentinel->login($user));
+    }
 
-		$this->assertFalse($sentinel->login($user));
-	}
+    public function testLogout()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testLogout()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $user = new EloquentUser;
 
-		$user = new EloquentUser;
+        $persistences->shouldReceive('forget')->once();
 
-		$persistences->shouldReceive('forget')->once();
+        $users->shouldReceive('recordLogout')->once();
 
-		$users->shouldReceive('recordLogout')->once();
+        $sentinel->logout($user);
+    }
 
-		$sentinel->logout($user);
-	}
+    public function testLogoutEverywhere()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testLogoutEverywhere()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $user = new EloquentUser;
 
-		$user = new EloquentUser;
+        $persistences->shouldReceive('flush')->once();
 
-		$persistences->shouldReceive('flush')->once();
+        $users->shouldReceive('recordLogout')->once();
 
-		$users->shouldReceive('recordLogout')->once();
+        $sentinel->logout($user, true);
+    }
 
-		$sentinel->logout($user, true);
-	}
+    public function testLogoutInvalidUser()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testLogoutInvalidUser()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $user = null;
 
-		$user = null;
+        $persistences->shouldReceive('check')->once();
 
-		$persistences->shouldReceive('check')->once();
+        $sentinel->logout($user, true);
+    }
 
-		$sentinel->logout($user, true);
-	}
+    /**
+     * @expectedException \Cartalyst\Sentinel\Checkpoints\NotActivatedException
+     */
+    public function testAddCheckpoint()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	/**
-	 * @expectedException \Cartalyst\Sentinel\Checkpoints\NotActivatedException
-	 */
-	public function testAddCheckpoint()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $persistences->shouldReceive('check')->once()->andReturn('foobar');
+        $persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser);
 
-		$persistences->shouldReceive('check')->once()->andReturn('foobar');
-		$persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser);
+        $activations->shouldReceive('completed')->once()->andReturn(false);
 
-		$activations->shouldReceive('completed')->once()->andReturn(false);
+        $user = m::mock('Cartalyst\Sentinel\Users\EloquentUser');
 
-		$user = m::mock('Cartalyst\Sentinel\Users\EloquentUser');
+        $checkpoint = new ActivationCheckpoint($activations);
 
-		$checkpoint = new ActivationCheckpoint($activations);
+        $sentinel->addCheckpoint('activation', $checkpoint);
 
-		$sentinel->addCheckpoint('activation', $checkpoint);
+        $sentinel->check();
+    }
 
-		$sentinel->check();
-	}
+    public function testBypassCheckpoints()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testBypassCheckpoints()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $user = m::mock('Cartalyst\Sentinel\Users\EloquentUser');
 
-		$user = m::mock('Cartalyst\Sentinel\Users\EloquentUser');
+        $checkpoint = new ActivationCheckpoint($activations);
 
-		$checkpoint = new ActivationCheckpoint($activations);
+        $sentinel->addCheckpoint('activation', $checkpoint);
 
-		$sentinel->addCheckpoint('activation', $checkpoint);
+        $persistences->shouldReceive('check')->once()->andReturn('foobar');
+        $persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser);
 
-		$persistences->shouldReceive('check')->once()->andReturn('foobar');
-		$persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser);
+        $sentinel->bypassCheckpoints(function () use ($sentinel) {
+            $this->assertInstanceOf('Cartalyst\Sentinel\Users\EloquentUser', $sentinel->check());
+        });
+    }
 
-		$sentinel->bypassCheckpoints(function() use ($sentinel)
-		{
-			$this->assertInstanceOf('Cartalyst\Sentinel\Users\EloquentUser', $sentinel->check());
-		});
-	}
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testGetBasicResponse()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	/**
-	 * @expectedException \RuntimeException
-	 */
-	public function testGetBasicResponse()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $sentinel->getBasicResponse();
+    }
 
-		$sentinel->getBasicResponse();
-	}
+    public function testCreateGetBasicResponse()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
-	public function testCreateGetBasicResponse()
-	{
-		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $response = json_encode(['response']);
 
-		$response = json_encode(['response']);
+        $sentinel->creatingBasicResponse(function () use ($response) {
+            return $response;
+        });
 
-		$sentinel->creatingBasicResponse(function() use ($response)
-		{
-			return $response;
-		});
+        $this->assertEquals($response, $sentinel->getBasicResponse());
+    }
 
-		$this->assertEquals($response, $sentinel->getBasicResponse());
-	}
+    protected function createSentinel()
+    {
+        $sentinel = new Sentinel(
+            $persistences = m::mock('Cartalyst\Sentinel\Persistences\IlluminatePersistenceRepository'),
+            $users        = m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository'),
+            $roles        = m::mock('Cartalyst\Sentinel\Roles\IlluminateRoleRepository'),
+            $activations  = m::mock('Cartalyst\Sentinel\Activations\IlluminateActivationRepository'),
+            $dispatcher   = m::mock('Illuminate\Events\Dispatcher')
+        );
 
-	protected function createSentinel()
-	{
-		$sentinel = new Sentinel(
-			$persistences = m::mock('Cartalyst\Sentinel\Persistences\IlluminatePersistenceRepository'),
-			$users        = m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository'),
-			$roles        = m::mock('Cartalyst\Sentinel\Roles\IlluminateRoleRepository'),
-			$activations  = m::mock('Cartalyst\Sentinel\Activations\IlluminateActivationRepository'),
-			$dispatcher   = m::mock('Illuminate\Events\Dispatcher')
-		);
-
-		return [$sentinel, $persistences, $users, $roles, $activations, $dispatcher];
-	}
-
+        return [$sentinel, $persistences, $users, $roles, $activations, $dispatcher];
+    }
 }

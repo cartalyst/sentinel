@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Persistences;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,34 +18,35 @@
  * @link       http://cartalyst.com
  */
 
-interface PersistableInterface {
+namespace Cartalyst\Sentinel\Persistences;
 
-	/**
-	 * Returns the persistable key name.
-	 *
-	 * @return string
-	 */
-	public function getPersistableKey();
+interface PersistableInterface
+{
+    /**
+     * Returns the persistable key name.
+     *
+     * @return string
+     */
+    public function getPersistableKey();
 
-	/**
-	 * Returns the persistable key value.
-	 *
-	 * @return string
-	 */
-	public function getPersistableId();
+    /**
+     * Returns the persistable key value.
+     *
+     * @return string
+     */
+    public function getPersistableId();
 
-	/**
-	 * Returns the persistable relationship name.
-	 *
-	 * @return string
-	 */
-	public function getPersistableRelationship();
+    /**
+     * Returns the persistable relationship name.
+     *
+     * @return string
+     */
+    public function getPersistableRelationship();
 
-	/**
-	 * Generates a random persist code.
-	 *
-	 * @return string
-	 */
-	public function generatePersistenceCode();
-
+    /**
+     * Generates a random persist code.
+     *
+     * @return string
+     */
+    public function generatePersistenceCode();
 }

@@ -1,4 +1,5 @@
-<?php namespace Cartalyst\Sentinel\Hashing;
+<?php
+
 /**
  * Part of the Sentinel package.
  *
@@ -17,29 +18,29 @@
  * @link       http://cartalyst.com
  */
 
+namespace Cartalyst\Sentinel\Hashing;
+
 use RuntimeException;
 
-class NativeHasher implements HasherInterface {
+class NativeHasher implements HasherInterface
+{
+    /**
+     * {@inheritDoc}
+     */
+    public function hash($value)
+    {
+        if (! $hash = password_hash($value, PASSWORD_DEFAULT)) {
+            throw new RuntimeException('Error hashing value. Check system compatibility with password_hash().');
+        }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public function hash($value)
-	{
-		if ( ! $hash = password_hash($value, PASSWORD_DEFAULT))
-		{
-			throw new RuntimeException('Error hashing value. Check system compatibility with password_hash().');
-		}
+        return $hash;
+    }
 
-		return $hash;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function check($value, $hashedValue)
-	{
-		return password_verify($value, $hashedValue);
-	}
-
+    /**
+     * {@inheritDoc}
+     */
+    public function check($value, $hashedValue)
+    {
+        return password_verify($value, $hashedValue);
+    }
 }
