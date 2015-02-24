@@ -11,7 +11,7 @@ We do not give estimated times for completion on `Accepted` Proposals.
 
 ---
 
-### v2.0.0 - TBA
+### v2.0.0 - 2015-02-24
 
 - Updated for Laravel 5.
 
