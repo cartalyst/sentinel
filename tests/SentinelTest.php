@@ -397,6 +397,24 @@ class SentinelTest extends PHPUnit_Framework_TestCase {
 		$sentinel->logout($user, true);
 	}
 
+	public function testUserIsNullAfterLogout()
+	{
+		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+
+		$user = new EloquentUser;
+
+		$persistences->shouldReceive('persist')->once();
+		$persistences->shouldReceive('forget')->once();
+
+		$users->shouldReceive('recordLogin')->once();
+		$users->shouldReceive('recordLogout')->once();
+
+		$sentinel->login($user);
+		$sentinel->logout($user);
+
+		$this->assertNull($sentinel->getUser(false));
+	}
+
 	public function testLogoutInvalidUser()
 	{
 		list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
