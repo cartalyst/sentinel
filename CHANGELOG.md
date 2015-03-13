@@ -11,6 +11,13 @@ We do not give estimated times for completion on `Accepted` Proposals.
 
 ---
 
+### v2.0.1 - 2015-03-13
+
+`FIXED`
+
+- Set the user object on the `Sentinel` class to null after logout.
+- Detect client ip using symfony's `Request` class on the native bootstrapper.
+
 ### v2.0.0 - 2015-02-24
 
 - Updated for Laravel 5.
