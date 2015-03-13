@@ -522,6 +522,8 @@ class Sentinel
 
         $this->persistences->{$method}($user);
 
+        $this->user = null;
+
         return $this->users->recordLogout($user);
     }
 
