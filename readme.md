@@ -10,6 +10,11 @@ Sentinel is a framework agnostic set of interfaces with default implementations,
 
 Package history and capabilities.
 
+#### 13-Mar-15 - v1.0.9
+
+- Set the user object on the `Sentinel` class to null after logout.
+- Detect client ip using symfony's `Request` class on the native bootstrapper.
+
 #### 23-Jan-15 - v1.0.8
 
 - Fixed a bug on the `findByCredentials` method that caused the first user to be returned when an empty array is passed.
