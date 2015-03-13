@@ -31,6 +31,7 @@ use Cartalyst\Sentinel\Throttling\IlluminateThrottleRepository;
 use Cartalyst\Sentinel\Users\IlluminateUserRepository;
 use Illuminate\Events\Dispatcher;
 use InvalidArgumentException;
+use Symfony\Component\HttpFoundation\Request;
 
 class SentinelBootstrapper {
 
@@ -87,7 +88,7 @@ class SentinelBootstrapper {
 			$dispatcher
 		);
 
-		$ipAddress = $this->guessIpAddress();
+		$ipAddress = $this->getIpAddress();
 
 		$checkpoints = $this->createCheckpoints($activations, $ipAddress);
 
@@ -211,27 +212,15 @@ class SentinelBootstrapper {
 	}
 
 	/**
-	 * Guesses the client's ip address.
+	 * Returns the client's ip address.
 	 *
 	 * @return string
 	 */
-	protected function guessIpAddress()
+	protected function getIpAddress()
 	{
-		foreach (['HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR'] as $key)
-		{
-			if (array_key_exists($key, $_SERVER) === true)
-			{
-				foreach (explode(',', $_SERVER[$key]) as $ipAddress)
-				{
-					$ipAddress = trim($ipAddress);
+		$request = Request::createFromGlobals();
 
-					if (filter_var($ipAddress, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false)
-					{
-						return $ipAddress;
-					}
-				}
-			}
-		}
+		return $request->getClientIp();
 	}
 
 	/**
