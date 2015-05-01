@@ -223,7 +223,7 @@ Creates a new user.
 Key          | Required | Type           | Default | Description
 ------------ | -------- | -------------- | ------- | ------------------------------------
 $credentials | true     | array          | null    | The user credentials.
-$callback    | false    | bool ; Closure | null    | This argument is used for two things, either pass in `true` to activate the user or a `Closure` that would be executed before the user is created and can prevent user creation if it returns false.
+$callback    | false    | Closure        | null    | A `Closure` that would be executed before the user is created and can prevent user creation if it returns false.
 
 ##### Example
 
