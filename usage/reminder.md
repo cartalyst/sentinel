@@ -45,12 +45,12 @@ else
 }
 ```
 
-#### Reminder::deleteExpired()
+#### Reminder::removeExpired()
 
 Remove all expired reminders.
 
 ```php
-Reminder::deleteExpired();
+Reminder::removeExpired();
 ```
 
 #### Reminder::createModel()
