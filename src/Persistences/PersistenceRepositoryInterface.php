@@ -45,7 +45,7 @@ interface PersistenceRepositoryInterface {
 	/**
 	 * Adds a new user persistence to the current session and attaches the user.
 	 *
-	 * @param  \Cartalyst\Sentinel\Persistence\PersistenceInterface  $persistable
+	 * @param  \Cartalyst\Sentinel\Persistences\PersistableInterface  $persistable
 	 * @param  bool  $remember
 	 * @return bool
 	 */
@@ -54,7 +54,7 @@ interface PersistenceRepositoryInterface {
 	/**
 	 * Adds a new user persistence, to remember.
 	 *
-	 * @param  \Cartalyst\Sentinel\Persistence\PersistableInterface  $persistable
+	 * @param  \Cartalyst\Sentinel\Persistences\PersistableInterface  $persistable
 	 * @return bool
 	 */
 	public function persistAndRemember(PersistableInterface $persistable);
@@ -62,7 +62,6 @@ interface PersistenceRepositoryInterface {
 	/**
 	 * Removes the persistence bound to the current session.
 	 *
-	 * @param  \Cartalyst\Sentinel\Persistence\PersistableInterface  $persistable
 	 * @return bool|null
 	 */
 	public function forget();
@@ -78,7 +77,7 @@ interface PersistenceRepositoryInterface {
 	/**
 	 * Flushes persistences for the given user.
 	 *
-	 * @param  \Cartalyst\Sentinel\Persistence\PersistableInterface  $persistable
+	 * @param  \Cartalyst\Sentinel\Persistences\PersistableInterface  $persistable
 	 * @param  bool  $forget
 	 * @return void
 	 */

@@ -115,7 +115,7 @@ class Sentinel {
 	/**
 	 * Create a new Sentinel instance.
 	 *
-	 * @param  \Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface  $persistence
+	 * @param  \Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface  $persistences
 	 * @param  \Cartalyst\Sentinel\Users\UserRepositoryInterface  $users
 	 * @param  \Cartalyst\Sentinel\Roles\RoleRepositoryInterface  $roles
 	 * @param  \Cartalyst\Sentinel\Activations\ActivationRepositoryInterface  $activations
@@ -482,7 +482,7 @@ class Sentinel {
 	/**
 	 * Sets the callback which creates a basic response.
 	 *
-	 * @param  \Closure  $basicResonse
+	 * @param  \Closure  $basicResponse
 	 * @return void
 	 */
 	public function creatingBasicResponse(Closure $basicResponse)

@@ -52,7 +52,7 @@ class SentinelBootstrapper {
 	/**
 	 * Constructor.
 	 *
-	 * @param  arry  $config
+	 * @param  array  $config
 	 * @return void
 	 */
 	public function __construct($config = null)
