@@ -285,7 +285,7 @@ class IlluminateUserRepository implements UserRepositoryInterface
      *
      * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
      * @param  array  $credentials
-     * @return void
+     * @return \Cartalyst\Sentinel\Users\UserInterface
      */
     public function fill(UserInterface $user, array $credentials)
     {
@@ -321,8 +321,7 @@ class IlluminateUserRepository implements UserRepositoryInterface
     /**
      * Returns the hasher instance.
      *
-     * @param \Cartalyst\Sentinel\Hashing\HasherInterface  $hasher
-     * @return void
+     * @return \Cartalyst\Sentinel\Hashing\HasherInterface  $hasher
      */
     public function getHasher()
     {
