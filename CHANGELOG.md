@@ -11,6 +11,12 @@ We do not give estimated times for completion on `Accepted` Proposals.
 
 ---
 
+### v2.0.2 - 2015-05-22
+
+`FIXED`
+
+- Throw an exception when registering with a blank password.
+
 ### v2.0.1 - 2015-03-13
 
 `FIXED`
@@ -25,6 +31,19 @@ We do not give estimated times for completion on `Accepted` Proposals.
 `REVISED`
 
 - Switched to PSR-2.
+
+### v1.0.10 - 2015-05-22
+
+`FIXED`
+
+- Throw an exception when registering with a blank password.
+
+### v1.0.9 - 2015-03-13
+
+`FIXED`
+
+- Set the user object on the `Sentinel` class to null after logout.
+- Detect client ip using symfony's `Request` class on the native bootstrapper.
 
 ### v1.0.8 - 2015-01-23
 
