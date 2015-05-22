@@ -213,6 +213,23 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase
         $users->validForCreation($credetials);
     }
 
+	/**
+	 * @expectedException \InvalidArgumentException
+	 */
+	public function testValidateUserForCreationWithEmptyPassword()
+	{
+		$user = new EloquentUser;
+
+		list($users, $hasher, $model, $query) = $this->getUsersMock();
+
+		$credetials = [
+			'email'    => 'foo@example.com',
+			'password' => null,
+		];
+
+		$users->validForCreation($credetials);
+	}
+
     public function testValidateUserForUpdate()
     {
         $user = $this->fakeUser();

@@ -30,7 +30,6 @@ use InvalidArgumentException;
 
 class IlluminateUserRepository implements UserRepositoryInterface
 {
-
     use EventTrait, RepositoryTrait;
 
     /**
@@ -272,7 +271,7 @@ class IlluminateUserRepository implements UserRepositoryInterface
                 throw new InvalidArgumentException('No [login] credential was passed.');
             }
 
-            if ($password === null) {
+            if (empty($password)) {
                 throw new InvalidArgumentException('You have not passed a [password].');
             }
         }
