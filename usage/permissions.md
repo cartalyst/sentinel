@@ -87,9 +87,9 @@ This user has access to everything and can execute every action on your applicat
 
 This is a special user, mainly because this user has two roles assigned. There are some things that you should know when assigning multiple roles to a user.
 
-When a user has two or more roles assigned, if those roles define the same permissions but they have different values (e.g., one role grants the creation of users and the other role denies it), once any of those role permissions are denied, the user will be denied access to that permission --- no matter what the other roles have as a permission value and no matter which permission type (`standard` or `strict`) is being used.
+When a user has two or more roles assigned, if those roles define the same permissions but they have different values (e.g., one role grants the creation of users and the other role denies it), once any of those role permissions are denied, the user will be denied access to that permission, no matter what the other roles have as a permission value and no matter which permission type (`standard` or `strict`) is being used.
 
-This means that for you to allow a permission to this specific user, you have to be using `strict` permissions and you have to change the user permission to grant access.
+This means that for you to allow a permission for this specific user, you have to be using `strict` permissions and you have to change the user permission to grant access.
 
 #### Usage
 
