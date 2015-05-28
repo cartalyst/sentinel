@@ -5,15 +5,15 @@ Permissions can be broken down into two types and two implementations. Depending
 - Role Permissions
 - User Permissions
 
-*Standard* - This implementation will give the user-based permissions a higher priority and will override role-based permissions, any permissions granted/rejected on the user will always take precendece over any role-based permissions assigned.
+*Standard* - This implementation will give the user-based permissions a higher priority and will override role-based permissions. Any permissions granted/rejected on the user will always take precendece over any role-based permissions assigned.
 
-*Strict* - This implementation will reject a permission as soon as one rejected permission is found on either the user or any of the assigned roles, granting a user a permission that is rejected on a role he is assigned to will not grant that user this permission.
+*Strict* - This implementation will reject a permission as soon as one rejected permission is found on either the user or any of the assigned roles. Granting a user a permission that is rejected on a role he is assigned to will not grant that user this permission.
 
 Role-based permissions that define the same permission with different access rights will be rejected in case of any rejections on any role.
 
 If a user is not assigned a permission, the user will inherit permissions from the role. If a user is assigned a permission of false or true, then the user's permission will override the role permission.
 
-> **Note** The permission type is set to `StandardPermissions` by default, it can be changed on the `config` file.
+> **Note** The permission type is set to `StandardPermissions` by default; it can be changed on the `config` file.
 
 ###### Administrator Role
 
@@ -85,17 +85,17 @@ This user has access to everything and can execute every action on your applicat
 - Can create, update and view users.
 - Cannot execute delete users.
 
-Since this is a special user, mainly because this user has two assigned roles, there are some things that you should know when assigning multiple roles to a user.
+This is a special user, mainly because this user has two roles assigned. There are some things that you should know when assigning multiple roles to a user.
 
-When a user has two or more roles assigned, if those roles have the same permissions but different permission access's are assigned, once any of those role permissions are denied, the user will be denied access to that permission no matter what the other roles have as a permission value and no matter with permission type is being used.
+When a user has two or more roles assigned, if those roles define the same permissions but they have different values (e.g., one role grants the creation of users and the other role denies it), once any of those role permissions are denied, the user will be denied access to that permission --- no matter what the other roles have as a permission value and no matter which permission type (`standard` or `strict`) is being used.
 
-Which means for you to allow a permission to this specific user, you have to be using `strict` permissions and you have to change the user permission to grant access.
+This means that for you to allow a permission to this specific user, you have to be using `strict` permissions and you have to change the user permission to grant access.
 
 #### Usage
 
 Permissions live on permissible models, users and roles.
 
-You can add, modify, update or delete permissions right on the objects.
+You can add, modify, update or delete permissions directly on the objects.
 
 ##### Storing Permissions
 
