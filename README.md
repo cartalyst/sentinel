@@ -1,3 +1,6 @@
+## Help Support Sentinel version 3
+http://igg.me/at/sentinel-open-source
+
 # Sentinel
 
 [![Build Status](https://travis-ci.org/cartalyst/sentinel.svg?branch=2.0)](https://travis-ci.org/cartalyst/sentinel)
