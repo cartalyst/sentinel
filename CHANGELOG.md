@@ -11,6 +11,13 @@ We do not give estimated times for completion on `Accepted` Proposals.
 
 ---
 
+### v1.0.11 - 2015-06-24
+
+`UPDATED`
+
+- License to 3-clause BSD.
+- Some other minor tweaks.
+
 ### v1.0.10 - 2015-05-22
 
 `FIXED`
