@@ -10,7 +10,7 @@
 		"codeigniter",
 		"fuelphp"
 	],
-	"license": "proprietary",
+	"license": "BSD-3-Clause",
 	"authors": [
 		{
 			"name": "Cartalyst LLC",
@@ -35,12 +35,6 @@
 			"name": "Suhayb Wardany",
 			"email": "su.wardany@cartalyst.com",
 			"role": "Developer"
-		}
-	],
-	"repositories": [
-		{
-			"type": "composer",
-			"url": "https://packages.cartalyst.com"
 		}
 	],
 	"require": {
@@ -77,5 +71,5 @@
 			"dev-master": "2.0.x-dev"
 		}
 	},
-	"minimum-stability": "dev"
+	"minimum-stability": "stable"
 }
