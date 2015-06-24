@@ -8,15 +8,6 @@ Open your `composer.json` file and add the following to the `require` array:
 
 	"cartalyst/sentinel": "1.0.*"
 
-Add the following lines after the `require` array on your `composer.json` file:
-
-	"repositories": [
-		{
-			"type": "composer",
-			"url": "https://packages.cartalyst.com"
-		}
-	],
-
 > **Note:** Make sure that after the required changes your `composer.json` file is valid by running `composer validate`.
 
 ### Install the dependencies
