@@ -11,6 +11,16 @@ We do not give estimated times for completion on `Accepted` Proposals.
 
 ---
 
+### v2.0.4 - 2015-06-25
+
+`UPDATED`
+
+- `.travis.yml` file contents.
+
+`FIXED`
+
+- Method visibility on the `PermissibleTrait` to avoid warnings on some IDE's.
+
 ### v2.0.3 - 2015-06-24
 
 `UPDATED`
@@ -38,6 +48,16 @@ We do not give estimated times for completion on `Accepted` Proposals.
 `REVISED`
 
 - Switched to PSR-2.
+
+### v1.0.12 - 2015-06-25
+
+`UPDATED`
+
+- `.travis.yml` file contents.
+
+`FIXED`
+
+- Method visibility on the `PermissibleTrait` to avoid warnings on some IDE's.
 
 ### v1.0.11 - 2015-06-24
 
