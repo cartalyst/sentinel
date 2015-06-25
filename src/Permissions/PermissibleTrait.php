@@ -80,7 +80,7 @@ trait PermissibleTrait {
 	 *
 	 * @return \Cartalyst\Sentinel\Permissions\PermissionsInterface
 	 */
-	abstract function createPermissions();
+	abstract protected function createPermissions();
 
 	/**
 	 * {@inheritDoc}
