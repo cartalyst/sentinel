@@ -2,22 +2,18 @@
 
 The best and easiest way to install Sentinel is with [Composer](http://getcomposer.org).
 
-### Preparation
+If you have [installed Composer globally](https://getcomposer.org/doc/00-intro.md#globally) run the following:
 
-Open your `composer.json` file and add the following to the `require` array:
+```
+composer require cartalyst/sentinel "2.0.*"
+```
 
-	"cartalyst/sentinel": "2.0.*"
+Otherwise you'll have to manually download the `composer.phar` file:
 
-> **Note:** Make sure that after the required changes your `composer.json` file is valid by running `composer validate`.
-
-### Install the dependencies
-
-Run Composer to install or update the new requirement.
-
-	php composer install
-
-or
-
-	php composer update
+```
+curl -sS https://getcomposer.org/installer | php
+php composer.phar require cartalyst/sentinel "2.0.*"
+```
 
 Now you are able to require the `vendor/autoload.php` file to autoload the package.
+ 
