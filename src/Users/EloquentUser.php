@@ -177,7 +177,7 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
      * @param  mixed  $permissions
      * @return void
      */
-    public function setPermissionsAttribute(array $permissions)
+    public function setPermissionsAttribute(array $permissions = null)
     {
         $this->attributes['permissions'] = $permissions ? json_encode($permissions) : '';
     }
