@@ -18,10 +18,4 @@ If you have an idea for a new feature you would like to see added to the package
 
 ## Coding Guidelines
 
-Cartalyst follows the [PSR-1](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md) and [PSR-4](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md) coding standards. In addition to these standards, below is a list of other coding standards that should be followed:
-
-- Namespace declarations should be on the same line as `<?php`.
-- Class opening `{` should be on the same line as the class name.
-- Function and control structure opening `{` should be on a separate line.
-- Interface names are suffixed with `Interface` (`FooInterface`)
-- Use tabs instead of 4 spaces.
+This package is compliant with [PSR-1](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md), [PSR-2](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md) and [PSR-4](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md). If you notice compliance oversights, please send a patch via pull request.
