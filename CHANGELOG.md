@@ -11,6 +11,12 @@ We do not give estimated times for completion on `Accepted` Proposals.
 
 ---
 
+### v2.0.5 - 2015-07-09
+
+`REVISED`
+
+- Using `singleton` in favor of `bindShared` being deprecated on Laravel 5.1 and removed on Laravel 5.2.
+
 ### v2.0.4 - 2015-06-25
 
 `UPDATED`
