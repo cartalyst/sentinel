@@ -58,9 +58,6 @@
 		"symfony/http-foundation": "Required for native implementations."
 	},
 	"autoload": {
-		"classmap": [
-			"src/migrations"
-		],
 		"psr-4": {
 			"Cartalyst\\Sentinel\\": "src/"
 		}
