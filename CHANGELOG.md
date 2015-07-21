@@ -55,6 +55,12 @@ We do not give estimated times for completion on `Accepted` Proposals.
 
 - Switched to PSR-2.
 
+### v1.0.13 - 2015-07-21
+
+`UPDATED`
+
+- `composer.json` to fix Composer warnings about migrations.
+
 ### v1.0.12 - 2015-06-25
 
 `UPDATED`
