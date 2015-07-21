@@ -96,7 +96,7 @@ class SentinelServiceProvider extends ServiceProvider
         $this->registerSession();
         $this->registerCookie();
 
-        $this->app['sentinel.persistence'] = $this->app->share(function ($app) {
+        $this->app->singleton('sentinel.persistence', function ($app) {
             $config = $app['config']->get('cartalyst.sentinel');
 
             $model  = array_get($config, 'persistences.model');
@@ -118,7 +118,7 @@ class SentinelServiceProvider extends ServiceProvider
      */
     protected function registerSession()
     {
-        $this->app['sentinel.session'] = $this->app->share(function ($app) {
+        $this->app->singleton('sentinel.session', function ($app) {
             $key = $app['config']->get('cartalyst.sentinel.session');
 
             return new IlluminateSession($app['session.store'], $key);
@@ -132,7 +132,7 @@ class SentinelServiceProvider extends ServiceProvider
      */
     protected function registerCookie()
     {
-        $this->app['sentinel.cookie'] = $this->app->share(function ($app) {
+        $this->app->singleton('sentinel.cookie', function ($app) {
             $key = $app['config']->get('cartalyst.sentinel.cookie');
 
             return new IlluminateCookie($app['request'], $app['cookie'], $key);
@@ -148,7 +148,7 @@ class SentinelServiceProvider extends ServiceProvider
     {
         $this->registerHasher();
 
-        $this->app['sentinel.users'] = $this->app->share(function ($app) {
+        $this->app->singleton('sentinel.users', function ($app) {
             $config = $app['config']->get('cartalyst.sentinel');
 
             $users        = array_get($config, 'users.model');
@@ -179,7 +179,7 @@ class SentinelServiceProvider extends ServiceProvider
      */
     protected function registerHasher()
     {
-        $this->app['sentinel.hasher'] = $this->app->share(function ($app) {
+        $this->app->singleton('sentinel.hasher', function () {
             return new NativeHasher;
         });
     }
@@ -191,7 +191,7 @@ class SentinelServiceProvider extends ServiceProvider
      */
     protected function registerRoles()
     {
-        $this->app['sentinel.roles'] = $this->app->share(function ($app) {
+        $this->app->singleton('sentinel.roles', function ($app) {
             $config = $app['config']->get('cartalyst.sentinel');
 
             $model = array_get($config, 'roles.model');
@@ -216,7 +216,7 @@ class SentinelServiceProvider extends ServiceProvider
         $this->registerActivationCheckpoint();
         $this->registerThrottleCheckpoint();
 
-        $this->app['sentinel.checkpoints'] = $this->app->share(function ($app) {
+        $this->app->singleton('sentinel.checkpoints', function ($app) {
             $activeCheckpoints = $app['config']->get('cartalyst.sentinel.checkpoints');
 
             $checkpoints = [];
@@ -242,7 +242,7 @@ class SentinelServiceProvider extends ServiceProvider
     {
         $this->registerActivations();
 
-        $this->app['sentinel.checkpoint.activation'] = $this->app->share(function ($app) {
+        $this->app->singleton('sentinel.checkpoint.activation', function ($app) {
             return new ActivationCheckpoint($app['sentinel.activations']);
         });
     }
@@ -254,7 +254,7 @@ class SentinelServiceProvider extends ServiceProvider
      */
     protected function registerActivations()
     {
-        $this->app['sentinel.activations'] = $this->app->share(function ($app) {
+        $this->app->singleton('sentinel.activations', function ($app) {
             $config = $app['config']->get('cartalyst.sentinel');
 
             $model   = array_get($config, 'activations.model');
@@ -273,7 +273,7 @@ class SentinelServiceProvider extends ServiceProvider
     {
         $this->registerThrottling();
 
-        $this->app['sentinel.checkpoint.throttle'] = $this->app->share(function ($app) {
+        $this->app->singleton('sentinel.checkpoint.throttle', function ($app) {
             return new ThrottleCheckpoint(
                 $app['sentinel.throttling'],
                 $app['request']->getClientIp()
@@ -288,7 +288,7 @@ class SentinelServiceProvider extends ServiceProvider
      */
     protected function registerThrottling()
     {
-        $this->app['sentinel.throttling'] = $this->app->share(function ($app) {
+        $this->app->singleton('sentinel.throttling', function ($app) {
             $model = $app['config']->get('cartalyst.sentinel.throttling.model');
 
             foreach (['global', 'ip', 'user'] as $type) {
@@ -315,7 +315,7 @@ class SentinelServiceProvider extends ServiceProvider
      */
     protected function registerReminders()
     {
-        $this->app['sentinel.reminders'] = $this->app->share(function ($app) {
+        $this->app->singleton('sentinel.reminders', function ($app) {
             $config = $app['config']->get('cartalyst.sentinel');
 
             $model   = array_get($config, 'reminders.model');
@@ -332,7 +332,7 @@ class SentinelServiceProvider extends ServiceProvider
      */
     protected function registerSentinel()
     {
-        $this->app['sentinel'] = $this->app->share(function ($app) {
+        $this->app->singleton('sentinel', function ($app) {
             $sentinel = new Sentinel(
                 $app['sentinel.persistence'],
                 $app['sentinel.users'],
