@@ -47,7 +47,7 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
         'first_name',
         'permissions',
         'firm_id',
-        'theme'
+         'theme'
     ];
 
     /**
