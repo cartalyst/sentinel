@@ -32,6 +32,8 @@ Run the following command to publish the migrations and config file.
 
 Run the following command to migrate Sentinel after publishing the assets.
 
+> **Note:** Before running the following command, please remove the default Laravel migrations to avoid table collision.
+
 `php artisan migrate`
 
 #### Configuration
