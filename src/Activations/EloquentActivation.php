@@ -61,9 +61,7 @@ class EloquentActivation extends Model implements ActivationInterface
     }
 
     /**
-     * Return the random string used as activation code.
-     *
-     * @return string
+     * {@inheritDoc}
      */
     public function getCode()
     {

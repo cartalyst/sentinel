@@ -28,7 +28,7 @@ interface ActivationRepositoryInterface
      * Create a new activation record and code.
      *
      * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
-     * @return ActivationInterface
+     * @return \Cartalyst\Sentinel\Activations\ActivationInterface
      */
     public function create(UserInterface $user);
 
@@ -37,7 +37,7 @@ interface ActivationRepositoryInterface
      *
      * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
      * @param  string  $code
-     * @return ActivationInterface|bool
+     * @return \Cartalyst\Sentinel\Activations\ActivationInterface|bool
      */
     public function exists(UserInterface $user, $code = null);
 
@@ -54,7 +54,7 @@ interface ActivationRepositoryInterface
      * Checks if a valid activation has been completed.
      *
      * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
-     * @return ActivationInterface|bool
+     * @return \Cartalyst\Sentinel\Activations\ActivationInterface|bool
      */
     public function completed(UserInterface $user);
 
