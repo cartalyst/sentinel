@@ -220,7 +220,7 @@ class Sentinel
 
         $this->fireEvent('sentinel.activated', [ $user, $activation ]);
 
-        return $activations->complete($user, $activation->code);
+        return $activations->complete($user, $activation->getCode());
     }
 
     /**

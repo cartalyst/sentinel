@@ -87,9 +87,11 @@ class SentinelTest extends PHPUnit_Framework_TestCase
         $users->shouldReceive('validForCreation')->once()->andReturn(true);
         $users->shouldReceive('create')->once()->andReturn(m::mock('Cartalyst\Sentinel\Users\EloquentUser'));
 
-        $activations->shouldReceive('create')->once()->andReturn($activation = m::mock('Cartalyst\Sentinel\Activations\EloquentActivation'));
+        $activations->shouldReceive('create')->once()->andReturn($activation = m::mock('Cartalyst\Sentinel\Activations\ActivationInterface'));
         $activations->shouldReceive('complete')->once()->andReturn(true);
-        $activation->shouldReceive('getAttribute')->once();
+
+
+        $activation->shouldReceive('getCode')->once()->andReturn('a_random_code');
 
         $dispatcher->shouldReceive('fire')->times(4);
 
@@ -105,9 +107,9 @@ class SentinelTest extends PHPUnit_Framework_TestCase
 
         $user = new EloquentUser;
 
-        $activations->shouldReceive('create')->once()->andReturn($activation = m::mock('Cartalyst\Sentinel\Activations\EloquentActivation'));
+        $activations->shouldReceive('create')->once()->andReturn($activation = m::mock('Cartalyst\Sentinel\Activations\ActivationInterface'));
         $activations->shouldReceive('complete')->once()->andReturn(true);
-        $activation->shouldReceive('getAttribute')->once();
+        $activation->shouldReceive('getCode')->once()->andReturn('a_random_code');
 
         $dispatcher->shouldReceive('fire')->twice();
 
@@ -122,9 +124,9 @@ class SentinelTest extends PHPUnit_Framework_TestCase
 
         $users->shouldReceive('findById')->with('1')->once()->andReturn(new EloquentUser);
 
-        $activations->shouldReceive('create')->once()->andReturn($activation = m::mock('Cartalyst\Sentinel\Activations\EloquentActivation'));
+        $activations->shouldReceive('create')->once()->andReturn($activation = m::mock('Cartalyst\Sentinel\Activations\ActivationInterface'));
         $activations->shouldReceive('complete')->once()->andReturn(true);
-        $activation->shouldReceive('getAttribute')->once();
+        $activation->shouldReceive('getCode')->once()->andReturn('a_random_code');
 
         $dispatcher->shouldReceive('fire')->twice();
 
@@ -142,9 +144,9 @@ class SentinelTest extends PHPUnit_Framework_TestCase
 
         $users->shouldReceive('findByCredentials')->with($credentials)->once()->andReturn(new EloquentUser);
 
-        $activations->shouldReceive('create')->once()->andReturn($activation = m::mock('Cartalyst\Sentinel\Activations\EloquentActivation'));
+        $activations->shouldReceive('create')->once()->andReturn($activation = m::mock('Cartalyst\Sentinel\Activations\ActivationInterface'));
         $activations->shouldReceive('complete')->once()->andReturn(true);
-        $activation->shouldReceive('getAttribute')->once();
+        $activation->shouldReceive('getCode')->once()->andReturn('a_random_code');
 
         $dispatcher->shouldReceive('fire')->twice();
 
