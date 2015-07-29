@@ -22,7 +22,7 @@ namespace Cartalyst\Sentinel\Activations;
 
 use Illuminate\Database\Eloquent\Model;
 
-class EloquentActivation extends Model
+class EloquentActivation extends Model implements ActivationInterface
 {
     /**
      * {@inheritDoc}
@@ -58,5 +58,15 @@ class EloquentActivation extends Model
     public function setCompletedAttribute($completed)
     {
         $this->attributes['completed'] = (bool) $completed;
+    }
+
+    /**
+     * Return the random string used as activation code.
+     *
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->attributes['code'];
     }
 }
