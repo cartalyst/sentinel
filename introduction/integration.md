@@ -22,7 +22,7 @@ In the `$aliases` array add the following facades for this package.
 'Sentinel'   => 'Cartalyst\Sentinel\Laravel\Facades\Sentinel',
 ```
 
-### Assets
+#### Assets
 
 Run the following command to publish the migrations and config file.
 
