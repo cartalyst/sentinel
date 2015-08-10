@@ -81,4 +81,14 @@ class IlluminateRoleRepository implements RoleRepositoryInterface
             ->where('name', $name)
             ->first();
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function all()
+    {
+        return $this
+            ->createModel()
+            ->get();
+    }
 }

@@ -45,4 +45,11 @@ interface RoleRepositoryInterface
      * @return \Cartalyst\Sentinel\Roles\RoleInterface
      */
     public function findByName($name);
+
+    /**
+     * Finds all roles.
+     *
+     * @return \IteratorAggregate
+     */
+    public function all();
 }
