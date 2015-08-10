@@ -89,6 +89,7 @@ class IlluminateRoleRepository implements RoleRepositoryInterface
     {
         return $this
             ->createModel()
+            ->newQuery()
             ->get();
     }
 }
