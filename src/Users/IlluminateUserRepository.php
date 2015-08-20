@@ -11,7 +11,7 @@
  * bundled with this package in the LICENSE file.
  *
  * @package    Sentinel
- * @version    2.0.6
+ * @version    2.1.0
  * @author     Cartalyst LLC
  * @license    BSD License (3-clause)
  * @copyright  (c) 2011-2015, Cartalyst LLC
@@ -320,8 +320,7 @@ class IlluminateUserRepository implements UserRepositoryInterface
     /**
      * Returns the hasher instance.
      *
-     * @param \Cartalyst\Sentinel\Hashing\HasherInterface  $hasher
-     * @return void
+     * @return \Cartalyst\Sentinel\Hashing\HasherInterface
      */
     public function getHasher()
     {
