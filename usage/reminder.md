@@ -35,7 +35,7 @@ Returns bool.
 ```php
 $user = Sentinel::findById(1);
 
-if ($reminder = Reminder::complete($user, 'reminder_code_here'))
+if ($reminder = Reminder::complete($user, 'reminder_code_here', 'new_password_here'))
 {
 	// Reminder was successfull
 }
