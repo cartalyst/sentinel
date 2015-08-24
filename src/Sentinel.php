@@ -512,9 +512,17 @@ class Sentinel
      */
     public function logout(UserInterface $user = null, $everywhere = false)
     {
-        $user = $user ?: $this->getUser();
+        $currentUser = $this->check();
 
-        if ($user === null) {
+        if ($user && $user !== $currentUser) {
+            $this->persistences->flush($user);
+
+            return true;
+        }
+
+        $user = $user ?: $currentUser;
+
+        if ($user === false) {
             return true;
         }
 

@@ -382,6 +382,8 @@ class SentinelTest extends PHPUnit_Framework_TestCase
 
         $user = new EloquentUser;
 
+        $persistences->shouldReceive('check')->once()->andReturn('foobar');
+        $persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->once()->andReturn($user);
         $persistences->shouldReceive('forget')->once();
 
         $users->shouldReceive('recordLogout')->once();
@@ -395,6 +397,8 @@ class SentinelTest extends PHPUnit_Framework_TestCase
 
         $user = new EloquentUser;
 
+        $persistences->shouldReceive('check')->once()->andReturn('foobar');
+        $persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->once()->andReturn($user);
         $persistences->shouldReceive('flush')->once();
 
         $users->shouldReceive('recordLogout')->once();
@@ -418,6 +422,25 @@ class SentinelTest extends PHPUnit_Framework_TestCase
         $sentinel->logout($user);
 
         $this->assertNull($sentinel->getUser(false));
+    }
+
+    public function testUserIsMaintainedAfterLoggingOutAnotherUser()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+
+        $user        = new EloquentUser();
+        $currentUser = new EloquentUser();
+
+        $persistences->shouldReceive('persist')->once();
+        $persistences->shouldReceive('flush')->once()->with($user);
+
+        $users->shouldReceive('recordLogin')->once();
+
+        $sentinel->login($currentUser);
+
+        $sentinel->logout($user);
+
+        $this->assertInstanceOf('Cartalyst\Sentinel\Users\EloquentUser', $sentinel->getUser(false));
     }
 
     public function testLogoutInvalidUser()
