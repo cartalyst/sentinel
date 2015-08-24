@@ -220,7 +220,7 @@ class Sentinel
 
         $this->fireEvent('sentinel.activated', [ $user, $activation ]);
 
-        return $activations->complete($user, $activation->code);
+        return $activations->complete($user, $activation->getCode());
     }
 
     /**
@@ -512,9 +512,17 @@ class Sentinel
      */
     public function logout(UserInterface $user = null, $everywhere = false)
     {
-        $user = $user ?: $this->getUser();
+        $currentUser = $this->check();
 
-        if ($user === null) {
+        if ($user && $user !== $currentUser) {
+            $this->persistences->flush($user, false);
+
+            return true;
+        }
+
+        $user = $user ?: $currentUser;
+
+        if ($user === false) {
             return true;
         }
 

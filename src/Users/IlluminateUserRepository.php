@@ -320,8 +320,7 @@ class IlluminateUserRepository implements UserRepositoryInterface
     /**
      * Returns the hasher instance.
      *
-     * @param \Cartalyst\Sentinel\Hashing\HasherInterface  $hasher
-     * @return void
+     * @return \Cartalyst\Sentinel\Hashing\HasherInterface
      */
     public function getHasher()
     {
