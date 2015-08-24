@@ -432,7 +432,7 @@ class SentinelTest extends PHPUnit_Framework_TestCase
         $currentUser = new EloquentUser();
 
         $persistences->shouldReceive('persist')->once();
-        $persistences->shouldReceive('flush')->once()->with($user);
+        $persistences->shouldReceive('flush')->once()->with($user, false);
 
         $users->shouldReceive('recordLogin')->once();
 
@@ -440,7 +440,7 @@ class SentinelTest extends PHPUnit_Framework_TestCase
 
         $sentinel->logout($user);
 
-        $this->assertInstanceOf('Cartalyst\Sentinel\Users\EloquentUser', $sentinel->getUser(false));
+        $this->assertSame($currentUser, $sentinel->getUser(false));
     }
 
     public function testLogoutInvalidUser()
