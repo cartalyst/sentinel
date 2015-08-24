@@ -515,7 +515,7 @@ class Sentinel
         $currentUser = $this->check();
 
         if ($user && $user !== $currentUser) {
-            $this->persistences->flush($user);
+            $this->persistences->flush($user, false);
 
             return true;
         }
