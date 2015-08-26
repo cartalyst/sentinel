@@ -98,22 +98,22 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase {
 	{
 		list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-		$query->shouldReceive('first')->once()->andReturn($model);
-
-		$users->findByCredentials([
+		$user = $users->findByCredentials([
 			'password' => 'secret',
 		]);
+
+		$this->assertEquals(null, $user);
 	}
 
 	public function testFindByCredentials5()
 	{
 		list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-		$query->shouldReceive('first')->once()->andReturn($model);
-
-		$users->findByCredentials([
+		$user = $users->findByCredentials([
 			'username' => 'foo',
 		]);
+
+		$this->assertEquals(null, $user);
 	}
 
 	public function testFindByCredentials6()
