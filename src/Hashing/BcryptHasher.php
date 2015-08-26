@@ -22,7 +22,6 @@ namespace Cartalyst\Sentinel\Hashing;
 
 class BcryptHasher implements HasherInterface
 {
-
     use Hasher;
 
     /**

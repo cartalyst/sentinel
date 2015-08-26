@@ -24,7 +24,6 @@ use Cartalyst\Support\Traits\RepositoryTrait;
 
 class IlluminateRoleRepository implements RoleRepositoryInterface
 {
-
     use RepositoryTrait;
 
     /**

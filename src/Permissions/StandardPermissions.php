@@ -22,7 +22,6 @@ namespace Cartalyst\Sentinel\Permissions;
 
 class StandardPermissions implements PermissionsInterface
 {
-
     use PermissionsTrait;
 
     /**

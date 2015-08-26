@@ -36,7 +36,6 @@ use RuntimeException;
 
 class Sentinel
 {
-
     use EventTrait;
 
     /**

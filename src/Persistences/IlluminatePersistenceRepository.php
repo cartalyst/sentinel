@@ -27,7 +27,6 @@ use Cartalyst\Support\Traits\RepositoryTrait;
 
 class IlluminatePersistenceRepository implements PersistenceRepositoryInterface
 {
-
     use RepositoryTrait;
 
     /**

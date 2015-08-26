@@ -25,7 +25,6 @@ use Cartalyst\Sentinel\Users\UserInterface;
 
 class ActivationCheckpoint implements CheckpointInterface
 {
-
     use AuthenticatedCheckpoint;
 
     /**

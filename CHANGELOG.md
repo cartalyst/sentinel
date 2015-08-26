@@ -11,6 +11,12 @@ We do not give estimated times for completion on `Accepted` Proposals.
 
 ---
 
+### v2.0.7 - 2015-08-26
+
+`REVISED`
+
+- Added additional check to prevent the first user from being returned when skipping login columns.
+
 ### v2.0.6 - 2015-07-21
 
 `UPDATED`
@@ -60,6 +66,12 @@ We do not give estimated times for completion on `Accepted` Proposals.
 `REVISED`
 
 - Switched to PSR-2.
+
+### v1.0.14 - 2015-08-26
+
+`REVISED`
+
+- Added additional check to prevent the first user from being returned when skipping login columns.
 
 ### v1.0.13 - 2015-07-21
 

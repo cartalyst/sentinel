@@ -22,7 +22,6 @@ namespace Cartalyst\Sentinel\Permissions;
 
 class StrictPermissions implements PermissionsInterface
 {
-
     use PermissionsTrait;
 
     /**

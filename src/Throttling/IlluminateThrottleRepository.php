@@ -26,7 +26,6 @@ use Cartalyst\Support\Traits\RepositoryTrait;
 
 class IlluminateThrottleRepository implements ThrottleRepositoryInterface
 {
-
     use RepositoryTrait;
 
     /**

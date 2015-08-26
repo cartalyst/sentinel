@@ -27,7 +27,6 @@ use Cartalyst\Support\Traits\RepositoryTrait;
 
 class IlluminateReminderRepository implements ReminderRepositoryInterface
 {
-
     use RepositoryTrait;
 
     /**
