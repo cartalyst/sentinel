@@ -11,6 +11,12 @@ We do not give estimated times for completion on `Accepted` Proposals.
 
 ---
 
+### v2.0.7 - 2015-08-26
+
+`REVISED`
+
+- Added additional check to prevent the first user from being returned when skipping login columns.
+
 ### v2.0.6 - 2015-07-21
 
 `UPDATED`
