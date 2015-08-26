@@ -101,22 +101,29 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase
     {
         list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-        $query->shouldReceive('first')->once()->andReturn($model);
-
-        $users->findByCredentials([
+        $user = $users->findByCredentials([
             'password' => 'secret',
         ]);
+
+        $this->assertEquals(null, $user);
     }
 
     public function testFindByCredentials5()
     {
         list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-        $query->shouldReceive('first')->once()->andReturn($model);
-
-        $users->findByCredentials([
+        $user = $users->findByCredentials([
             'username' => 'foo',
         ]);
+
+        $this->assertEquals(null, $user);
+    }
+
+    public function testFindByCredentials6()
+    {
+        list($users, $hasher, $model, $query) = $this->getUsersMock();
+
+        $this->assertNull($users->findByCredentials([]));
     }
 
     public function testFindByPersistenceCode()
@@ -213,22 +220,22 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase
         $users->validForCreation($credetials);
     }
 
-	/**
-	 * @expectedException \InvalidArgumentException
-	 */
-	public function testValidateUserForCreationWithEmptyPassword()
-	{
-		$user = new EloquentUser;
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testValidateUserForCreationWithEmptyPassword()
+    {
+        $user = new EloquentUser;
 
-		list($users, $hasher, $model, $query) = $this->getUsersMock();
+        list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-		$credetials = [
-			'email'    => 'foo@example.com',
-			'password' => null,
-		];
+        $credetials = [
+            'email'    => 'foo@example.com',
+            'password' => null,
+        ];
 
-		$users->validForCreation($credetials);
-	}
+        $users->validForCreation($credetials);
+    }
 
     public function testValidateUserForUpdate()
     {

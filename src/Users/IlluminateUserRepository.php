@@ -84,13 +84,21 @@ class IlluminateUserRepository implements UserRepositoryInterface
      */
     public function findByCredentials(array $credentials)
     {
+        if (empty($credentials)) {
+            return;
+        }
+
         $instance = $this->createModel();
 
         $loginNames = $instance->getLoginNames();
 
-        $query = $instance->newQuery();
-
         list($logins, $password, $credentials) = $this->parseCredentials($credentials, $loginNames);
+
+        if (empty($logins)) {
+            return;
+        }
+
+        $query = $instance->newQuery();
 
         if (is_array($logins)) {
             foreach ($logins as $key => $value) {
@@ -313,8 +321,6 @@ class IlluminateUserRepository implements UserRepositoryInterface
         }
 
         $this->fireEvent('sentinel.user.filled', compact('user', 'credentials'));
-
-        return $user;
     }
 
     /**
