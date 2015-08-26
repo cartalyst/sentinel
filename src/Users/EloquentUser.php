@@ -29,7 +29,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class EloquentUser extends Model implements RoleableInterface, PermissibleInterface, PersistableInterface, UserInterface
 {
-
     use PermissibleTrait;
 
     /**

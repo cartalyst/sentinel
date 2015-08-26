@@ -141,7 +141,6 @@ class PermissibleTraitTest extends PHPUnit_Framework_TestCase
 
 class PermissibleStub implements PermissibleInterface
 {
-
     use PermissibleTrait;
 
     protected $permissions = [];

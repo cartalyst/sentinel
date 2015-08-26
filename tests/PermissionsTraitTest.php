@@ -98,7 +98,6 @@ class PermissionsTraitTest extends PHPUnit_Framework_TestCase
 
 class PermissionsStub implements PermissionsInterface
 {
-
     use PermissionsTrait;
 
     protected function createPreparedPermissions()

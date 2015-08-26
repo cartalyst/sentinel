@@ -26,7 +26,6 @@ use Cartalyst\Support\Traits\RepositoryTrait;
 
 class IlluminateActivationRepository implements ActivationRepositoryInterface
 {
-
     use RepositoryTrait;
 
     /**

@@ -22,7 +22,6 @@ namespace Cartalyst\Sentinel\Hashing;
 
 class Sha256Hasher implements HasherInterface
 {
-
     use Hasher;
 
     /**

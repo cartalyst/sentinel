@@ -22,7 +22,6 @@ namespace Cartalyst\Sentinel\Hashing;
 
 class WhirlpoolHasher implements HasherInterface
 {
-
     use Hasher;
 
     /**

@@ -26,7 +26,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class EloquentRole extends Model implements RoleInterface, PermissibleInterface
 {
-
     use PermissibleTrait;
 
     /**
