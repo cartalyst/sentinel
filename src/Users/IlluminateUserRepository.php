@@ -93,6 +93,10 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 
 		list($logins, $password, $credentials) = $this->parseCredentials($credentials, $loginNames);
 
+		if (empty($logins)) {
+			return;
+		}
+
 		if (is_array($logins))
 		{
 			foreach ($logins as $key => $value)
