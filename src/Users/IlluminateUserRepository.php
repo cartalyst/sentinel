@@ -89,13 +89,11 @@ class IlluminateUserRepository implements UserRepositoryInterface {
 
 		$loginNames = $instance->getLoginNames();
 
-		$query = $instance->newQuery();
-
 		list($logins, $password, $credentials) = $this->parseCredentials($credentials, $loginNames);
 
-		if (empty($logins)) {
-			return;
-		}
+		if (empty($logins)) return;
+
+		$query = $instance->newQuery();
 
 		if (is_array($logins))
 		{
