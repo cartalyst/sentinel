@@ -182,7 +182,7 @@ Activation::removeExpired();
 Creates a new activation model instance.
 
 ```php
-$activation = Activate::createModel();
+$activation = Activation::createModel();
 ```
 
 #### Activation::setModel()
