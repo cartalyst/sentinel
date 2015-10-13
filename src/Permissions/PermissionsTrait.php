@@ -143,9 +143,10 @@ trait PermissionsTrait
      *
      * @param  array  $prepared
      * @param  array  $permissions
+     * @param  bool   $allowIsAboveDeny
      * @return void
      */
-    protected function preparePermissions(array &$prepared, array $permissions)
+    protected function preparePermissions(array &$prepared, array $permissions, $allowIsAboveDeny = false)
     {
         foreach ($permissions as $keys => $value) {
             foreach ($this->extractClassPermissions($keys) as $key) {
@@ -156,8 +157,9 @@ trait PermissionsTrait
                     continue;
                 }
 
-                // If our value is in the array and equals false, it will override
-                if ($value === false) {
+                // If our value is in the array and equals false in case of "deny-first" policy; 
+                // or equals true in case of "allow-first" policy, it will override
+                if ($value === $allowIsAboveDeny) {
                     $prepared[$key] = $value;
                 }
             }
