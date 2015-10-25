@@ -448,8 +448,10 @@ class SentinelServiceProvider extends ServiceProvider
      */
     protected function setUserResolver()
     {
-        $this->app['request']->setUserResolver(function () {
-            return $this->app['sentinel']->getUser();
+        $this->app->rebinding('request', function ($app, $request) {
+            $request->setUserResolver(function () use ($app) {
+                return $app['sentinel']->getUser();
+            });
         });
     }
 }
