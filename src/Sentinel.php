@@ -263,7 +263,7 @@ class Sentinel
     /**
      * Checks if we are currently a guest.
      *
-     * @return \Cartalyst\Sentinel\Users\UserInterface|bool
+     * @return bool
      */
     public function guest()
     {
