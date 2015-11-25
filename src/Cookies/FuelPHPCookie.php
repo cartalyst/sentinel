@@ -47,7 +47,7 @@ class FuelPHPCookie implements CookieInterface {
 	 */
 	public function put($value)
 	{
-		Cookie::set($this->key, serialize($value), 2628000);
+		Cookie::set($this->key, json_encode($value), 2628000);
 	}
 
 	/**
@@ -59,7 +59,7 @@ class FuelPHPCookie implements CookieInterface {
 
 		if ($value)
 		{
-			return unserialize($value);
+			return json_decode($value);
 		}
 	}
 

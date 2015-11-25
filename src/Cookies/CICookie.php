@@ -68,7 +68,7 @@ class CICookie implements CookieInterface {
 	public function put($value)
 	{
 		$options = array_merge($this->options, [
-			'value'  => serialize($value),
+			'value'  => json_encode($value),
 			'expire' => 2628000,
 		]);
 
@@ -84,7 +84,7 @@ class CICookie implements CookieInterface {
 
 		if ($value)
 		{
-			return unserialize($value);
+			return json_decode($value);
 		}
 	}
 

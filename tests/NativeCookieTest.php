@@ -38,7 +38,7 @@ class NativeCookieTest extends PHPUnit_Framework_TestCase {
 		$cookie = new NativeCookie('__sentinel');
 		$this->assertNull($cookie->get());
 
-		$_COOKIE['__sentinel'] = serialize('bar');
+		$_COOKIE['__sentinel'] = json_encode('bar');
 		$this->assertEquals('bar', $cookie->get());
 	}
 

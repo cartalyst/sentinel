@@ -57,7 +57,7 @@ class FuelPHPCookieTest extends PHPUnit_Framework_TestCase {
 		list($key, $value, $expire) = $result;
 
 		$this->assertEquals('foo', $key);
-		$this->assertEquals(serialize('bar'), $value);
+		$this->assertEquals(json_encode('bar'), $value);
 		$this->assertEquals(2628000, $expire);
 		unset($_SERVER['__cookie.set']);
 	}
