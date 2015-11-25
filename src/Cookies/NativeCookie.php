@@ -97,7 +97,7 @@ class NativeCookie implements CookieInterface
             $value = $_COOKIE[$this->options['name']];
 
             if ($value) {
-                return unserialize($value);
+                return json_decode($value);
             }
         }
     }
@@ -117,7 +117,7 @@ class NativeCookie implements CookieInterface
     {
         setcookie(
             $this->options['name'],
-            serialize($value),
+            json_encode($value),
             $lifetime,
             $path ?: $this->options['path'],
             $domain ?: $this->options['domain'],

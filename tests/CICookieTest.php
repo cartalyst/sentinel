@@ -53,7 +53,7 @@ class CICookieTest extends PHPUnit_Framework_TestCase
 
         $input->shouldReceive('set_cookie')->with([
             'name'   => 'foo',
-            'value'  => serialize('bar'),
+            'value'  => json_encode('bar'),
             'expire' => 2628000,
             'domain' => '',
             'path'   => '/',
@@ -67,7 +67,7 @@ class CICookieTest extends PHPUnit_Framework_TestCase
     public function testGet()
     {
         $cookie = new CICookie($input = m::mock('CI_Input'), 'foo');
-        $input->shouldReceive('cookie')->with('foo')->once()->andReturn(serialize('baz'));
+        $input->shouldReceive('cookie')->with('foo')->once()->andReturn(json_encode('baz'));
         $this->assertEquals('baz', $cookie->get());
     }
 
