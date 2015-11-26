@@ -11,6 +11,12 @@ We do not give estimated times for completion on `Accepted` Proposals.
 
 ---
 
+### v1.0.15 - 2015-11-25
+
+`REVISED`
+
+- Use json methods for various cookie implementations.
+
 ### v1.0.14 - 2015-08-26
 
 `REVISED`
