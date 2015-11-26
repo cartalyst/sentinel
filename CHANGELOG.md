@@ -11,6 +11,12 @@ We do not give estimated times for completion on `Accepted` Proposals.
 
 ---
 
+### v2.0.8 - 2015-11-25
+
+`REVISED`
+
+- Use json methods for various cookie implementations.
+
 ### v2.0.7 - 2015-08-26
 
 `REVISED`
@@ -66,6 +72,12 @@ We do not give estimated times for completion on `Accepted` Proposals.
 `REVISED`
 
 - Switched to PSR-2.
+
+### v1.0.15 - 2015-11-25
+
+`REVISED`
+
+- Use json methods for various cookie implementations.
 
 ### v1.0.14 - 2015-08-26
 
