@@ -30,7 +30,7 @@ use Cartalyst\Sentinel\Users\UserInterface;
 use Cartalyst\Sentinel\Users\UserRepositoryInterface;
 use Cartalyst\Support\Traits\EventTrait;
 use Closure;
-use Illuminate\Events\Dispatcher;
+use Illuminate\Contracts\Events\Dispatcher;
 use InvalidArgumentException;
 use RuntimeException;
 
@@ -122,7 +122,7 @@ class Sentinel
      * @param  \Cartalyst\Sentinel\Users\UserRepositoryInterface  $users
      * @param  \Cartalyst\Sentinel\Roles\RoleRepositoryInterface  $roles
      * @param  \Cartalyst\Sentinel\Activations\ActivationRepositoryInterface  $activations
-     * @param  \Illuminate\Events\Dispatcher  $dispatcher
+     * @param  \Illuminate\Contracts\Events\Dispatcher  $dispatcher
      * @return void
      */
     public function __construct(
