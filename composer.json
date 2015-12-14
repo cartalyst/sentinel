@@ -26,6 +26,7 @@
     "require-dev": {
         "illuminate/cookie": "~5.0",
         "illuminate/database": "~5.0",
+        "illuminate/events": "~5.0",
         "illuminate/http": "~5.0",
         "illuminate/session": "~5.0",
         "ircmaxell/password-compat": "~1.0",
