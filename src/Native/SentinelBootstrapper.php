@@ -48,7 +48,7 @@ class SentinelBootstrapper
     /**
      * The event dispatcher.
      *
-     * @var \Illuminate\Events\Dispatcher
+     * @var \Illuminate\Contracts\Events\Dispatcher
      */
     protected $dispatcher;
 
@@ -301,7 +301,7 @@ class SentinelBootstrapper
     /**
      * Returns the event dispatcher.
      *
-     * @return \Illuminate\Events\Dispatcher
+     * @return \Illuminate\Contracts\Events\Dispatcher
      */
     protected function getEventDispatcher()
     {
