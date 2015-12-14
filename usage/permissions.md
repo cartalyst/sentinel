@@ -68,7 +68,7 @@ This user has access to everything and can execute every action on your applicat
 - Can view users.
 - Cannot create, update or delete users.
 
-> **Note:** We are using `Permission Inheritance` here, hence the `user.update : false` which means whatever you define on your role permission this user permission will inherit that permission, which means that in this case the user is denied access to update users.
+> **Note:** The use of `user.update : false` demonstrates `Permission Inheritance`, which applies only when using `Standard Mode` (inheritance is disabled, by design, when using `Strict Mode`). When a permission is defined at the user-level, it **overrides** the same permission that is defined on the role. Given the above example, the user will be denied the `user.update` permission, even though the permission is allowed on the role.
 
 ###### User - Bruce Wayne
 
