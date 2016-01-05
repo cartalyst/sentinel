@@ -6,7 +6,7 @@ The role repository can be accessed using `Sentinel::getRoleRepository()` and al
 
 #### Sentinel::findRoleById()
 
-Finds a role by it's id.
+Finds a role by its ID.
 
 Returns: `Cartalyst\Sentinel\Roles\RoleInterface` or `null`.
 
@@ -39,7 +39,7 @@ $role = Sentinel::findRoleById(1);
 
 #### Sentinel::findRoleBySlug()
 
-Finds a role by it's slug.
+Finds a role by its slug.
 
 Returns: `Cartalyst\Sentinel\Roles\RoleInterface` or `null`.
 
@@ -72,7 +72,7 @@ $role = Sentinel::findRoleBySlug('admin');
 
 #### Sentinel::findRoleByName()
 
-Finds a role by it's name.
+Finds a role by its name.
 
 Returns: `Cartalyst\Sentinel\Roles\RoleInterface` or `null`.
 
