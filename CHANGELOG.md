@@ -11,6 +11,16 @@ We do not give estimated times for completion on `Accepted` Proposals.
 
 ---
 
+### v2.0.9 - 2016-02-11
+
+`FIXED`
+
+- Bypassing specific checkpoints.
+
+`ADDED`
+
+- A new database schema file for MySQL 5.6+.
+
 ### v2.0.8 - 2015-11-25
 
 `REVISED`
