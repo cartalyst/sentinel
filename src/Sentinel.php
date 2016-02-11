@@ -548,7 +548,7 @@ class Sentinel
         $activeCheckpoints = [];
 
         foreach (array_keys($originalCheckpoints) as $checkpoint) {
-            if (in_array($checkpoint, $checkpoints)) {
+            if ($checkpoints && ! in_array($checkpoint, $checkpoints)) {
                 $activeCheckpoints[$checkpoint] = $originalCheckpoints[$checkpoint];
             }
         }

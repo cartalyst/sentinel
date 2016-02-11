@@ -109,7 +109,7 @@ class CheckpointsTest extends PHPUnit_Framework_TestCase
 
         $sentinel->bypassCheckpoints(function ($s) {
             $this->assertNotNull($s->check());
-        }, ['throttle']);
+        }, ['activation']);
     }
 
     public function testDisableCheckpoints()
