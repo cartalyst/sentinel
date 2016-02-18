@@ -407,7 +407,7 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
             $this->throttle()->delete();
         }
 
-        parent::delete();
+        return parent::delete();
     }
 
     /**
