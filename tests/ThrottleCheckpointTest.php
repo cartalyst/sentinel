@@ -23,7 +23,6 @@ namespace Cartalyst\Sentinel\tests;
 use Carbon\Carbon;
 use Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint;
 use Cartalyst\Sentinel\Checkpoints\ThrottlingException;
-use Cartalyst\Sentinel\Throttling\IlluminateThrottleRepository;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
 

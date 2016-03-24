@@ -20,12 +20,9 @@
 
 namespace Cartalyst\Sentinel\tests;
 
-use ArrayIterator;
-use Carbon\Carbon;
 use Cartalyst\Sentinel\Reminders\IlluminateReminderRepository;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
-use StdClass;
 
 class IlluminateReminderRepositoryTest extends PHPUnit_Framework_TestCase
 {

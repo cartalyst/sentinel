@@ -22,7 +22,6 @@ namespace Cartalyst\Sentinel\tests;
 
 use Carbon\Carbon;
 use Cartalyst\Sentinel\Throttling\EloquentThrottle;
-use Cartalyst\Sentinel\Throttling\IlluminateThrottleRepository;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
 
