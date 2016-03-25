@@ -24,7 +24,7 @@ use ArrayIterator;
 use Cartalyst\Sentinel\Persistences\IlluminatePersistenceRepository;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
-use StdClass;
+use stdClass;
 
 class IlluminatePersistenceRepositoryTest extends PHPUnit_Framework_TestCase
 {
@@ -86,7 +86,7 @@ class IlluminatePersistenceRepositoryTest extends PHPUnit_Framework_TestCase
     {
         $persistence = m::mock('Cartalyst\Sentinel\Persistences\IlluminatePersistenceRepository[createModel]', [$session = m::mock('Cartalyst\Sentinel\Sessions\SessionInterface'), $cookie = m::mock('Cartalyst\Sentinel\Cookies\CookieInterface')]);
 
-        $persistenceRecord = new StdClass;
+        $persistenceRecord = new stdClass;
         $persistenceRecord->user = m::mock('UserMock');
 
         $persistence->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Persistences\EloquentPersistence[newQuery]'));
@@ -105,7 +105,7 @@ class IlluminatePersistenceRepositoryTest extends PHPUnit_Framework_TestCase
     {
         $persistence = m::mock('Cartalyst\Sentinel\Persistences\IlluminatePersistenceRepository[createModel]', [$session = m::mock('Cartalyst\Sentinel\Sessions\SessionInterface'), $cookie = m::mock('Cartalyst\Sentinel\Cookies\CookieInterface')]);
 
-        $persistenceRecord = new StdClass;
+        $persistenceRecord = new stdClass;
         $persistenceRecord->user = m::mock('UserMock');
 
         $persistence->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Persistences\EloquentPersistence[newQuery]'));
