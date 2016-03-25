@@ -20,10 +20,7 @@
 
 namespace Cartalyst\Sentinel\tests;
 
-use Carbon\Carbon;
-use Cartalyst\Sentinel\Hashing\NativeHasher;
 use Cartalyst\Sentinel\Users\EloquentUser;
-use Cartalyst\Sentinel\Users\IlluminateUserRepository;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
 

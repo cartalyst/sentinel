@@ -21,7 +21,6 @@
 namespace Cartalyst\Sentinel\tests;
 
 use Cartalyst\Sentinel\Cookies\CICookie;
-use CI_Input;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
 
