@@ -11,15 +11,15 @@ After installing the package, open your Laravel config file located at `config/a
 In the `$providers` array add the following service provider for this package.
 
 ```php
-'Cartalyst\Sentinel\Laravel\SentinelServiceProvider',
+Cartalyst\Sentinel\Laravel\SentinelServiceProvider::class,
 ```
 
 In the `$aliases` array add the following facades for this package.
 
 ```php
-'Activation' => 'Cartalyst\Sentinel\Laravel\Facades\Activation',
-'Reminder'   => 'Cartalyst\Sentinel\Laravel\Facades\Reminder',
-'Sentinel'   => 'Cartalyst\Sentinel\Laravel\Facades\Sentinel',
+'Activation' => Cartalyst\Sentinel\Laravel\Facades\Activation::class,
+'Reminder'   => Cartalyst\Sentinel\Laravel\Facades\Reminder::class,
+'Sentinel'   => Cartalyst\Sentinel\Laravel\Facades\Sentinel::class,
 ```
 
 #### Assets
