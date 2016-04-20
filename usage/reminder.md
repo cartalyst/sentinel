@@ -58,7 +58,7 @@ Reminder::removeExpired();
 Creates a new reminder model instance.
 
 ```php
-$reminder = Activate::createModel();
+$reminder = Reminder::createModel();
 ```
 
 #### Reminder::setModel($model)
