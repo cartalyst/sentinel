@@ -102,7 +102,7 @@ class IlluminateUserRepository implements UserRepositoryInterface
 
         if (is_array($logins)) {
             foreach ($logins as $key => $value) {
-                $query->where($key, $value);
+                $query->where($key, 'ILIKE', $value);
             }
         } else {
             $query->whereNested(function ($query) use ($loginNames, $logins) {
