@@ -26,7 +26,6 @@ use Cartalyst\Sentinel\Persistences\PersistableInterface;
 use Cartalyst\Sentinel\Roles\RoleableInterface;
 use Cartalyst\Sentinel\Roles\RoleInterface;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class EloquentUser extends Model implements RoleableInterface, PermissibleInterface, PersistableInterface, UserInterface
 {
@@ -407,7 +406,7 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
      */
     public function delete()
     {
-        $isSoftDeleted = array_key_exists(SoftDeletes::class, class_uses($this));
+        $isSoftDeleted = array_key_exists('Illuminate\Database\Eloquent\SoftDeletes', class_uses($this));
 
         if ($this->exists && ! $isSoftDeleted) {
             $this->activations()->delete();
