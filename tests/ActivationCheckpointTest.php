@@ -20,10 +20,8 @@
 
 namespace Cartalyst\Sentinel\tests;
 
-use Cartalyst\Sentinel\Activations\IlluminateActivationRepository;
 use Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint;
 use Cartalyst\Sentinel\Checkpoints\NotActivatedException;
-use Cartalyst\Sentinel\Users\EloquentUser;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
 

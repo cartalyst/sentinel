@@ -20,9 +20,6 @@
 
 namespace Cartalyst\Sentinel\tests;
 
-use Carbon\Carbon;
-use Cartalyst\Sentinel\Roles\EloquentRole;
-use Cartalyst\Sentinel\Roles\IlluminateRoleRepository;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
 

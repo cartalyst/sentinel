@@ -20,7 +20,6 @@
 
 namespace Cartalyst\Sentinel\tests;
 
-use Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint;
 use Cartalyst\Sentinel\Sentinel;
 use Cartalyst\Sentinel\Users\EloquentUser;
 use Mockery as m;
@@ -109,7 +108,7 @@ class CheckpointsTest extends PHPUnit_Framework_TestCase
 
         $sentinel->bypassCheckpoints(function ($s) {
             $this->assertNotNull($s->check());
-        }, ['throttle']);
+        }, ['activation']);
     }
 
     public function testDisableCheckpoints()

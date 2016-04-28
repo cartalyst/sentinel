@@ -263,7 +263,7 @@ class Sentinel
     /**
      * Checks if we are currently a guest.
      *
-     * @return \Cartalyst\Sentinel\Users\UserInterface|bool
+     * @return bool
      */
     public function guest()
     {
@@ -548,7 +548,7 @@ class Sentinel
         $activeCheckpoints = [];
 
         foreach (array_keys($originalCheckpoints) as $checkpoint) {
-            if (in_array($checkpoint, $checkpoints)) {
+            if ($checkpoints && ! in_array($checkpoint, $checkpoints)) {
                 $activeCheckpoints[$checkpoint] = $originalCheckpoints[$checkpoint];
             }
         }

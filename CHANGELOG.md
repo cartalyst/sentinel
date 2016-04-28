@@ -11,6 +11,35 @@ We do not give estimated times for completion on `Accepted` Proposals.
 
 ---
 
+### v2.0.10 - 2016-04-28
+
+`FIXED`
+
+- Delete method on the user model not returning parent.
+- Removed unused imports on some tests.
+- Reference to the stdClass on tests.
+- Various docblocks.
+
+`UPDATED`
+
+- User model to hide the hashed password by default.
+
+### v2.0.9 - 2016-02-11
+
+`FIXED`
+
+- Bypassing specific checkpoints.
+
+`ADDED`
+
+- A new database schema file for MySQL 5.6+.
+
+### v2.0.8 - 2015-11-25
+
+`REVISED`
+
+- Use json methods for various cookie implementations.
+
 ### v2.0.7 - 2015-08-26
 
 `REVISED`
@@ -66,6 +95,12 @@ We do not give estimated times for completion on `Accepted` Proposals.
 `REVISED`
 
 - Switched to PSR-2.
+
+### v1.0.15 - 2015-11-25
+
+`REVISED`
+
+- Use json methods for various cookie implementations.
 
 ### v1.0.14 - 2015-08-26
 

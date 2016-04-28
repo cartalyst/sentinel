@@ -28,7 +28,7 @@ class Cookie
     public static function get($key)
     {
         if ($key == 'foo') {
-            return serialize('baz');
+            return json_encode('baz');
         }
     }
 

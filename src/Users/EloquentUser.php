@@ -50,6 +50,13 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
     /**
      * {@inheritDoc}
      */
+    protected $hidden = [
+        'password',
+    ];
+
+    /**
+     * {@inheritDoc}
+     */
     protected $persistableKey = 'user_id';
 
     /**
@@ -407,7 +414,7 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
             $this->throttle()->delete();
         }
 
-        parent::delete();
+        return parent::delete();
     }
 
     /**

@@ -20,12 +20,9 @@
 
 namespace Cartalyst\Sentinel\tests;
 
-use ArrayIterator;
-use Carbon\Carbon;
 use Cartalyst\Sentinel\Activations\IlluminateActivationRepository;
 use Mockery as m;
 use PHPUnit_Framework_TestCase;
-use StdClass;
 
 class IlluminateActivationRepositoryTest extends PHPUnit_Framework_TestCase
 {
