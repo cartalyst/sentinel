@@ -46,7 +46,11 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
         'first_name',
         'permissions',
     ];
-
+    
+    protected $hidden = [
+        'password',
+    ];
+    
     /**
      * {@inheritDoc}
      */
