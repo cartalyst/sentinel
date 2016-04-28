@@ -409,7 +409,7 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
     {
         $isSoftDeleted = array_key_exists(SoftDeletes::class, class_uses($this));
 
-        if ($this->exists && ! $isSoftdeleted) {
+        if ($this->exists && ! $isSoftDeleted) {
             $this->activations()->delete();
             $this->persistences()->delete();
             $this->reminders()->delete();
