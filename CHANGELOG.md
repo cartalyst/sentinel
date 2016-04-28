@@ -11,6 +11,19 @@ We do not give estimated times for completion on `Accepted` Proposals.
 
 ---
 
+### v2.0.10 - 2016-04-28
+
+`FIXED`
+
+- Delete method on the user model not returning parent.
+- Removed unused imports on some tests.
+- Reference to the stdClass on tests.
+- Various docblocks.
+
+`UPDATED`
+
+- User model to hide the hashed password by default.
+
 ### v2.0.9 - 2016-02-11
 
 `FIXED`
