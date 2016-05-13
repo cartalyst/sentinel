@@ -11,6 +11,13 @@ We do not give estimated times for completion on `Accepted` Proposals.
 
 ---
 
+### v2.0.12 - 2016-05-13
+
+`UPDATED`
+
+- Bump `paragonie/random_compat` version.
+- Use CSPRNG for salts.
+
 ### v2.0.11 - 2016-04-28
 
 `UPDATED`
