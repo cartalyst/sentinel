@@ -49,7 +49,7 @@
         "illuminate/session": "~5.0",
         "ircmaxell/password-compat": "~1.0",
         "mockery/mockery": "~0.9",
-        "paragonie/random_compat": "~1.1",
+        "paragonie/random_compat": "^1.4|^2",
         "phpunit/phpunit": "~4.0"
     },
     "suggest": {

@@ -11,7 +11,7 @@
  * bundled with this package in the LICENSE file.
  *
  * @package    Sentinel
- * @version    2.1.0
+ * @version    2.0.11
  * @author     Cartalyst LLC
  * @license    BSD License (3-clause)
  * @copyright  (c) 2011-2015, Cartalyst LLC
@@ -86,7 +86,7 @@ class NativeSession implements SessionInterface
     protected function startSession()
     {
         // Check that the session hasn't already been started
-        if (session_id() == '' && ! headers_sent()) {
+        if (session_status() != PHP_SESSION_ACTIVE && ! headers_sent()) {
             session_start();
         }
     }

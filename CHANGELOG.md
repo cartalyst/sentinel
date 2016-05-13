@@ -11,6 +11,13 @@ We do not give estimated times for completion on `Accepted` Proposals.
 
 ---
 
+### v2.0.11 - 2016-04-28
+
+`UPDATED`
+
+- User model to check if the model is being soft deleted.
+- Native Session to better check if session is open or closed.
+
 ### v2.0.10 - 2016-04-28
 
 `FIXED`
