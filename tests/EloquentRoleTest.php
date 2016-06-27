@@ -65,6 +65,21 @@ class EloquentRoleTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Illuminate\Database\Eloquent\Relations\BelongsToMany', $role->users());
     }
 
+    public function testDeleteRole()
+    {
+        $role = m::mock('Cartalyst\Sentinel\Roles\EloquentRole[users]');
+        $role->exists = true;
+
+        $role->getConnection()->getQueryGrammar()->shouldReceive('compileDelete');
+        $role->getConnection()->shouldReceive('delete')->once();
+
+        $role->shouldReceive('users')->once()->andReturn($users = m::mock('Illuminate\Database\Eloquent\Relations\BelongsToMany'));
+
+        $users->shouldReceive('detach')->once();
+
+        $role->delete();
+    }
+
     protected function addMockConnection($model)
     {
         $model->setConnectionResolver($resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'));
