@@ -359,15 +359,7 @@ class SentinelServiceProvider extends ServiceProvider
     protected function registerSentinel()
     {
         $this->app->singleton('sentinel', function ($app) {
-            $config = $app['config']->get('cartalyst.sentinel');
-            
-            $sentinelClass = array_get(
-                $config,
-                'sentinel',
-                'Cartalyst\Sentinel\Sentinel'
-            );
-
-            $sentinel = new $sentinelClass(
+            $sentinel = new Sentinel(
                 $app['sentinel.persistence'],
                 $app['sentinel.users'],
                 $app['sentinel.roles'],
