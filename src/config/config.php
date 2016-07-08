@@ -41,6 +41,16 @@ return [
     */
 
     'cookie' => 'cartalyst_sentinel',
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Main Sentinel Class
+    |--------------------------------------------------------------------------
+    |
+    | Please provide the main class for Sentinel.
+    |
+    */
+    'sentinel' => 'Cartalyst\Sentinel\Sentinel',
 
     /*
     |--------------------------------------------------------------------------
@@ -54,6 +64,8 @@ return [
     'users' => [
 
         'model' => 'Cartalyst\Sentinel\Users\EloquentUser',
+
+        'repository' => 'Cartalyst\Sentinel\Users\IlluminateUserRepository'
 
     ],
 
@@ -69,6 +81,8 @@ return [
     'roles' => [
 
         'model' => 'Cartalyst\Sentinel\Roles\EloquentRole',
+
+        'repository' => 'Cartalyst\Sentinel\Roles\IlluminateRoleRepository'
 
     ],
 
@@ -112,6 +126,8 @@ return [
     'persistences' => [
 
         'model' => 'Cartalyst\Sentinel\Persistences\EloquentPersistence',
+
+        'repository' => 'Cartalyst\Sentinel\Persistences\IlluminatePersistenceRepository',
 
         'single' => false,
 
@@ -158,6 +174,8 @@ return [
 
         'lottery' => [2, 100],
 
+        'repository' => 'Cartalyst\Sentinel\Activations\IlluminateActivationRepository',
+
     ],
 
     /*
@@ -179,6 +197,8 @@ return [
         'expires' => 14400,
 
         'lottery' => [2, 100],
+
+        'repository' => 'Cartalyst\Sentinel\Reminders\IlluminateReminderRepository'
 
     ],
 
@@ -250,6 +270,8 @@ return [
             'thresholds' => 5,
 
         ],
+
+        'repository' => 'Cartalyst\Sentinel\Throttling\IlluminateThrottleRepository',
 
         'user' => [
 

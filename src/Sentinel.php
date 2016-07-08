@@ -820,7 +820,6 @@ class Sentinel
             $user = $this->getUserRepository();
 
             $method = 'findBy'.substr($method, 10);
-
             return call_user_func_array([$user, $method], $parameters);
         }
 
