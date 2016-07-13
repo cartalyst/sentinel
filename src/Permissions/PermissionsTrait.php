@@ -151,14 +151,14 @@ trait PermissionsTrait
             foreach ($this->extractClassPermissions($keys) as $key) {
                 // If the value is not in the array, we're opting in
                 if (! array_key_exists($key, $prepared)) {
-                    $prepared[$key] = $value;
+                    $prepared[$key] = (bool) $value;
 
                     continue;
                 }
 
                 // If our value is in the array and equals false, it will override
                 if ($value === false) {
-                    $prepared[$key] = $value;
+                    $prepared[$key] = (bool) $value;
                 }
             }
         }
