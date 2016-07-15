@@ -50,6 +50,20 @@ class EloquentRole extends Model implements RoleInterface, PermissibleInterface
     protected static $usersModel = 'Cartalyst\Sentinel\Users\EloquentUser';
 
     /**
+     * {@inheritDoc}
+     */
+    public function delete()
+    {
+        $isSoftDeleted = array_key_exists('Illuminate\Database\Eloquent\SoftDeletes', class_uses($this));
+
+        if ($this->exists && ! $isSoftDeleted) {
+            $this->users()->detach();
+        }
+
+        return parent::delete();
+    }
+
+    /**
      * The Users relationship.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

@@ -26,6 +26,7 @@ use Cartalyst\Sentinel\Checkpoints\CheckpointInterface;
 use Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface;
 use Cartalyst\Sentinel\Reminders\ReminderRepositoryInterface;
 use Cartalyst\Sentinel\Roles\RoleRepositoryInterface;
+use Cartalyst\Sentinel\Throttling\ThrottleRepositoryInterface;
 use Cartalyst\Sentinel\Users\UserInterface;
 use Cartalyst\Sentinel\Users\UserRepositoryInterface;
 use Cartalyst\Support\Traits\EventTrait;
@@ -114,6 +115,13 @@ class Sentinel
      * @var \Closure
      */
     protected $basicResponse;
+
+    /**
+     * The Throttle repository.
+     *
+     * @var \Cartalyst\Sentinel\Throttling\ThrottleRepositoryInterface
+     */
+    protected $throttle;
 
     /**
      * Create a new Sentinel instance.
@@ -778,6 +786,27 @@ class Sentinel
     public function setReminderRepository(ReminderRepositoryInterface $reminders)
     {
         $this->reminders = $reminders;
+    }
+
+    /**
+     * Returns the throttle repository.
+     *
+     * @return \Cartalyst\Sentinel\Throttling\ThrottleRepositoryInterface
+     */
+    public function getThrottleRepository()
+    {
+        return $this->throttle;
+    }
+
+    /**
+     * Sets the throttle repository.
+     *
+     * @param  \Cartalyst\Sentinel\Throttling\ThrottleRepositoryInterface  $throttle
+     * @return void
+     */
+    public function setThrottleRepository(ThrottleRepositoryInterface $throttle)
+    {
+        $this->throttle = $throttle;
     }
 
     /**
