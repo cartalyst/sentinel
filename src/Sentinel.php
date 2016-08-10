@@ -628,18 +628,17 @@ class Sentinel
         }
     }
 
-	/**
-	 * Removes the chosen checkpoints
-	 *
-	 * @param array $checkpoints
-	 * @return void
-	 */
-	public function removeCheckpoints( array $checkpoints = [] )
-	{
-		foreach($checkpoints as $checkpoint)
-		{
-			$this->removeCheckpoint($checkpoint);
-		}
+    /**
+     * Removes the chosen checkpoints
+     *
+     * @param array $checkpoints
+     * @return void
+     */
+    public function removeCheckpoints( array $checkpoints = [] )
+    {
+        foreach($checkpoints as $checkpoint) {
+            $this->removeCheckpoint($checkpoint);
+        }
 	}
 
     /**
