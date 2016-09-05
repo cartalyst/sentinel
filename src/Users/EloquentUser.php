@@ -201,19 +201,17 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
      */
     public function inRole($role)
     {
-        $role = array_first($this->roles, function ($index, $instance) use ($role) {
+        foreach ($this->roles as $instance) {
             if ($role instanceof RoleInterface) {
-                return ($instance->getRoleId() === $role->getRoleId());
+                return $instance->getRoleId() === $role->getRoleId();
             }
 
             if ($instance->getRoleId() == $role || $instance->getRoleSlug() == $role) {
                 return true;
             }
+        }
 
-            return false;
-        });
-
-        return $role !== null;
+        return false;
     }
 
     /**
