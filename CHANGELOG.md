@@ -1,4 +1,4 @@
-# Sentinel Change Log
+# Change Log
 
 This project follows [Semantic Versioning](CONTRIBUTING.md).
 
