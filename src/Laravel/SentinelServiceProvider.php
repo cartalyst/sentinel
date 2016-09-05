@@ -99,9 +99,9 @@ class SentinelServiceProvider extends ServiceProvider
         $this->app->singleton('sentinel.persistence', function ($app) {
             $config = $app['config']->get('cartalyst.sentinel');
 
-            $model  = $config['persistences.model'];
-            $single = $config['persistences.single'];
-            $users  = $config['users.model'];
+            $model  = $config['persistences']['model'];
+            $single = $config['persistences']['single'];
+            $users  = $config['users']['model'];
 
             if (class_exists($users) && method_exists($users, 'setPersistencesModel')) {
                 forward_static_call_array([$users, 'setPersistencesModel'], [$model]);
@@ -151,10 +151,10 @@ class SentinelServiceProvider extends ServiceProvider
         $this->app->singleton('sentinel.users', function ($app) {
             $config = $app['config']->get('cartalyst.sentinel');
 
-            $users        = $config['users.model'];
-            $roles        = $config['roles.model'];
-            $persistences = $config['persistences.model'];
-            $permissions  = $config['permissions.class'];
+            $users        = $config['users']['model'];
+            $roles        = $config['roles']['model'];
+            $persistences = $config['persistences']['model'];
+            $permissions  = $config['permissions']['class'];
 
             if (class_exists($roles) && method_exists($roles, 'setUsersModel')) {
                 forward_static_call_array([$roles, 'setUsersModel'], [$users]);
@@ -194,8 +194,8 @@ class SentinelServiceProvider extends ServiceProvider
         $this->app->singleton('sentinel.roles', function ($app) {
             $config = $app['config']->get('cartalyst.sentinel');
 
-            $model = $config['roles.model'];
-            $users = $config['users.model'];
+            $model = $config['roles']['model'];
+            $users = $config['users']['model'];
 
             if (class_exists($users) && method_exists($users, 'setRolesModel')) {
                 forward_static_call_array([$users, 'setRolesModel'], [$model]);
@@ -257,8 +257,8 @@ class SentinelServiceProvider extends ServiceProvider
         $this->app->singleton('sentinel.activations', function ($app) {
             $config = $app['config']->get('cartalyst.sentinel');
 
-            $model   = $config['activations.model'];
-            $expires = $config['activations.expires'];
+            $model   = $config['activations']['model'];
+            $expires = $config['activations']['expires'];
 
             return new IlluminateActivationRepository($model, $expires);
         });
@@ -318,8 +318,8 @@ class SentinelServiceProvider extends ServiceProvider
         $this->app->singleton('sentinel.reminders', function ($app) {
             $config = $app['config']->get('cartalyst.sentinel');
 
-            $model   = $config['reminders.model'];
-            $expires = $config['reminders.expires'];
+            $model   = $config['reminders']['model'];
+            $expires = $config['reminders']['expires'];
 
             return new IlluminateReminderRepository($app['sentinel.users'], $model, $expires);
         });
