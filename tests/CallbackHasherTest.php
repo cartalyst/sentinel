@@ -39,8 +39,12 @@ class CallbackHasherTest extends PHPUnit_Framework_TestCase
     public function testHashing()
     {
         // Never use this hashing strategy!
-        $hash = function ($value) { return strrev($value); };
-        $check = function ($value, $hashedValue) { return (strrev($value) === $hashedValue); };
+        $hash = function ($value) {
+            return strrev($value);
+        };
+        $check = function ($value, $hashedValue) {
+            return (strrev($value) === $hashedValue);
+        };
         $hasher = new CallbackHasher($hash, $check);
 
         $hashedValue = $hasher->hash('password');
@@ -52,8 +56,12 @@ class CallbackHasherTest extends PHPUnit_Framework_TestCase
     public function testShortValue()
     {
         // Never use this hashing strategy!
-        $hash = function ($value) { return strrev($value); };
-        $check = function ($value, $hashedValue) { return (strrev($value) === $hashedValue); };
+        $hash = function ($value) {
+            return strrev($value);
+        };
+        $check = function ($value, $hashedValue) {
+            return (strrev($value) === $hashedValue);
+        };
         $hasher = new CallbackHasher($hash, $check);
 
         $hashedValue = $hasher->hash('foo');
@@ -64,8 +72,12 @@ class CallbackHasherTest extends PHPUnit_Framework_TestCase
     public function testUtf8Value()
     {
         // Never use this hashing strategy!
-        $hash = function ($value) { return strrev($value); };
-        $check = function ($value, $hashedValue) { return (strrev($value) === $hashedValue); };
+        $hash = function ($value) {
+            return strrev($value);
+        };
+        $check = function ($value, $hashedValue) {
+            return (strrev($value) === $hashedValue);
+        };
         $hasher = new CallbackHasher($hash, $check);
 
         $hashedValue = $hasher->hash('fÄÓñ');
@@ -76,8 +88,12 @@ class CallbackHasherTest extends PHPUnit_Framework_TestCase
     public function testSymbolsValue()
     {
         // Never use this hashing strategy!
-        $hash = function ($value) { return strrev($value); };
-        $check = function ($value, $hashedValue) { return (strrev($value) === $hashedValue); };
+        $hash = function ($value) {
+            return strrev($value);
+        };
+        $check = function ($value, $hashedValue) {
+            return (strrev($value) === $hashedValue);
+        };
         $hasher = new CallbackHasher($hash, $check);
 
         $hashedValue = $hasher->hash('!"#$%^&*()-_,./:;<=>?@[]{}`~|');
