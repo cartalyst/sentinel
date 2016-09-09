@@ -191,7 +191,7 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface
     public function flush(PersistableInterface $persistable, $forget = true)
     {
         if ($forget) {
-            $this->forget($persistable);
+            $this->forget();
         }
 
         foreach ($persistable->{$persistable->getPersistableRelationship()}()->get() as $persistence) {
