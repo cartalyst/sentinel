@@ -11,10 +11,10 @@
  * bundled with this package in the LICENSE file.
  *
  * @package    Sentinel
- * @version    2.0.12
+ * @version    2.0.13
  * @author     Cartalyst LLC
  * @license    BSD License (3-clause)
- * @copyright  (c) 2011-2015, Cartalyst LLC
+ * @copyright  (c) 2011-2016, Cartalyst LLC
  * @link       http://cartalyst.com
  */
 
@@ -39,8 +39,12 @@ class CallbackHasherTest extends PHPUnit_Framework_TestCase
     public function testHashing()
     {
         // Never use this hashing strategy!
-        $hash = function ($value) { return strrev($value); };
-        $check = function ($value, $hashedValue) { return (strrev($value) === $hashedValue); };
+        $hash = function ($value) {
+            return strrev($value);
+        };
+        $check = function ($value, $hashedValue) {
+            return (strrev($value) === $hashedValue);
+        };
         $hasher = new CallbackHasher($hash, $check);
 
         $hashedValue = $hasher->hash('password');
@@ -52,8 +56,12 @@ class CallbackHasherTest extends PHPUnit_Framework_TestCase
     public function testShortValue()
     {
         // Never use this hashing strategy!
-        $hash = function ($value) { return strrev($value); };
-        $check = function ($value, $hashedValue) { return (strrev($value) === $hashedValue); };
+        $hash = function ($value) {
+            return strrev($value);
+        };
+        $check = function ($value, $hashedValue) {
+            return (strrev($value) === $hashedValue);
+        };
         $hasher = new CallbackHasher($hash, $check);
 
         $hashedValue = $hasher->hash('foo');
@@ -64,8 +72,12 @@ class CallbackHasherTest extends PHPUnit_Framework_TestCase
     public function testUtf8Value()
     {
         // Never use this hashing strategy!
-        $hash = function ($value) { return strrev($value); };
-        $check = function ($value, $hashedValue) { return (strrev($value) === $hashedValue); };
+        $hash = function ($value) {
+            return strrev($value);
+        };
+        $check = function ($value, $hashedValue) {
+            return (strrev($value) === $hashedValue);
+        };
         $hasher = new CallbackHasher($hash, $check);
 
         $hashedValue = $hasher->hash('fÄÓñ');
@@ -76,8 +88,12 @@ class CallbackHasherTest extends PHPUnit_Framework_TestCase
     public function testSymbolsValue()
     {
         // Never use this hashing strategy!
-        $hash = function ($value) { return strrev($value); };
-        $check = function ($value, $hashedValue) { return (strrev($value) === $hashedValue); };
+        $hash = function ($value) {
+            return strrev($value);
+        };
+        $check = function ($value, $hashedValue) {
+            return (strrev($value) === $hashedValue);
+        };
         $hasher = new CallbackHasher($hash, $check);
 
         $hashedValue = $hasher->hash('!"#$%^&*()-_,./:;<=>?@[]{}`~|');

@@ -11,10 +11,10 @@
  * bundled with this package in the LICENSE file.
  *
  * @package    Sentinel
- * @version    2.0.12
+ * @version    2.0.13
  * @author     Cartalyst LLC
  * @license    BSD License (3-clause)
- * @copyright  (c) 2011-2015, Cartalyst LLC
+ * @copyright  (c) 2011-2016, Cartalyst LLC
  * @link       http://cartalyst.com
  */
 
@@ -201,19 +201,17 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
      */
     public function inRole($role)
     {
-        $role = array_first($this->roles, function ($index, $instance) use ($role) {
+        foreach ($this->roles as $instance) {
             if ($role instanceof RoleInterface) {
-                return ($instance->getRoleId() === $role->getRoleId());
+                return $instance->getRoleId() === $role->getRoleId();
             }
 
             if ($instance->getRoleId() == $role || $instance->getRoleSlug() == $role) {
                 return true;
             }
+        }
 
-            return false;
-        });
-
-        return $role !== null;
+        return false;
     }
 
     /**

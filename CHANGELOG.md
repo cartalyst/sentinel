@@ -1,4 +1,4 @@
-# Sentinel Change Log
+# Change Log
 
 This project follows [Semantic Versioning](CONTRIBUTING.md).
 
@@ -10,6 +10,22 @@ We do not give estimated times for completion on `Accepted` Proposals.
 - [Rejected](https://github.com/cartalyst/sentinel/labels/Rejected)
 
 ---
+
+### v2.0.13 - 2016-09-05
+
+`ADDED`
+
+- Missing Throttle repository getter/setter.
+- Laravel 5.3 support.
+
+`UPDATED`
+
+- Detach the role from users when the role is deleted.
+- Pass persistence model from the configuration to the native bootstrapper.
+
+`REMOVED`
+
+- Removed usage of Laravel helpers.
 
 ### v2.0.12 - 2016-05-13
 

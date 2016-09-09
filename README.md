@@ -17,9 +17,9 @@ Raw files can be found via this projects docs/version branch.
 - [2.0](https://github.com/cartalyst/sentinel/tree/docs/2.0)
 - [1.0](https://github.com/cartalyst/sentinel/tree/docs/1.0)
 
-## Changelog
+## Change Log
 
-Important versions listed below. Refer to the [Changelog](CHANGELOG.md) for a full history of the project.
+Important versions listed below. Refer to the [Change Log](CHANGELOG.md) for a full history of the project.
 
 - [2.0](CHANGELOG.md) - 2015-02-24
 - [1.0](CHANGELOG.md) - 2014-08-05
@@ -43,4 +43,4 @@ Bug reports, feature requests, and pull requests can be submitted by following o
 
 This software is released under the [BSD 3-Clause](LICENSE) License.
 
-© 2011-2015 Cartalyst LLC, All rights reserved.
+© 2011-2016 Cartalyst LLC, All rights reserved.

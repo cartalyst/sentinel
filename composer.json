@@ -14,27 +14,8 @@
     "authors": [
         {
             "name": "Cartalyst LLC",
-            "email": "help@cartalyst.com"
-        },
-        {
-            "name": "Ben Corlett",
-            "email": "ben.corlett@cartalyst.com",
-            "role": "Developer"
-        },
-        {
-            "name": "Bruno Gaspar",
-            "email": "bruno.gaspar@cartalyst.com",
-            "role": "Developer"
-        },
-        {
-            "name": "Dan Syme",
-            "email": "dan.syme@cartalyst.com",
-            "role": "Creator & Designer"
-        },
-        {
-            "name": "Suhayb Wardany",
-            "email": "su.wardany@cartalyst.com",
-            "role": "Developer"
+            "email": "help@cartalyst.com",
+            "homepage": "https://cartalyst.com"
         }
     ],
     "require": {
