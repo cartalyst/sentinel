@@ -169,7 +169,7 @@ class EloquentUserTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Illuminate\Database\Eloquent\Relations\HasMany', $user->persistences());
     }
 
-    public function testInRole()
+    public function testInRoleUsingRoleSlugs()
     {
         $user = new EloquentUser;
 
@@ -199,6 +199,62 @@ class EloquentUserTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($user->inRole('bar'));
         $this->assertFalse($user->inRole('baz'));
     }
+
+    public function testInRoleUsingRoleInstances()
+    {
+        $user = new EloquentUser;
+
+        $user->setConnectionResolver($resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'));
+        $resolver->shouldReceive('connection')->andReturn(m::mock('Illuminate\Database\Connection'));
+        $user->getConnection()->shouldReceive('getQueryGrammar')->andReturn(m::mock('Illuminate\Database\Query\Grammars\Grammar'));
+        $user->getConnection()->shouldReceive('getPostProcessor')->andReturn($processor = m::mock('Illuminate\Database\Query\Processors\Processor'));
+        $user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
+        $user->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
+        $processor->shouldReceive('processSelect')->andReturn([
+            [
+                'id'   => 1,
+                'slug' => 'foobar',
+            ],
+            [
+                'id'   => 2,
+                'slug' => 'foo',
+            ],
+            [
+                'id'   => 3,
+                'slug' => 'bar',
+            ],
+        ]);
+
+        $user->getConnection()->getQueryGrammar()->shouldReceive('compileSelect');
+        $user->getConnection()->shouldReceive('select');
+
+        $foobar = m::mock('Cartalyst\Sentinel\Roles\RoleInterface');
+        $foo = m::mock('Cartalyst\Sentinel\Roles\RoleInterface');
+        $bar = m::mock('Cartalyst\Sentinel\Roles\RoleInterface');
+        $baz = m::mock('Cartalyst\Sentinel\Roles\RoleInterface');
+
+        $foobar->shouldReceive('getRoleId')
+            ->once()
+            ->andReturn(1);
+
+        $foo->shouldReceive('getRoleId')
+            ->once()
+            ->andReturn(2);
+
+        $bar->shouldReceive('getRoleId')
+            ->once()
+            ->andReturn(3);
+
+        $baz->shouldReceive('getRoleId')
+            ->once()
+            ->andReturn(4);
+
+        $this->assertTrue($user->inRole($foobar));
+        $this->assertTrue($user->inRole($foo));
+        $this->assertTrue($user->inRole($bar));
+        $this->assertFalse($user->inRole($baz));
+    }
+
 
     public function testGetRoles()
     {
