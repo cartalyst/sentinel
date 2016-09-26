@@ -88,9 +88,11 @@ class SentinelBootstrapper {
 			$dispatcher
 		);
 
+		$throttle = $this->createThrottling();
+
 		$ipAddress = $this->getIpAddress();
 
-		$checkpoints = $this->createCheckpoints($activations, $ipAddress);
+		$checkpoints = $this->createCheckpoints($activations, $throttle, $ipAddress);
 
 		foreach ($checkpoints as $key => $checkpoint)
 		{
@@ -102,6 +104,8 @@ class SentinelBootstrapper {
 		$sentinel->setActivationRepository($activations);
 
 		$sentinel->setReminderRepository($reminders);
+
+		$sentinel->setThrottleRepository($throttle);
 
 		return $sentinel;
 	}
@@ -238,17 +242,18 @@ class SentinelBootstrapper {
 	 * Create activation and throttling checkpoints.
 	 *
 	 * @param  \Cartalyst\Sentinel\Activations\IlluminateActivationRepository  $activations
+	 * @param  \Cartalyst\Sentinel\Throttling\IlluminateThrottleRepository  $throttle
 	 * @param  string  $ipAddress
 	 * @return array
 	 * @throws \InvalidArgumentException
 	 */
-	protected function createCheckpoints(IlluminateActivationRepository $activations, $ipAddress)
+	protected function createCheckpoints(IlluminateActivationRepository $activations, IlluminateThrottleRepository $throttle, $ipAddress)
 	{
 		$activeCheckpoints = $this->config['checkpoints'];
 
 		$activation = $this->createActivationCheckpoint($activations);
 
-		$throttle = $this->createThrottleCheckpoint($ipAddress);
+		$throttle = $this->createThrottleCheckpoint($throttle, $ipAddress);
 
 		$checkpoints = [];
 
@@ -268,14 +273,13 @@ class SentinelBootstrapper {
 	/**
 	 * Create a throttle checkpoint.
 	 *
+	 * @param  \Cartalyst\Sentinel\Throttling\IlluminateThrottleRepository  $throttle
 	 * @param  string  $ipAddress
 	 * @return \Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint
 	 */
-	protected function createThrottleCheckpoint($ipAddress)
+	protected function createThrottleCheckpoint(IlluminateThrottleRepository $throttle, $ipAddress)
 	{
-		$throttling = $this->createThrottling();
-
-		return new ThrottleCheckpoint($throttling, $ipAddress);
+		return new ThrottleCheckpoint($throttle, $ipAddress);
 	}
 
 	/**
