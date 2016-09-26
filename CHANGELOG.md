@@ -11,6 +11,12 @@ We do not give estimated times for completion on `Accepted` Proposals.
 
 ---
 
+### v1.0.16 - 2016-09-26
+
+`ADDED`
+
+- Missing Throttle repository getter/setter.
+
 ### v1.0.15 - 2015-11-25
 
 `REVISED`
