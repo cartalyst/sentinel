@@ -11,6 +11,12 @@ We do not give estimated times for completion on `Accepted` Proposals.
 
 ---
 
+### v1.0.17 - 2016-09-27
+
+`FIXED`
+
+- Set the Throttle repository on Sentinel.
+
 ### v1.0.16 - 2016-09-26
 
 `ADDED`
