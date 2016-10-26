@@ -629,6 +629,19 @@ class Sentinel
     }
 
     /**
+     * Removes the chosen checkpoints
+     *
+     * @param array $checkpoints
+     * @return void
+     */
+    public function removeCheckpoints( array $checkpoints = [] )
+    {
+        foreach($checkpoints as $checkpoint) {
+            $this->removeCheckpoint($checkpoint);
+        }
+	}
+
+    /**
      * Cycles through all the registered checkpoints for a user. Checkpoints
      * may throw their own exceptions, however, if just one returns false,
      * the cycle fails.
