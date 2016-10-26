@@ -629,17 +629,17 @@ class Sentinel
     }
 
     /**
-     * Removes the chosen checkpoints
+     * Removes the given checkpoints.
      *
-     * @param array $checkpoints
+     * @param  array  $checkpoints
      * @return void
      */
-    public function removeCheckpoints( array $checkpoints = [] )
+    public function removeCheckpoints(array $checkpoints = [])
     {
-        foreach($checkpoints as $checkpoint) {
+        foreach ($checkpoints as $checkpoint) {
             $this->removeCheckpoint($checkpoint);
         }
-	}
+    }
 
     /**
      * Cycles through all the registered checkpoints for a user. Checkpoints
