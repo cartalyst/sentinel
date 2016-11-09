@@ -38,7 +38,7 @@ class IlluminateThrottleRepository implements ThrottleRepositoryInterface
     /**
      * The global thresholds configuration array.
      *
-     * If an array is set, the key is the number of failed login attemps
+     * If an array is set, the key is the number of failed login attempts
      * and the value is the delay in seconds before another login can
      * occur.
      *
