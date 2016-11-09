@@ -53,6 +53,7 @@ class SentinelServiceProvider extends ServiceProvider
     public function register()
     {
         $this->prepareResources();
+        $this->setOverrides();
         $this->registerPersistences();
         $this->registerUsers();
         $this->registerRoles();
@@ -97,17 +98,11 @@ class SentinelServiceProvider extends ServiceProvider
         $this->registerCookie();
 
         $this->app->singleton('sentinel.persistence', function ($app) {
-            $config = $app['config']->get('cartalyst.sentinel');
+            $config = $app['config']->get('cartalyst.sentinel.persistences');
 
-            $model  = $config['persistences']['model'];
-            $single = $config['persistences']['single'];
-            $users  = $config['users']['model'];
-
-            if (class_exists($users) && method_exists($users, 'setPersistencesModel')) {
-                forward_static_call_array([$users, 'setPersistencesModel'], [$model]);
-            }
-
-            return new IlluminatePersistenceRepository($app['sentinel.session'], $app['sentinel.cookie'], $model, $single);
+            return new IlluminatePersistenceRepository(
+                $app['sentinel.session'], $app['sentinel.cookie'], $config['model'], $config['single']
+            );
         });
     }
 
@@ -119,9 +114,9 @@ class SentinelServiceProvider extends ServiceProvider
     protected function registerSession()
     {
         $this->app->singleton('sentinel.session', function ($app) {
-            $key = $app['config']->get('cartalyst.sentinel.session');
-
-            return new IlluminateSession($app['session.store'], $key);
+            return new IlluminateSession(
+                $app['session.store'], $app['config']->get('cartalyst.sentinel.session')
+            );
         });
     }
 
@@ -133,9 +128,9 @@ class SentinelServiceProvider extends ServiceProvider
     protected function registerCookie()
     {
         $this->app->singleton('sentinel.cookie', function ($app) {
-            $key = $app['config']->get('cartalyst.sentinel.cookie');
-
-            return new IlluminateCookie($app['request'], $app['cookie'], $key);
+            return new IlluminateCookie(
+                $app['request'], $app['cookie'], $app['config']->get('cartalyst.sentinel.cookie')
+            );
         });
     }
 
@@ -149,26 +144,11 @@ class SentinelServiceProvider extends ServiceProvider
         $this->registerHasher();
 
         $this->app->singleton('sentinel.users', function ($app) {
-            $config = $app['config']->get('cartalyst.sentinel');
+            $config = $app['config']->get('cartalyst.sentinel.users');
 
-            $users        = $config['users']['model'];
-            $roles        = $config['roles']['model'];
-            $persistences = $config['persistences']['model'];
-            $permissions  = $config['permissions']['class'];
-
-            if (class_exists($roles) && method_exists($roles, 'setUsersModel')) {
-                forward_static_call_array([$roles, 'setUsersModel'], [$users]);
-            }
-
-            if (class_exists($persistences) && method_exists($persistences, 'setUsersModel')) {
-                forward_static_call_array([$persistences, 'setUsersModel'], [$users]);
-            }
-
-            if (class_exists($users) && method_exists($users, 'setPermissionsClass')) {
-                forward_static_call_array([$users, 'setPermissionsClass'], [$permissions]);
-            }
-
-            return new IlluminateUserRepository($app['sentinel.hasher'], $app['events'], $users);
+            return new IlluminateUserRepository(
+                $app['sentinel.hasher'], $app['events'], $config['model']
+            );
         });
     }
 
@@ -192,16 +172,9 @@ class SentinelServiceProvider extends ServiceProvider
     protected function registerRoles()
     {
         $this->app->singleton('sentinel.roles', function ($app) {
-            $config = $app['config']->get('cartalyst.sentinel');
+            $config = $app['config']->get('cartalyst.sentinel.roles');
 
-            $model = $config['roles']['model'];
-            $users = $config['users']['model'];
-
-            if (class_exists($users) && method_exists($users, 'setRolesModel')) {
-                forward_static_call_array([$users, 'setRolesModel'], [$model]);
-            }
-
-            return new IlluminateRoleRepository($model);
+            return new IlluminateRoleRepository($config['model']);
         });
     }
 
@@ -214,6 +187,7 @@ class SentinelServiceProvider extends ServiceProvider
     protected function registerCheckpoints()
     {
         $this->registerActivationCheckpoint();
+
         $this->registerThrottleCheckpoint();
 
         $this->app->singleton('sentinel.checkpoints', function ($app) {
@@ -255,12 +229,9 @@ class SentinelServiceProvider extends ServiceProvider
     protected function registerActivations()
     {
         $this->app->singleton('sentinel.activations', function ($app) {
-            $config = $app['config']->get('cartalyst.sentinel');
+            $config = $app['config']->get('cartalyst.sentinel.activations');
 
-            $model   = $config['activations']['model'];
-            $expires = $config['activations']['expires'];
-
-            return new IlluminateActivationRepository($model, $expires);
+            return new IlluminateActivationRepository($config['model'], $config['expires']);
         });
     }
 
@@ -275,8 +246,7 @@ class SentinelServiceProvider extends ServiceProvider
 
         $this->app->singleton('sentinel.checkpoint.throttle', function ($app) {
             return new ThrottleCheckpoint(
-                $app['sentinel.throttling'],
-                $app['request']->getClientIp()
+                $app['sentinel.throttling'], $app['request']->getClientIp()
             );
         });
     }
@@ -291,9 +261,11 @@ class SentinelServiceProvider extends ServiceProvider
         $this->app->singleton('sentinel.throttling', function ($app) {
             $model = $app['config']->get('cartalyst.sentinel.throttling.model');
 
-            foreach (['global', 'ip', 'user'] as $type) {
-                ${"{$type}Interval"} = $app['config']->get("cartalyst.sentinel.throttling.{$type}.interval");
-                ${"{$type}Thresholds"} = $app['config']->get("cartalyst.sentinel.throttling.{$type}.thresholds");
+            $throttling = $app['config']->get('cartalyst.sentinel.throttling');
+
+            foreach ([ 'global', 'ip', 'user' ] as $type) {
+                ${"{$type}Interval"} = $throttling[$type]['interval'];
+                ${"{$type}Thresholds"} = $throttling[$type]['thresholds'];
             }
 
             return new IlluminateThrottleRepository(
@@ -316,12 +288,11 @@ class SentinelServiceProvider extends ServiceProvider
     protected function registerReminders()
     {
         $this->app->singleton('sentinel.reminders', function ($app) {
-            $config = $app['config']->get('cartalyst.sentinel');
+            $config = $app['config']->get('cartalyst.sentinel.reminders');
 
-            $model   = $config['reminders']['model'];
-            $expires = $config['reminders']['expires'];
-
-            return new IlluminateReminderRepository($app['sentinel.users'], $model, $expires);
+            return new IlluminateReminderRepository(
+                $app['sentinel.users'], $config['model'], $config['expires']
+            );
         });
     }
 
@@ -404,13 +375,15 @@ class SentinelServiceProvider extends ServiceProvider
      */
     protected function garbageCollect()
     {
-        $config = $this->app['config']->get('cartalyst.sentinel.activations.lottery');
+        $config = $this->app['config']->get('cartalyst.sentinel');
 
-        $this->sweep($this->app['sentinel.activations'], $config);
+        $this->sweep(
+            $this->app['sentinel.activations'], $config['activations']['lottery']
+        );
 
-        $config = $this->app['config']->get('cartalyst.sentinel.reminders.lottery');
-
-        $this->sweep($this->app['sentinel.reminders'], $config);
+        $this->sweep(
+            $this->app['sentinel.reminders'], $config['reminders']['lottery']
+        );
     }
 
     /**
@@ -420,7 +393,7 @@ class SentinelServiceProvider extends ServiceProvider
      * @param  array  $lottery
      * @return void
      */
-    protected function sweep($repository, $lottery)
+    protected function sweep($repository, array $lottery)
     {
         if ($this->configHitsLottery($lottery)) {
             try {
@@ -453,5 +426,43 @@ class SentinelServiceProvider extends ServiceProvider
                 return $app['sentinel']->getUser();
             });
         });
+    }
+
+    /**
+     * Performs the necessary overrides.
+     *
+     * @return void
+     */
+    protected function setOverrides()
+    {
+        $config = $this->app['config']->get('cartalyst.sentinel');
+
+        $users = $config['users']['model'];
+
+        $roles = $config['roles']['model'];
+
+        $persistences = $config['persistences']['model'];
+
+        if (class_exists($users)) {
+            if (method_exists($users, 'setRolesModel')) {
+                forward_static_call_array([ $users, 'setRolesModel' ], [ $roles ]);
+            }
+
+            if (method_exists($users, 'setPersistencesModel')) {
+                forward_static_call_array([ $users, 'setPersistencesModel' ], [ $persistences ]);
+            }
+
+            if (method_exists($users, 'setPermissionsClass')) {
+                forward_static_call_array([ $users, 'setPermissionsClass' ], [ $config['permissions']['class'] ]);
+            }
+        }
+
+        if (class_exists($roles) && method_exists($roles, 'setUsersModel')) {
+            forward_static_call_array([ $roles, 'setUsersModel' ], [ $users ]);
+        }
+
+        if (class_exists($persistences) && method_exists($persistences, 'setUsersModel')) {
+            forward_static_call_array([ $persistences, 'setUsersModel' ], [ $users ]);
+        }
     }
 }
