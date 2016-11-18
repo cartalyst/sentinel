@@ -58,6 +58,8 @@ class MigrationCartalystSentinel extends Migration
             $table->boolean('completed')->default(0);
             $table->timestamp('completed_at')->nullable();
             $table->timestamps();
+            
+            $table->engine = 'InnoDB';            
         });
 
         Schema::create('roles', function (Blueprint $table) {
