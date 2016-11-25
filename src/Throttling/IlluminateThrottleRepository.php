@@ -366,7 +366,7 @@ class IlluminateThrottleRepository implements ThrottleRepositoryInterface
                     return $this->secondsToFree($last, $delay);
                 }
             }
-        } elseif ($throttles->count() > $this->$thresholds) {
+        } elseif ($throttles->count() >= $this->$thresholds) {
             $interval = $type.'Interval';
 
             $first = $throttles->first();
