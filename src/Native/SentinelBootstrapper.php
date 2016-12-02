@@ -122,7 +122,9 @@ class SentinelBootstrapper
 
         $model = $this->config['persistences']['model'];
 
-        return new IlluminatePersistenceRepository($session, $cookie, $model);
+	    $single = $this->config['persistences']['single'];
+
+        return new IlluminatePersistenceRepository($session, $cookie, $model, $single);
     }
 
     /**
