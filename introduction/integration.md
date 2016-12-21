@@ -2,11 +2,11 @@
 
 Cartalyst packages are framework agnostic and as such can be integrated easily natively or with your favorite framework.
 
-### Laravel 4
+### Laravel 5
 
-The Sentinel package has optional support for Laravel 4 and it comes bundled with a Service Provider and a Facade for easy integration.
+The Sentinel package has optional support for Laravel 5 and it comes bundled with a Service Provider and a Facade for easy integration.
 
-After installing the package, open your Laravel config file located at `app/config/app.php` and add the following lines.
+After installing the package, open your Laravel config file located at `config/app.php` and add the following lines.
 
 In the `$providers` array add the following service provider for this package.
 
@@ -22,19 +22,23 @@ In the `$aliases` array add the following facades for this package.
 'Sentinel'   => 'Cartalyst\Sentinel\Laravel\Facades\Sentinel',
 ```
 
+#### Assets
+
+Run the following command to publish the migrations and config file.
+
+`php artisan vendor:publish --provider="Cartalyst\Sentinel\Laravel\SentinelServiceProvider"`
+
 #### Migrations
 
-Run the following command to migrate Sentinel.
+Run the following command to migrate Sentinel after publishing the assets.
 
-`php artisan migrate --package=cartalyst/sentinel`
+> **Note:** Before running the following command, please remove the default Laravel migrations to avoid table collision.
+
+`php artisan migrate`
 
 #### Configuration
 
-After installing, you can publish the package configuration file into your application by running the following command on your terminal:
-
-`php artisan config:publish cartalyst/sentinel`
-
-This will publish the config file to `app/config/packages/cartalyst/sentinel/config.php` where you can modify the package configuration.
+After publishing, the sentinel config file can be found under `config/cartalyst.sentinel.php` where you can modify the package configuration.
 
 ### Native
 
