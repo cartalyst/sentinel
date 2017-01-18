@@ -219,7 +219,7 @@ class CheckpointsTest extends PHPUnit_Framework_TestCase
             $users        = m::mock('Cartalyst\Sentinel\Users\UserRepositoryInterface'),
             $roles        = m::mock('Cartalyst\Sentinel\Roles\RoleRepositoryInterface'),
             $activations  = m::mock('Cartalyst\Sentinel\Activations\ActivationRepositoryInterface'),
-            $dispatcher   = m::mock('Illuminate\Events\Dispatcher')
+            $dispatcher   = m::mock('Illuminate\Contracts\Events\Dispatcher')
         );
 
         $throttle = m::mock('Cartalyst\Sentinel\Throttling\ThrottleRepositoryInterface');

@@ -25,7 +25,7 @@ use Cartalyst\Sentinel\Hashing\HasherInterface;
 use Cartalyst\Support\Traits\EventTrait;
 use Cartalyst\Support\Traits\RepositoryTrait;
 use Closure;
-use Illuminate\Events\Dispatcher;
+use Illuminate\Contracts\Events\Dispatcher;
 use InvalidArgumentException;
 
 class IlluminateUserRepository implements UserRepositoryInterface
@@ -50,7 +50,7 @@ class IlluminateUserRepository implements UserRepositoryInterface
      * Create a new Illuminate user repository.
      *
      * @param  \Cartalyst\Sentinel\Hashing\HasherInterface  $hasher
-     * @param  \Illuminate\Events\Dispatcher  $dispatcher
+     * @param  \Illuminate\Contracts\Events\Dispatcher  $dispatcher
      * @param  string  $model
      * @return void
      */
