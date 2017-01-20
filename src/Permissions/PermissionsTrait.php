@@ -200,8 +200,12 @@ trait PermissionsTrait
         if (array_key_exists($permission, $prepared) && $prepared[$permission] === true) {
             return true;
         }
-
+        //typecasted as a workaround for a flaw in laravel's str::is()
+        $permission = (string)$permission;
+        
         foreach ($prepared as $key => $value) {
+            //typecasted as a workaround for a flaw in laravel's str::is()
+            $key = (string)$key;            
             if ((str_is($permission, $key) || str_is($key, $permission)) && $value === true) {
                 return true;
             }
