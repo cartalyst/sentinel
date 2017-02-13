@@ -22,6 +22,7 @@ namespace Cartalyst\Sentinel\Cookies;
 
 use Illuminate\Cookie\CookieJar;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Cookie;
 
 class IlluminateCookie implements CookieInterface
 {
@@ -86,11 +87,13 @@ class IlluminateCookie implements CookieInterface
         // available in 4.0.*, only 4.1+
         $queued = $this->jar->getQueuedCookies();
 
-        if (isset($queued[$key])) {
-            return $queued[$key];
+        $cookie = isset($queued[$key]) ? $queued[$key] : $this->request->cookie($key);
+
+        if ($cookie instanceof Cookie) {
+            return $cookie->getValue();
         }
 
-        return $this->request->cookie($key);
+        return $cookie;
     }
 
     /**
