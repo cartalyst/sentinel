@@ -38,10 +38,10 @@ class IlluminateCookieTest extends PHPUnit_Framework_TestCase
 
     public function testPut()
     {
-        $illuminateCookie = new IlluminateCookie($request = m::mock('Illuminate\Http\Request'), $jar = m::mock('Illuminate\Cookie\CookieJar'), 'foo');
+        $cookie = new IlluminateCookie($request = m::mock('Illuminate\Http\Request'), $jar = m::mock('Illuminate\Cookie\CookieJar'), 'foo');
         $jar->shouldReceive('forever')->with('foo', 'bar')->once()->andReturn('cookie');
         $jar->shouldReceive('queue')->with('cookie')->once();
-        $illuminateCookie->put('bar');
+        $cookie->put('bar');
     }
 
     public function testGetWithQueuedCookie()
@@ -54,17 +54,17 @@ class IlluminateCookieTest extends PHPUnit_Framework_TestCase
 
     public function testGetWithPreviousCookies()
     {
-        $illuminateCookie = new IlluminateCookie($request = m::mock('Illuminate\Http\Request'), $jar = m::mock('Illuminate\Cookie\CookieJar'), 'foo');
+        $cookie = new IlluminateCookie($request = m::mock('Illuminate\Http\Request'), $jar = m::mock('Illuminate\Cookie\CookieJar'), 'foo');
         $jar->shouldReceive('getQueuedCookies')->once()->andReturn([]);
         $request->shouldReceive('cookie')->with('foo')->once()->andReturn('bar');
-        $this->assertEquals('bar', $illuminateCookie->get());
+        $this->assertEquals('bar', $cookie->get());
     }
 
     public function testForget()
     {
-        $illuminateCookie = new IlluminateCookie($request = m::mock('Illuminate\Http\Request'), $jar = m::mock('Illuminate\Cookie\CookieJar'), 'foo');
+        $cookie = new IlluminateCookie($request = m::mock('Illuminate\Http\Request'), $jar = m::mock('Illuminate\Cookie\CookieJar'), 'foo');
         $jar->shouldReceive('forget')->with('foo')->once()->andReturn('cookie');
         $jar->shouldReceive('queue')->with('cookie')->once();
-        $illuminateCookie->forget();
+        $cookie->forget();
     }
 }
