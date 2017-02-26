@@ -87,13 +87,11 @@ class IlluminateCookie implements CookieInterface
         // available in 4.0.*, only 4.1+
         $queued = $this->jar->getQueuedCookies();
 
-        $cookie = isset($queued[$key]) ? $queued[$key] : $this->request->cookie($key);
-
-        if ($cookie instanceof Cookie) {
-            return $cookie->getValue();
+        if (isset($queued[$key])) {
+          return $queued[$key]->getValue();
         }
 
-        return $cookie;
+        return $this->request->cookie($key);
     }
 
     /**
