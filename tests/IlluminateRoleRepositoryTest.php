@@ -79,4 +79,15 @@ class IlluminateRoleRepositoryTest extends PHPUnit_Framework_TestCase
 
         $roles->findByName('foo');
     }
+
+    public function testFindAll()
+    {
+        $roles = m::mock('Cartalyst\Sentinel\Roles\IlluminateRoleRepository[createModel]');
+
+        $roles->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Roles\EloquentRole[newQuery]'));
+        $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
+        $query->shouldReceive('get')->once();
+
+        $roles->all();
+    }
 }
