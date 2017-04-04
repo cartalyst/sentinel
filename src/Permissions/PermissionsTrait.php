@@ -157,7 +157,7 @@ trait PermissionsTrait
                 }
 
                 // If our value is in the array and equals false, it will override
-                if ($value === false) {
+                if (! $value) {
                     $prepared[$key] = $value;
                 }
             }
@@ -197,12 +197,12 @@ trait PermissionsTrait
      */
     protected function checkPermission(array $prepared, $permission)
     {
-        if (array_key_exists($permission, $prepared) && $prepared[$permission] === true) {
+        if (array_key_exists($permission, $prepared) && $prepared[$permission]) {
             return true;
         }
 
         foreach ($prepared as $key => $value) {
-            if ((str_is($permission, $key) || str_is($key, $permission)) && $value === true) {
+            if ((str_is($permission, $key) || str_is($key, $permission)) && $value) {
                 return true;
             }
         }
