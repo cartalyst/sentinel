@@ -43,6 +43,13 @@ class EloquentRole extends Model implements RoleInterface, PermissibleInterface
     ];
 
     /**
+     * {@inheritDoc}
+     */
+    protected $hidden = [
+        'pivot',
+    ];
+
+    /**
      * The Eloquent users model name.
      *
      * @var string
