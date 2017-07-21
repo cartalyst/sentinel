@@ -218,9 +218,10 @@ class CheckpointsTest extends PHPUnit_Framework_TestCase
             $persistences = m::mock('Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface'),
             $users        = m::mock('Cartalyst\Sentinel\Users\UserRepositoryInterface'),
             $roles        = m::mock('Cartalyst\Sentinel\Roles\RoleRepositoryInterface'),
-            $activations  = m::mock('Cartalyst\Sentinel\Activations\ActivationRepositoryInterface'),
-            $dispatcher   = m::mock('Illuminate\Contracts\Events\Dispatcher')
+            $activations  = m::mock('Cartalyst\Sentinel\Activations\ActivationRepositoryInterface')
         );
+
+        $sentinel->setDispatcher($dispatcher   = m::mock('Illuminate\Contracts\Events\Dispatcher'));
 
         $throttle = m::mock('Cartalyst\Sentinel\Throttling\ThrottleRepositoryInterface');
 
