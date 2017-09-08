@@ -49,6 +49,16 @@
         "component": "package",
         "branch-alias": {
             "dev-master": "2.0.x-dev"
+        },
+        "laravel": {
+            "providers": [
+                "Cartalyst\\Sentinel\\Laravel\\SentinelServiceProvider::class,"
+            ],
+            "aliases": {
+				"Activation": "Cartalyst\\Sentinel\\Laravel\\Facades\\Activation::class",
+				"Reminder": "Cartalyst\\Sentinel\\Laravel\\Facades\\Reminder::class",
+				"Sentinel": "Cartalyst\\Sentinel\\Laravel\\Facades\\Sentinel::class"
+            }
         }
     },
     "minimum-stability": "stable"
