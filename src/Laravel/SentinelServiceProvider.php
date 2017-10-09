@@ -308,9 +308,10 @@ class SentinelServiceProvider extends ServiceProvider
                 $app['sentinel.persistence'],
                 $app['sentinel.users'],
                 $app['sentinel.roles'],
-                $app['sentinel.activations'],
-                $app['events']
+                $app['sentinel.activations']
             );
+
+            $sentinel->setDispatcher($app['events']);
 
             if (isset($app['sentinel.checkpoints'])) {
                 foreach ($app['sentinel.checkpoints'] as $key => $checkpoint) {

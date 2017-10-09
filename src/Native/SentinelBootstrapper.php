@@ -84,9 +84,10 @@ class SentinelBootstrapper
             $persistence,
             $users,
             $roles,
-            $activations,
-            $dispatcher
+            $activations
         );
+
+        $sentinel->setDispatcher($dispatcher);
 
         $throttle = $this->createThrottling();
 

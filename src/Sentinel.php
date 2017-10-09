@@ -31,7 +31,6 @@ use Cartalyst\Sentinel\Users\UserInterface;
 use Cartalyst\Sentinel\Users\UserRepositoryInterface;
 use Cartalyst\Support\Traits\EventTrait;
 use Closure;
-use Illuminate\Contracts\Events\Dispatcher;
 use InvalidArgumentException;
 use RuntimeException;
 
@@ -130,15 +129,13 @@ class Sentinel
      * @param  \Cartalyst\Sentinel\Users\UserRepositoryInterface  $users
      * @param  \Cartalyst\Sentinel\Roles\RoleRepositoryInterface  $roles
      * @param  \Cartalyst\Sentinel\Activations\ActivationRepositoryInterface  $activations
-     * @param  \Illuminate\Contracts\Events\Dispatcher  $dispatcher
      * @return void
      */
     public function __construct(
         PersistenceRepositoryInterface $persistences,
         UserRepositoryInterface $users,
         RoleRepositoryInterface $roles,
-        ActivationRepositoryInterface $activations,
-        Dispatcher $dispatcher
+        ActivationRepositoryInterface $activations
     ) {
         $this->persistences = $persistences;
 
@@ -147,8 +144,6 @@ class Sentinel
         $this->roles = $roles;
 
         $this->activations = $activations;
-
-        $this->dispatcher = $dispatcher;
     }
 
     /**
