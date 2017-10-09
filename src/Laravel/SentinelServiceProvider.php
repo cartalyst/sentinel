@@ -74,10 +74,16 @@ class SentinelServiceProvider extends ServiceProvider
         $config = realpath(__DIR__.'/../config/config.php');
 
         $this->mergeConfigFrom($config, 'cartalyst.sentinel');
+        if(function_exists('config_path')){
+            $this->publishes([
+                $config => config_path('cartalyst.sentinel.php'),
+            ], 'config');
+        }else{
+            $this->publishes([
+                $config => $this->app->basePath('cartalyst.sentinel.php'),
+            ], 'config');
+        }
 
-        $this->publishes([
-            $config => config_path('cartalyst.sentinel.php'),
-        ], 'config');
 
         // Publish migrations
         $migrations = realpath(__DIR__.'/../migrations');
