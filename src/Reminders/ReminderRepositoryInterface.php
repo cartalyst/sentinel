@@ -28,7 +28,7 @@ interface ReminderRepositoryInterface
      * Create a new reminder record and code.
      *
      * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
-     * @return string
+     * @return mixed
      */
     public function create(UserInterface $user);
 
