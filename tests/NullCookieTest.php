@@ -7,14 +7,13 @@ use PHPUnit_Framework_TestCase;
 
 class NullCookieTest extends PHPUnit_Framework_TestCase
 {
-
     public function testPut()
     {
         $cookie = new NullCookie();
         $this->assertNull($cookie->put('cookie'));
     }
 
-    public function tetstGet()
+    public function testGet()
     {
         $cookie = new NullCookie();
         $this->assertNull($cookie->get());
@@ -25,6 +24,4 @@ class NullCookieTest extends PHPUnit_Framework_TestCase
         $cookie = new NullCookie();
         $this->assertNull($cookie->forget());
     }
-
-
 }

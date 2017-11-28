@@ -4,7 +4,6 @@ namespace Cartalyst\Sentinel\Cookies;
 
 class NullCookie implements CookieInterface
 {
-
     /**
      * Put a value in the Sentinel cookie (to be stored until it's cleared).
      *
