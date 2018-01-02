@@ -8,6 +8,9 @@ Sentinel is a framework agnostic set of interfaces with default implementations,
 
 An open source package by [Cartalyst](https://cartalyst.com), code well, rock on!
 
+## Installation without Laravel
+`composer require symfony/http-foundation illuminate/database illuminate/events`
+
 ## Documentation
 
 Reader-friendly Documentation can be found here. [Sentinel Manual](https://cartalyst.com/manual/sentinel/2.0).
