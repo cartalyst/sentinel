@@ -88,7 +88,7 @@ $user = Sentinel::findById(1);
 
 if (Activation::complete($user, 'activation_code_here'))
 {
-	// Activation was successfull
+	// Activation was successful.
 }
 else
 {
