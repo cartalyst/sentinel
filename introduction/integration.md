@@ -42,7 +42,13 @@ After publishing, the sentinel config file can be found under `config/cartalyst.
 
 ### Native
 
-Sentinel ships with default implementations for `illuminate/database`, in order to use it, make sure you require it on your `composer.json` file.
+Sentinel being framework agnostic, by default, ships with the implementation for the Illuminate Database component.
+
+In order to use it, make sure you require the necessary dependencies by running:
+
+```
+composer require illuminate/database illuminate/events symfony/http-foundation
+```
 
 ```php
 // Import the necessary classes
