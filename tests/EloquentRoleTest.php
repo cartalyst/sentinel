@@ -71,6 +71,7 @@ class EloquentRoleTest extends PHPUnit_Framework_TestCase
         $role->exists = true;
 
         $role->getConnection()->getQueryGrammar()->shouldReceive('compileDelete');
+        $role->getConnection()->getQueryGrammar()->shouldReceive('prepareBindingsForDelete')->andReturn([]);
         $role->getConnection()->shouldReceive('delete')->once();
 
         $role->shouldReceive('users')->once()->andReturn($users = m::mock('Illuminate\Database\Eloquent\Relations\BelongsToMany'));
