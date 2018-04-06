@@ -411,7 +411,8 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
     public function delete()
     {
         $isSoftDeletable = property_exists($this, 'forceDeleting');
-        $isSoftDeleted = $isSoftDeletable && !$this->forceDeleting;
+
+        $isSoftDeleted = $isSoftDeletable && ! $this->forceDeleting;
 
         if ($this->exists && ! $isSoftDeleted) {
             $this->activations()->delete();
