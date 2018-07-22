@@ -157,7 +157,7 @@ class Sentinel
      *
      * @param  array  $credentials
      * @param  \Closure|bool  $callback
-     * @return \Cartalyst\Sentinel\Users\UserInteface|bool
+     * @return \Cartalyst\Sentinel\Users\UserInterface|bool
      * @throws \InvalidArgumentException
      */
     public function register(array $credentials, $callback = null)
@@ -191,7 +191,7 @@ class Sentinel
      * Registers and activates the user.
      *
      * @param  array  $credentials
-     * @return \Cartalyst\Sentinel\Users\UserInteface|bool
+     * @return \Cartalyst\Sentinel\Users\UserInterface|bool
      */
     public function registerAndActivate(array $credentials)
     {
