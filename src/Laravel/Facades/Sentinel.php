@@ -22,6 +22,9 @@ namespace Cartalyst\Sentinel\Laravel\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
+/**
+ * @mixin \Cartalyst\Sentinel\Sentinel
+ */
 class Sentinel extends Facade
 {
     /**
