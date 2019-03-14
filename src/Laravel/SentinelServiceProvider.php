@@ -44,6 +44,7 @@ class SentinelServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->setOverrides();
         $this->garbageCollect();
     }
 
@@ -53,7 +54,6 @@ class SentinelServiceProvider extends ServiceProvider
     public function register()
     {
         $this->prepareResources();
-        $this->setOverrides();
         $this->registerPersistences();
         $this->registerUsers();
         $this->registerRoles();
