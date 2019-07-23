@@ -525,7 +525,7 @@ class SentinelTest extends PHPUnit_Framework_TestCase
             $users        = m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository'),
             $roles        = m::mock('Cartalyst\Sentinel\Roles\IlluminateRoleRepository'),
             $activations  = m::mock('Cartalyst\Sentinel\Activations\IlluminateActivationRepository'),
-            $dispatcher   = m::mock('Illuminate\Contracts\Events\Dispatcher')
+            $dispatcher   = m::mock('Illuminate\Contracts\Events\Dispatcher')->shouldRecieve('dispatch')
         );
 
         return [$sentinel, $persistences, $users, $roles, $activations, $dispatcher];
