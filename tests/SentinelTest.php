@@ -45,7 +45,7 @@ class SentinelTest extends PHPUnit_Framework_TestCase
         $users->shouldReceive('validForCreation')->once()->andReturn(true);
         $users->shouldReceive('create')->once();
 
-        $dispatcher->shouldReceive('fire')->twice();
+        $dispatcher->shouldReceive('dispatch')->twice();
 
         $sentinel->register([
             'email' => 'foo@example.com',
@@ -59,7 +59,7 @@ class SentinelTest extends PHPUnit_Framework_TestCase
 
         $users->shouldReceive('validForCreation')->once()->andReturn(false);
 
-        $dispatcher->shouldReceive('fire')->once();
+        $dispatcher->shouldReceive('dispatch')->once();
 
         $user = $sentinel->register([
             'email' => 'foo@example.com',
@@ -93,7 +93,7 @@ class SentinelTest extends PHPUnit_Framework_TestCase
 
         $activation->shouldReceive('getCode')->once()->andReturn('a_random_code');
 
-        $dispatcher->shouldReceive('fire')->times(4);
+        $dispatcher->shouldReceive('dispatch')->times(4);
 
         $sentinel->registerAndActivate([
             'email'    => 'foo@example.com',
@@ -111,7 +111,7 @@ class SentinelTest extends PHPUnit_Framework_TestCase
         $activations->shouldReceive('complete')->once()->andReturn(true);
         $activation->shouldReceive('getCode')->once()->andReturn('a_random_code');
 
-        $dispatcher->shouldReceive('fire')->twice();
+        $dispatcher->shouldReceive('dispatch')->twice();
 
         $sentinel->activate($user);
     }
@@ -128,7 +128,7 @@ class SentinelTest extends PHPUnit_Framework_TestCase
         $activations->shouldReceive('complete')->once()->andReturn(true);
         $activation->shouldReceive('getCode')->once()->andReturn('a_random_code');
 
-        $dispatcher->shouldReceive('fire')->twice();
+        $dispatcher->shouldReceive('dispatch')->twice();
 
         $sentinel->activate('1');
     }
@@ -148,7 +148,7 @@ class SentinelTest extends PHPUnit_Framework_TestCase
         $activations->shouldReceive('complete')->once()->andReturn(true);
         $activation->shouldReceive('getCode')->once()->andReturn('a_random_code');
 
-        $dispatcher->shouldReceive('fire')->twice();
+        $dispatcher->shouldReceive('dispatch')->twice();
 
         $sentinel->activate($credentials);
     }
@@ -258,7 +258,7 @@ class SentinelTest extends PHPUnit_Framework_TestCase
         $users->shouldReceive('recordLogin')->once();
 
         $dispatcher->shouldReceive('until')->once();
-        $dispatcher->shouldReceive('fire')->once();
+        $dispatcher->shouldReceive('dispatch')->once();
 
         $sentinel->authenticate($credentials);
     }
@@ -274,7 +274,7 @@ class SentinelTest extends PHPUnit_Framework_TestCase
         $users->shouldReceive('recordLogin')->once();
 
         $dispatcher->shouldReceive('until')->once();
-        $dispatcher->shouldReceive('fire')->once();
+        $dispatcher->shouldReceive('dispatch')->once();
 
         $sentinel->authenticate($user);
     }
@@ -315,7 +315,7 @@ class SentinelTest extends PHPUnit_Framework_TestCase
         $users->shouldReceive('recordLogin')->once();
 
         $dispatcher->shouldReceive('until')->once();
-        $dispatcher->shouldReceive('fire')->once();
+        $dispatcher->shouldReceive('dispatch')->once();
 
         $sentinel->authenticateAndRemember($credentials);
     }
