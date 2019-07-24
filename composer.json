@@ -32,7 +32,7 @@
         "ircmaxell/password-compat": "~1.0",
         "mockery/mockery": "~0.9",
         "paragonie/random_compat": "^1.4|^2",
-        "phpunit/phpunit": "~4.0"
+        "phpunit/phpunit": "~5.0"
     },
     "suggest": {
         "illuminate/database": "By default, Sentinel utilizes the powerful Illuminate database layer.",
