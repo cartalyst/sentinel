@@ -103,7 +103,7 @@ class EloquentUserTest extends PHPUnit_Framework_TestCase
         $user = new EloquentUser;
 
         $user->setConnectionResolver($resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'));
-        $resolver->shouldReceive('connection')->andReturn(m::mock('Illuminate\Database\Connection'));
+        $resolver->shouldReceive('connection')->andReturn(m::mock('Illuminate\Database\Connection')->makePartial());
         $user->getConnection()->shouldReceive('getName');
         $user->getConnection()->shouldReceive('getQueryGrammar')->andReturn(m::mock('Illuminate\Database\Query\Grammars\Grammar'));
         $user->getConnection()->shouldReceive('getPostProcessor')->andReturn($processor = m::mock('Illuminate\Database\Query\Processors\Processor'));
@@ -123,7 +123,7 @@ class EloquentUserTest extends PHPUnit_Framework_TestCase
         $user->email = 'foo@example.com';
 
         $user->setConnectionResolver($resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'));
-        $resolver->shouldReceive('connection')->andReturn(m::mock('Illuminate\Database\Connection'));
+        $resolver->shouldReceive('connection')->andReturn(m::mock('Illuminate\Database\Connection')->makePartial());
         $user->getConnection()->shouldReceive('getName');
         $user->getConnection()->shouldReceive('getQueryGrammar')->andReturn(m::mock('Illuminate\Database\Query\Grammars\Grammar'));
         $user->getConnection()->shouldReceive('getPostProcessor')->andReturn($processor = m::mock('Illuminate\Database\Query\Processors\Processor'));
@@ -174,9 +174,10 @@ class EloquentUserTest extends PHPUnit_Framework_TestCase
     public function testInRoleUsingRoleSlugs()
     {
         $user = new EloquentUser;
+        $user->id = 0;
 
         $user->setConnectionResolver($resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'));
-        $resolver->shouldReceive('connection')->andReturn(m::mock('Illuminate\Database\Connection'));
+        $resolver->shouldReceive('connection')->andReturn(m::mock('Illuminate\Database\Connection')->makePartial());
         $user->getConnection()->shouldReceive('getName');
         $user->getConnection()->shouldReceive('getQueryGrammar')->andReturn(m::mock('Illuminate\Database\Query\Grammars\Grammar'));
         $user->getConnection()->shouldReceive('getPostProcessor')->andReturn($processor = m::mock('Illuminate\Database\Query\Processors\Processor'));
@@ -206,9 +207,10 @@ class EloquentUserTest extends PHPUnit_Framework_TestCase
     public function testInRoleUsingRoleInstances()
     {
         $user = new EloquentUser;
+        $user->id = 0;
 
         $user->setConnectionResolver($resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'));
-        $resolver->shouldReceive('connection')->andReturn(m::mock('Illuminate\Database\Connection'));
+        $resolver->shouldReceive('connection')->andReturn(m::mock('Illuminate\Database\Connection')->makePartial());
         $user->getConnection()->shouldReceive('getName');
         $user->getConnection()->shouldReceive('getQueryGrammar')->andReturn(m::mock('Illuminate\Database\Query\Grammars\Grammar'));
         $user->getConnection()->shouldReceive('getPostProcessor')->andReturn($processor = m::mock('Illuminate\Database\Query\Processors\Processor'));
