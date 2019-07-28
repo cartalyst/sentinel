@@ -259,6 +259,8 @@ class EloquentUserTest extends PHPUnit_Framework_TestCase
         $user = new EloquentUser;
 
         $this->addMockConnection($user);
+        $user->getConnection()->getPostProcessor()->shouldReceive('processSelect')->andReturn([]);
+        $user->getConnection()->shouldReceive('select');
         $user->getConnection()->getQueryGrammar()->shouldReceive('compileSelect');
 
         $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $user->getRoles());
