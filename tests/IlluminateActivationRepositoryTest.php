@@ -47,6 +47,8 @@ class IlluminateActivationRepositoryTest extends PHPUnit_Framework_TestCase
     {
         list($activations, $model, $query) = $this->getActivationMock();
 
+        $this->addMockConnection($model);
+        $model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
         $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
 
         $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
@@ -192,5 +194,14 @@ class IlluminateActivationRepositoryTest extends PHPUnit_Framework_TestCase
             $this->assertEquals(time() - $expires, $timestamp->getTimestamp(), '', 3);
             return true;
         }))->andReturn($query);
+    }
+
+
+    protected function addMockConnection($model)
+    {
+        $model->setConnectionResolver($resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'));
+        $resolver->shouldReceive('connection')->andReturn(m::mock('Illuminate\Database\Connection')->makePartial());
+        $model->getConnection()->shouldReceive('getQueryGrammar')->andReturn(m::mock('Illuminate\Database\Query\Grammars\Grammar'));
+        $model->getConnection()->shouldReceive('getPostProcessor')->andReturn(m::mock('Illuminate\Database\Query\Processors\Processor'));
     }
 }

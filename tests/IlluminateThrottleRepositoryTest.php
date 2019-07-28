@@ -60,6 +60,7 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase
         $throttle->setGlobalThresholds(5);
 
         $throttle->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle[newQuery]'));
+        $this->addMockConnection($model);
         $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
         $query->shouldReceive('where')->with('type', 'global')->andReturn($query);
 
@@ -85,6 +86,7 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase
         $throttle->setGlobalThresholds(200);
 
         $throttle->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle[newQuery]'));
+        $this->addMockConnection($model);
         $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
         $query->shouldReceive('where')->with('type', 'global')->andReturn($query);
 
@@ -110,6 +112,7 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase
         $throttle->setGlobalThresholds([5 => 3, 10 => 10]);
 
         $throttle->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle[newQuery]'));
+        $this->addMockConnection($model);
         $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
         $query->shouldReceive('where')->with('type', 'global')->andReturn($query);
 
@@ -135,6 +138,7 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase
         $throttle->setGlobalThresholds([5 => 3, 10 => 10]);
 
         $throttle->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle[newQuery]'));
+        $this->addMockConnection($model);
         $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
         $query->shouldReceive('where')->with('type', 'global')->andReturn($query);
 
@@ -160,6 +164,7 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase
         $throttle->setGlobalThresholds([5 => 33, 10 => 100]);
 
         $throttle->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle[newQuery]'));
+        $this->addMockConnection($model);
         $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
         $query->shouldReceive('where')->with('type', 'global')->andReturn($query);
 
@@ -185,6 +190,7 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase
         $throttle->setIpThresholds(5);
 
         $throttle->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle[newQuery]'));
+        $this->addMockConnection($model);
         $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
         $query->shouldReceive('where')->with('type', 'ip')->andReturn($query);
         $query->shouldReceive('where')->with('ip', '127.0.0.1')->andReturn($query);
@@ -211,6 +217,7 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase
         $throttle->setIpThresholds([5 => 3, 10 => 10]);
 
         $throttle->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle[newQuery]'));
+        $this->addMockConnection($model);
         $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
         $query->shouldReceive('where')->with('type', 'ip')->andReturn($query);
         $query->shouldReceive('where')->with('ip', '127.0.0.1')->andReturn($query);
@@ -237,6 +244,7 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase
         $throttle->setIpThresholds([5 => 3, 10 => 10]);
 
         $throttle->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle[newQuery]'));
+        $this->addMockConnection($model);
         $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
         $query->shouldReceive('where')->with('type', 'ip')->andReturn($query);
         $query->shouldReceive('where')->with('ip', '127.0.0.1')->andReturn($query);
@@ -263,6 +271,7 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase
         $throttle->setUserThresholds(5);
 
         $throttle->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle[newQuery]'));
+        $this->addMockConnection($model);
         $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
         $query->shouldReceive('where')->with('type', 'user')->andReturn($query);
         $query->shouldReceive('where')->with('user_id', 1)->andReturn($query);
@@ -292,6 +301,7 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase
         $throttle->setUserThresholds([5 => 3, 10 => 10]);
 
         $throttle->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle[newQuery]'));
+        $this->addMockConnection($model);
         $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
         $query->shouldReceive('where')->with('type', 'user')->andReturn($query);
         $query->shouldReceive('where')->with('user_id', 1)->andReturn($query);
@@ -321,6 +331,7 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase
         $throttle->setUserThresholds([5 => 3, 10 => 10]);
 
         $throttle->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle[newQuery]'));
+        $this->addMockConnection($model);
         $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
         $query->shouldReceive('where')->with('type', 'user')->andReturn($query);
         $query->shouldReceive('where')->with('user_id', 1)->andReturn($query);
@@ -349,19 +360,31 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase
 
         $throttle->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle[newQuery]'));
 
+        $this->addMockConnection($model);
+        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
+        $model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
+
         $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
 
         $query->shouldReceive('where')->with('type', 'global')->andReturn($query);
         $query->shouldReceive('where')->with('id', '=', '');
 
         $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
-        $model->getConnection()->getQueryGrammar()->shouldReceive('compileUpdate')->once();
-        $model->getConnection()->getQueryGrammar()->shouldReceive('prepareBindingsForUpdate')->once()->andReturn([]);
-        $model->getConnection()->shouldReceive('update')->once();
+        $model->getConnection()->getQueryGrammar()->shouldReceive('compileUpdate')->twice();
+        $model->getConnection()->getQueryGrammar()->shouldReceive('prepareBindingsForUpdate')->twice()->andReturn([]);
+        $model->getConnection()->shouldReceive('update')->twice();
 
         $user = m::mock('Cartalyst\Sentinel\Users\EloquentUser');
         $user->shouldReceive('getUserId')->once()->andReturn(1);
 
         $throttle->log('127.0.0.1', $user);
+    }
+
+    protected function addMockConnection($model)
+    {
+        $model->setConnectionResolver($resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'));
+        $resolver->shouldReceive('connection')->andReturn(m::mock('Illuminate\Database\Connection')->makePartial());
+        $model->getConnection()->shouldReceive('getQueryGrammar')->andReturn(m::mock('Illuminate\Database\Query\Grammars\Grammar'));
+        $model->getConnection()->shouldReceive('getPostProcessor')->andReturn(m::mock('Illuminate\Database\Query\Processors\Processor'));
     }
 }
