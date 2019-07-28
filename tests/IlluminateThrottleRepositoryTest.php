@@ -345,7 +345,7 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase
 
         $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
         $model->getConnection()->getQueryGrammar()->shouldReceive('compileUpdate')->twice();
-        $model->getConnection()->getQueryGrammar()->shouldReceive('prepareBindingsForUpdate')->twice()->andReturn([]);
+        $model->getConnection()->getQueryGrammar()->shouldReceive('prepareBindingsForUpdate')->andReturn([]);
         $model->getConnection()->shouldReceive('update')->twice();
 
         $user = m::mock('Cartalyst\Sentinel\Users\EloquentUser');
