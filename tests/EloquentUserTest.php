@@ -155,12 +155,16 @@ class EloquentUserTest extends PHPUnit_Framework_TestCase
     {
         $user = new EloquentUser;
 
+        $this->addMockConnection($user);
+
         $this->assertInstanceOf('Illuminate\Database\Eloquent\Relations\BelongsToMany', $user->roles());
     }
 
     public function testPersistencesRelationship()
     {
         $user = new EloquentUser;
+
+        $this->addMockConnection($user);
 
         $this->assertInstanceOf('Illuminate\Database\Eloquent\Relations\HasMany', $user->persistences());
     }
@@ -253,6 +257,8 @@ class EloquentUserTest extends PHPUnit_Framework_TestCase
     public function testGetRoles()
     {
         $user = new EloquentUser;
+
+        $this->addMockConnection($user);
 
         $this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $user->getRoles());
     }
