@@ -221,6 +221,30 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
     }
 
     /**
+     * @param $role
+     * @return bool
+     */
+    public function inAnyRole($roles)
+    {
+        if (is_array($roles) && !empty($roles)) {
+
+            foreach ($roles as $role) {
+
+                if ($this->inRole($role)) {
+                    return true;
+                }
+            }
+
+        } else {
+
+            return $this->inRole($roles);
+
+        }
+
+        return false;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function generatePersistenceCode()
