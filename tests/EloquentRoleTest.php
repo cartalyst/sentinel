@@ -70,6 +70,8 @@ class EloquentRoleTest extends PHPUnit_Framework_TestCase
         $role = m::mock('Cartalyst\Sentinel\Roles\EloquentRole[users]');
         $role->exists = true;
 
+        $this->addMockConnection($role);
+
         $role->getConnection()->getQueryGrammar()->shouldReceive('compileDelete');
         $role->getConnection()->getQueryGrammar()->shouldReceive('prepareBindingsForDelete')->andReturn([]);
         $role->getConnection()->shouldReceive('delete')->once();
