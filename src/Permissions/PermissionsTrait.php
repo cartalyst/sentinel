@@ -201,7 +201,11 @@ trait PermissionsTrait
             return true;
         }
 
+        $permission = (string) $permission;
+
         foreach ($prepared as $key => $value) {
+            $key = (string) $key;
+
             if ((str_is($permission, $key) || str_is($key, $permission)) && $value === true) {
                 return true;
             }

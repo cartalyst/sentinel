@@ -137,6 +137,8 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase
     {
         list($users, $hasher, $model, $query) = $this->getUsersMock();
 
+        $this->addMockConnection($model);
+        $model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
         $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
         $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
 
@@ -147,6 +149,8 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase
     {
         list($users, $hasher, $model, $query) = $this->getUsersMock();
 
+        $this->addMockConnection($model);
+        $model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
         $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
         $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
 
@@ -254,6 +258,8 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase
     {
         list($users, $hasher, $model, $query) = $this->getUsersMock();
 
+        $this->addMockConnection($model);
+        $model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
         $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
         $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
 
@@ -271,6 +277,8 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase
     {
         list($users, $hasher, $model, $query) = $this->getUsersMock();
 
+        $this->addMockConnection($model);
+        $model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
         $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
         $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
 
@@ -290,6 +298,7 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase
     {
         list($users, $hasher, $model, $query) = $this->getUsersMock();
 
+        $this->addMockConnection($model);
         $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
 
         $hasher->shouldReceive('hash')->once()->with('secret')->andReturn(password_hash('secret', PASSWORD_DEFAULT));
@@ -308,15 +317,12 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase
     {
         list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-        $model->setConnectionResolver($resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'));
-        $resolver->shouldReceive('connection')->andReturn(m::mock('Illuminate\Database\Connection'));
+        $this->addMockConnection($model);
         $model->getConnection()->shouldReceive('getName');
-        $model->getConnection()->shouldReceive('getQueryGrammar')->andReturn(m::mock('Illuminate\Database\Query\Grammars\Grammar'));
-        $model->getConnection()->shouldReceive('getPostProcessor')->andReturn($processor = m::mock('Illuminate\Database\Query\Processors\Processor'));
 
         $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
         $model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
-        $processor->shouldReceive('processInsertGetId');
+        $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId');
 
         $user = $this->fakeUser();
 
@@ -335,6 +341,10 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase
 
         $users->shouldReceive('findById')->once()->andReturn($user = $this->fakeUser());
         $users->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Users\EloquentUser[newQuery]'));
+        $this->addMockConnection($model);
+        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
+        $model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
+        $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
 
         $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
 
@@ -377,5 +387,13 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase
         $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
 
         return [$users, $hasher, $model, $query];
+    }
+
+    protected function addMockConnection($model)
+    {
+        $model->setConnectionResolver($resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'));
+        $resolver->shouldReceive('connection')->andReturn(m::mock('Illuminate\Database\Connection')->makePartial());
+        $model->getConnection()->shouldReceive('getQueryGrammar')->andReturn(m::mock('Illuminate\Database\Query\Grammars\Grammar'));
+        $model->getConnection()->shouldReceive('getPostProcessor')->andReturn(m::mock('Illuminate\Database\Query\Processors\Processor'));
     }
 }

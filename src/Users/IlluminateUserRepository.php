@@ -107,9 +107,9 @@ class IlluminateUserRepository implements UserRepositoryInterface
         } else {
             $query->whereNested(function ($query) use ($loginNames, $logins) {
                 foreach ($loginNames as $index => $name) {
-                    // Only use OR after the first iteration so that the query is built using the correct boolean logic.
-                    $whereMethod = $index === 0 ? 'where' : 'orWhere';
-                    $query->$whereMethod($name, $logins);
+                    $method = $index === 0 ? 'where' : 'orWhere';
+
+                    $query->{$method}($name, $logins);
                 }
             });
         }
