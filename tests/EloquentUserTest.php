@@ -253,6 +253,82 @@ class EloquentUserTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($user->inRole($baz));
     }
 
+    public function testInAnyRoleUsingArrayOfRoleInstances()
+    {
+        $user = new EloquentUser;
+        $user->id = 0;
+
+        $this->addMockConnection($user);
+
+        $user->getConnection()->shouldReceive('getName');
+        $user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
+        $user->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
+        $user->getConnection()->getPostProcessor()->shouldReceive('processSelect')->andReturn([
+            [
+                'id'   => 1,
+                'slug' => 'foobar',
+            ],
+            [
+                'id'   => 2,
+                'slug' => 'foo',
+            ],
+            [
+                'id'   => 3,
+                'slug' => 'bar',
+            ],
+        ]);
+        $user->getConnection()->getQueryGrammar()->shouldReceive('compileSelect');
+        $user->getConnection()->shouldReceive('select');
+
+        $foobar = m::mock('Cartalyst\Sentinel\Roles\RoleInterface');
+        $foo = m::mock('Cartalyst\Sentinel\Roles\RoleInterface');
+        $bar = m::mock('Cartalyst\Sentinel\Roles\RoleInterface');
+        $baz = m::mock('Cartalyst\Sentinel\Roles\RoleInterface');
+        $abc = m::mock('Cartalyst\Sentinel\Roles\RoleInterface');
+        $def = m::mock('Cartalyst\Sentinel\Roles\RoleInterface');
+        $ghi = m::mock('Cartalyst\Sentinel\Roles\RoleInterface');
+
+        $foobar->shouldReceive('getRoleId')->once()->andReturn(1);
+        $foo->shouldReceive('getRoleId')->once()->andReturn(2);
+        $bar->shouldNotReceive('getRoleId');
+        $abc->shouldReceive('getRoleId')->once()->andReturn(4);
+        $def->shouldReceive('getRoleId')->once()->andReturn(5);
+        $ghi->shouldReceive('getRoleId')->once()->andReturn(6);
+
+        $this->assertFalse($user->inAnyRole([$abc, $def]));
+        $this->assertTrue($user->inAnyRole([$ghi, $foobar]));
+        $this->assertTrue($user->inAnyRole([$foo, $bar]));
+    }
+
+    public function testInAnyRoleUsingArrayOfSlugs()
+    {
+        $user = new EloquentUser;
+        $user->id = 0;
+
+        $this->addMockConnection($user);
+
+        $user->getConnection()->shouldReceive('getName');
+        $user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
+        $user->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
+        $user->getConnection()->getPostProcessor()->shouldReceive('processSelect')->andReturn([
+            [
+                'slug' => 'foobar',
+            ],
+            [
+                'slug' => 'foo',
+            ],
+            [
+                'slug' => 'bar',
+            ],
+        ]);
+
+        $user->getConnection()->getQueryGrammar()->shouldReceive('compileSelect');
+        $user->getConnection()->shouldReceive('select');
+
+        $this->assertFalse($user->inAnyRole(['abc', 'def']));
+        $this->assertTrue($user->inAnyRole(['ghi', 'foobar']));
+        $this->assertTrue($user->inAnyRole(['foo', 'bar']));
+    }
 
     public function testGetRoles()
     {

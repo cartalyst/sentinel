@@ -101,7 +101,10 @@ class SentinelServiceProvider extends ServiceProvider
             $config = $app['config']->get('cartalyst.sentinel.persistences');
 
             return new IlluminatePersistenceRepository(
-                $app['sentinel.session'], $app['sentinel.cookie'], $config['model'], $config['single']
+                $app['sentinel.session'],
+                $app['sentinel.cookie'],
+                $config['model'],
+                $config['single']
             );
         });
     }
@@ -115,7 +118,8 @@ class SentinelServiceProvider extends ServiceProvider
     {
         $this->app->singleton('sentinel.session', function ($app) {
             return new IlluminateSession(
-                $app['session.store'], $app['config']->get('cartalyst.sentinel.session')
+                $app['session.store'],
+                $app['config']->get('cartalyst.sentinel.session')
             );
         });
     }
@@ -129,7 +133,9 @@ class SentinelServiceProvider extends ServiceProvider
     {
         $this->app->singleton('sentinel.cookie', function ($app) {
             return new IlluminateCookie(
-                $app['request'], $app['cookie'], $app['config']->get('cartalyst.sentinel.cookie')
+                $app['request'],
+                $app['cookie'],
+                $app['config']->get('cartalyst.sentinel.cookie')
             );
         });
     }
@@ -147,7 +153,9 @@ class SentinelServiceProvider extends ServiceProvider
             $config = $app['config']->get('cartalyst.sentinel.users');
 
             return new IlluminateUserRepository(
-                $app['sentinel.hasher'], $app['events'], $config['model']
+                $app['sentinel.hasher'],
+                $app['events'],
+                $config['model']
             );
         });
     }
@@ -246,7 +254,8 @@ class SentinelServiceProvider extends ServiceProvider
 
         $this->app->singleton('sentinel.checkpoint.throttle', function ($app) {
             return new ThrottleCheckpoint(
-                $app['sentinel.throttling'], $app['request']->getClientIp()
+                $app['sentinel.throttling'],
+                $app['request']->getClientIp()
             );
         });
     }
@@ -291,7 +300,9 @@ class SentinelServiceProvider extends ServiceProvider
             $config = $app['config']->get('cartalyst.sentinel.reminders');
 
             return new IlluminateReminderRepository(
-                $app['sentinel.users'], $config['model'], $config['expires']
+                $app['sentinel.users'],
+                $config['model'],
+                $config['expires']
             );
         });
     }
@@ -378,11 +389,13 @@ class SentinelServiceProvider extends ServiceProvider
         $config = $this->app['config']->get('cartalyst.sentinel');
 
         $this->sweep(
-            $this->app['sentinel.activations'], $config['activations']['lottery']
+            $this->app['sentinel.activations'],
+            $config['activations']['lottery']
         );
 
         $this->sweep(
-            $this->app['sentinel.reminders'], $config['reminders']['lottery']
+            $this->app['sentinel.reminders'],
+            $config['reminders']['lottery']
         );
     }
 
