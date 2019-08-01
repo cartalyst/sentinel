@@ -6,9 +6,7 @@
         "cartalyst",
         "laravel",
         "auth",
-        "security",
-        "codeigniter",
-        "fuelphp"
+        "security"
     ],
     "license": "BSD-3-Clause",
     "authors": [
@@ -45,6 +43,16 @@
             "Cartalyst\\Sentinel\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Cartalyst\\Sentinel\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
     "extra": {
         "component": "package",
         "branch-alias": {
@@ -61,5 +69,6 @@
             }
         }
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
