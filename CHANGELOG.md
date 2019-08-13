@@ -1,5 +1,21 @@
 # Changelog
 
+### v3.0.0 - TBA
+
+- Added support for PHP ^7.2 only
+- Added support for Laravel ^6.0
+- Added PHP 7 Scalar type hints
+- Added PHP 7 Return type hints
+- Added `Sentinel::getCheckpoints()` method to retrieve all the added Checkpoints
+- Added `Sentinel::getActivationRepository()->get()` method to retrieve the valid Activation
+- Added `Sentinel::getReminderRepository()->get()` method to retrieve the valid Reminder
+- Updated the `Sentinel::getActivationRepository()->exists();` method to always return a boolean
+- Updated the `Sentinel::getActivationRepository()->completed();` method to always return a boolean
+- Updated the `Sentinel::getReminderRepository()->exists();` method to always return a boolean
+- Updated the `findByPersistenceCode()` to return a `PersistenceInterface` or `null` instead of `PersistenceInterface` or `bool`
+- Updated the `findUserByPersistenceCode()` to return `UserInterface` or `null` instead of `UserInterface` or `bool`
+- Removed integrations for both CodeIgniter and FuelPHP
+
 ### v2.0.17 - 2017-11-28
 
 `FIXED`

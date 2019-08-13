@@ -13,6 +13,7 @@ An open source package by [Cartalyst](https://cartalyst.com), code well, rock on
 
 Version | Laravel   | PHP Version
 ------- | --------- | ------------
+3.x     | 6.0       | >= 7.2
 2.x     | 5.0       | >= 5.4.0
 1.x     | 4.1 - 5.0 | >= 5.4.0
 
@@ -42,7 +43,7 @@ This software is released under the [BSD 3-Clause](LICENSE) License.
 [link-license]:   https://opensource.org/licenses/MIT
 [link-packagist]: https://packagist.org/packages/cartalyst/sentinel
 
-[icon-travis]:    https://travis-ci.org/cartalyst/sentinel.svg?branch=2.0
+[icon-travis]:    https://travis-ci.org/cartalyst/sentinel.svg?branch=3.0
 [icon-license]:   https://poser.pugx.org/cartalyst/sentinel/license
 [icon-version]:   https://poser.pugx.org/cartalyst/sentinel/version
 [icon-downloads]: https://poser.pugx.org/cartalyst/sentinel/downloads
