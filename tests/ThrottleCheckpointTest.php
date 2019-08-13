@@ -130,7 +130,7 @@ class ThrottleCheckpointTest extends PHPUnit_Framework_TestCase
         } catch (ThrottlingException $e) {
             $this->assertEquals(10, $e->getDelay());
             $this->assertEquals('user', $e->getType());
-            $this->assertLessThanOrEqual(10000, Carbon::now()->addSeconds(10)->diffInMicroseconds($e->getFree()));
+            $this->assertEquals(Carbon::now()->addSeconds(10), $e->getFree(), '', 1);
         }
     }
 }
