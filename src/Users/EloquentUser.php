@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -20,24 +20,26 @@
 
 namespace Cartalyst\Sentinel\Users;
 
-use Cartalyst\Sentinel\Permissions\PermissibleInterface;
-use Cartalyst\Sentinel\Permissions\PermissibleTrait;
-use Cartalyst\Sentinel\Persistences\PersistableInterface;
-use Cartalyst\Sentinel\Roles\RoleableInterface;
-use Cartalyst\Sentinel\Roles\RoleInterface;
+use IteratorAggregate;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Cartalyst\Sentinel\Roles\RoleInterface;
+use Cartalyst\Sentinel\Roles\RoleableInterface;
+use Cartalyst\Sentinel\Permissions\PermissibleTrait;
+use Cartalyst\Sentinel\Permissions\PermissibleInterface;
+use Cartalyst\Sentinel\Persistences\PersistableInterface;
 
-class EloquentUser extends Model implements RoleableInterface, PermissibleInterface, PersistableInterface, UserInterface
+class EloquentUser extends Model implements PermissibleInterface, PersistableInterface, RoleableInterface, UserInterface
 {
     use PermissibleTrait;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $table = 'users';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $fillable = [
         'email',
@@ -48,19 +50,19 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
     ];
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $hidden = [
         'password',
     ];
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $persistableKey = 'user_id';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $persistableRelationship = 'persistences';
 
@@ -169,7 +171,8 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
     /**
      * Get mutator for the "permissions" attribute.
      *
-     * @param  mixed  $permissions
+     * @param mixed $permissions
+     *
      * @return array
      */
     public function getPermissionsAttribute($permissions)
@@ -180,7 +183,8 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
     /**
      * Set mutator for the "permissions" attribute.
      *
-     * @param  mixed  $permissions
+     * @param mixed $permissions
+     *
      * @return void
      */
     public function setPermissionsAttribute(array $permissions)
@@ -189,17 +193,17 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function getRoles()
+    public function getRoles(): IteratorAggregate
     {
         return $this->roles;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function inRole($role)
+    public function inRole($role): bool
     {
         if ($role instanceof RoleInterface) {
             $roleId = $role->getRoleId();
@@ -221,34 +225,29 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
     }
 
     /**
-     * @param $role
-     * @return bool
+     * {@inheritdoc}
      */
-    public function inAnyRole($roles)
+    public function inAnyRole(array $roles): bool
     {
-        if (is_array($roles) && !empty($roles)) {
-            foreach ($roles as $role) {
-                if ($this->inRole($role)) {
-                    return true;
-                }
+        foreach ($roles as $role) {
+            if ($this->inRole($role)) {
+                return true;
             }
-        } else {
-            return $this->inRole($roles);
         }
 
         return false;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function generatePersistenceCode()
+    public function generatePersistenceCode(): string
     {
-        return str_random(32);
+        return Str::random(32);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getUserId()
     {
@@ -256,47 +255,47 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function getPersistableId()
+    public function getPersistableId(): string
     {
         return $this->getKey();
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function getPersistableKey()
+    public function getPersistableKey(): string
     {
         return $this->persistableKey;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function setPersistableKey($key)
+    public function setPersistableKey(string $key)
     {
         $this->persistableKey = $key;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function setPersistableRelationship($persistableRelationship)
-    {
-        $this->persistableRelationship = $persistableRelationship;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getPersistableRelationship()
+    public function getPersistableRelationship(): string
     {
         return $this->persistableRelationship;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     */
+    public function setPersistableRelationship(string $persistableRelationship)
+    {
+        $this->persistableRelationship = $persistableRelationship;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getUserLogin()
     {
@@ -304,7 +303,7 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getUserLoginName()
     {
@@ -312,7 +311,7 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getUserPassword()
     {
@@ -332,7 +331,8 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
     /**
      * Sets the roles model.
      *
-     * @param  string  $rolesModel
+     * @param string $rolesModel
+     *
      * @return void
      */
     public static function setRolesModel($rolesModel)
@@ -353,7 +353,8 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
     /**
      * Sets the persistences model.
      *
-     * @param  string  $persistencesModel
+     * @param string $persistencesModel
+     *
      * @return void
      */
     public static function setPersistencesModel($persistencesModel)
@@ -374,7 +375,8 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
     /**
      * Sets the activations model.
      *
-     * @param  string  $activationsModel
+     * @param string $activationsModel
+     *
      * @return void
      */
     public static function setActivationsModel($activationsModel)
@@ -395,7 +397,8 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
     /**
      * Sets the reminders model.
      *
-     * @param  string  $remindersModel
+     * @param string $remindersModel
+     *
      * @return void
      */
     public static function setRemindersModel($remindersModel)
@@ -416,7 +419,8 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
     /**
      * Sets the throttling model.
      *
-     * @param  string  $throttlingModel
+     * @param string $throttlingModel
+     *
      * @return void
      */
     public static function setThrottlingModel($throttlingModel)
@@ -425,7 +429,7 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function delete()
     {
@@ -447,8 +451,9 @@ class EloquentUser extends Model implements RoleableInterface, PermissibleInterf
     /**
      * Dynamically pass missing methods to the user.
      *
-     * @param  string  $method
-     * @param  array  $parameters
+     * @param string $method
+     * @param array  $parameters
+     *
      * @return mixed
      */
     public function __call($method, $parameters)

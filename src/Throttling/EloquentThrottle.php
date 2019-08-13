@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -25,12 +25,12 @@ use Illuminate\Database\Eloquent\Model;
 class EloquentThrottle extends Model
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $table = 'throttle';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $fillable = [
         'ip',

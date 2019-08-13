@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -30,16 +30,15 @@ class NativeSession implements SessionInterface
     protected $key = 'cartalyst_sentinel';
 
     /**
-     * Creates a new native session driver for Sentinel.
+     * Constructor.
      *
-     * @param  string  $key
+     * @param string $key
+     *
      * @return void
      */
-    public function __construct($key = null)
+    public function __construct(string $key = null)
     {
-        if (isset($key)) {
-            $this->key = $key;
-        }
+        $this->key = $key;
 
         $this->startSession();
     }
@@ -55,15 +54,15 @@ class NativeSession implements SessionInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function put($value)
+    public function put($value): void
     {
         $this->setSession($value);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function get()
     {
@@ -71,9 +70,9 @@ class NativeSession implements SessionInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function forget()
+    public function forget(): void
     {
         $this->forgetSession();
     }
@@ -83,7 +82,7 @@ class NativeSession implements SessionInterface
      *
      * @return void
      */
-    protected function startSession()
+    protected function startSession(): void
     {
         // Check that the session hasn't already been started
         if (session_status() != PHP_SESSION_ACTIVE && ! headers_sent()) {
@@ -96,7 +95,7 @@ class NativeSession implements SessionInterface
      *
      * @return void
      */
-    protected function writeSession()
+    protected function writeSession(): void
     {
         session_write_close();
     }
@@ -104,7 +103,7 @@ class NativeSession implements SessionInterface
     /**
      * Unserializes a value from the session and returns it.
      *
-     * @return mixed.
+     * @return mixed
      */
     protected function getSession()
     {
@@ -121,10 +120,11 @@ class NativeSession implements SessionInterface
      * Interacts with the $_SESSION global to set a property on it.
      * The property is serialized initially.
      *
-     * @param  mixed  $value
+     * @param mixed $value
+     *
      * @return void
      */
-    protected function setSession($value)
+    protected function setSession($value): void
     {
         $_SESSION[$this->key] = serialize($value);
     }
@@ -134,7 +134,7 @@ class NativeSession implements SessionInterface
      *
      * @return void
      */
-    protected function forgetSession()
+    protected function forgetSession(): void
     {
         if (isset($_SESSION[$this->key])) {
             unset($_SESSION[$this->key]);

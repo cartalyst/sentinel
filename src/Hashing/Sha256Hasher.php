@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -25,9 +25,9 @@ class Sha256Hasher implements HasherInterface
     use Hasher;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function hash($value)
+    public function hash(string $value): string
     {
         $salt = $this->createSalt();
 
@@ -35,9 +35,9 @@ class Sha256Hasher implements HasherInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function check($value, $hashedValue)
+    public function check(string $value, string $hashedValue): bool
     {
         $salt = substr($hashedValue, 0, $this->saltLength);
 

@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -25,7 +25,8 @@ class NullCookie implements CookieInterface
     /**
      * Put a value in the Sentinel cookie (to be stored until it's cleared).
      *
-     * @param  mixed $value
+     * @param mixed $value
+     *
      * @return void
      */
     public function put($value)

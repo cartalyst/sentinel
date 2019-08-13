@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -28,7 +28,7 @@ class ThrottlingException extends RuntimeException
     /**
      * The delay, in seconds.
      *
-     * @var string
+     * @var int
      */
     protected $delay;
 
@@ -44,7 +44,7 @@ class ThrottlingException extends RuntimeException
      *
      * @return int
      */
-    public function getDelay()
+    public function getDelay(): int
     {
         return $this->delay;
     }
@@ -52,12 +52,15 @@ class ThrottlingException extends RuntimeException
     /**
      * Sets the delay.
      *
-     * @param  int  $delay
-     * @return void
+     * @param int $delay
+     *
+     * @return $this
      */
-    public function setDelay($delay)
+    public function setDelay(int $delay): self
     {
         $this->delay = $delay;
+
+        return $this;
     }
 
     /**
@@ -73,12 +76,15 @@ class ThrottlingException extends RuntimeException
     /**
      * Sets the type.
      *
-     * @param  string  $type
-     * @return void
+     * @param string $type
+     *
+     * @return $this
      */
-    public function setType($type)
+    public function setType(string $type): self
     {
         $this->type = $type;
+
+        return $this;
     }
 
     /**
@@ -86,7 +92,7 @@ class ThrottlingException extends RuntimeException
      *
      * @return \Carbon\Carbon
      */
-    public function getFree()
+    public function getFree(): Carbon
     {
         return Carbon::now()->addSeconds($this->delay);
     }

@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -25,9 +25,9 @@ class StrictPermissions implements PermissionsInterface
     use PermissionsTrait;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    protected function createPreparedPermissions()
+    protected function createPreparedPermissions(): array
     {
         $prepared = [];
 

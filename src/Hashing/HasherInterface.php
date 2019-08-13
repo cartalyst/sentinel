@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -25,18 +25,21 @@ interface HasherInterface
     /**
      * Hash the given value.
      *
-     * @param  string  $value
-     * @return string
+     * @param string $value
+     *
      * @throws \RuntimeException
+     *
+     * @return string
      */
-    public function hash($value);
+    public function hash(string $value): string;
 
     /**
      * Checks the string against the hashed value.
      *
-     * @param  string  $value
-     * @param  string  $hashedValue
+     * @param string $value
+     * @param string $hashedValue
+     *
      * @return bool
      */
-    public function check($value, $hashedValue);
+    public function check(string $value, string $hashedValue): bool;
 }

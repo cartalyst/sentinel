@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -25,9 +25,10 @@ use Cartalyst\Sentinel\Users\UserInterface;
 trait AuthenticatedCheckpoint
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function fail(UserInterface $user = null)
+    public function fail(UserInterface $user = null): bool
     {
+        return true;
     }
 }

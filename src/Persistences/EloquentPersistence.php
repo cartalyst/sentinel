@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -21,46 +21,49 @@
 namespace Cartalyst\Sentinel\Persistences;
 
 use Illuminate\Database\Eloquent\Model;
+use Cartalyst\Sentinel\Users\EloquentUser;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EloquentPersistence extends Model implements PersistenceInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $table = 'persistences';
 
     /**
-     * The users model name.
+     * The Users model FQCN.
      *
      * @var string
      */
-    protected static $usersModel = 'Cartalyst\Sentinel\Users\EloquentUser';
+    protected static $usersModel = EloquentUser::class;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(static::$usersModel);
     }
 
     /**
-     * Get the users model.
+     * Get the Users model FQCN.
      *
      * @return string
      */
-    public static function getUsersModel()
+    public static function getUsersModel(): string
     {
         return static::$usersModel;
     }
 
     /**
-     * Set the users model.
+     * Set the Users model FQCN.
      *
-     * @param  string  $usersModel
+     * @param string $usersModel
+     *
      * @return void
      */
-    public static function setUsersModel($usersModel)
+    public static function setUsersModel(string $usersModel): void
     {
         static::$usersModel = $usersModel;
     }

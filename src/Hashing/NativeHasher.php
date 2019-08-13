@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -25,9 +25,9 @@ use RuntimeException;
 class NativeHasher implements HasherInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function hash($value)
+    public function hash(string $value): string
     {
         if (! $hash = password_hash($value, PASSWORD_DEFAULT)) {
             throw new RuntimeException('Error hashing value. Check system compatibility with password_hash().');
@@ -37,9 +37,9 @@ class NativeHasher implements HasherInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function check($value, $hashedValue)
+    public function check(string $value, string $hashedValue): bool
     {
         return password_verify($value, $hashedValue);
     }

@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -34,7 +34,8 @@ interface ThrottleRepositoryInterface
     /**
      * Returns the IP address throttling delay, in seconds.
      *
-     * @param  string  $ipAddress
+     * @param string $ipAddress
+     *
      * @return int
      */
     public function ipDelay($ipAddress);
@@ -42,7 +43,8 @@ interface ThrottleRepositoryInterface
     /**
      * Returns the throttling delay for the given user, in seconds.
      *
-     * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
+     * @param \Cartalyst\Sentinel\Users\UserInterface $user
+     *
      * @return int
      */
     public function userDelay(UserInterface $user);
@@ -50,8 +52,9 @@ interface ThrottleRepositoryInterface
     /**
      * Logs a new throttling entry.
      *
-     * @param  string  $ipAddress
-     * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
+     * @param string                                  $ipAddress
+     * @param \Cartalyst\Sentinel\Users\UserInterface $user
+     *
      * @return void
      */
     public function log($ipAddress = null, UserInterface $user = null);

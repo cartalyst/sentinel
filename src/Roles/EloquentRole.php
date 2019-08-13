@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -20,21 +20,25 @@
 
 namespace Cartalyst\Sentinel\Roles;
 
-use Cartalyst\Sentinel\Permissions\PermissibleInterface;
-use Cartalyst\Sentinel\Permissions\PermissibleTrait;
+use IteratorAggregate;
 use Illuminate\Database\Eloquent\Model;
+use Cartalyst\Sentinel\Users\EloquentUser;
+use Cartalyst\Sentinel\Permissions\PermissibleTrait;
+use Cartalyst\Sentinel\Permissions\PermissibleInterface;
+use Cartalyst\Sentinel\Permissions\PermissionsInterface;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class EloquentRole extends Model implements RoleInterface, PermissibleInterface
+class EloquentRole extends Model implements PermissibleInterface, RoleInterface
 {
     use PermissibleTrait;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $table = 'roles';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $fillable = [
         'name',
@@ -43,20 +47,25 @@ class EloquentRole extends Model implements RoleInterface, PermissibleInterface
     ];
 
     /**
+     * {@inheritdoc}
+     */
+    protected $casts = [
+        'permissions' => 'json',
+    ];
+
+    /**
      * The Eloquent users model name.
      *
      * @var string
      */
-    protected static $usersModel = 'Cartalyst\Sentinel\Users\EloquentUser';
+    protected static $usersModel = EloquentUser::class;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function delete()
     {
-        $isSoftDeleted = array_key_exists('Illuminate\Database\Eloquent\SoftDeletes', class_uses($this));
-
-        if ($this->exists && ! $isSoftDeleted) {
+        if ($this->exists && (! method_exists(static::class, 'isForceDeleting') || $this->isForceDeleting())) {
             $this->users()->detach();
         }
 
@@ -68,69 +77,71 @@ class EloquentRole extends Model implements RoleInterface, PermissibleInterface
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function users()
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(static::$usersModel, 'role_users', 'role_id', 'user_id')->withTimestamps();
     }
 
-    /**
-     * Get mutator for the "permissions" attribute.
-     *
-     * @param  mixed  $permissions
-     * @return array
-     */
-    public function getPermissionsAttribute($permissions)
-    {
-        return $permissions ? json_decode($permissions, true) : [];
-    }
+    // /**
+    //  * Get mutator for the "permissions" attribute.
+    //  *
+    //  * @param mixed $permissions
+    //  *
+    //  * @return array
+    //  */
+    // public function getPermissionsAttribute($permissions)
+    // {
+    //     return $permissions ? json_decode($permissions, true) : [];
+    // }
+
+    // /**
+    //  * Set mutator for the "permissions" attribute.
+    //  *
+    //  * @param mixed $permissions
+    //  *
+    //  * @return void
+    //  */
+    // public function setPermissionsAttribute(array $permissions)
+    // {
+    //     $this->attributes['permissions'] = $permissions ? json_encode($permissions) : '';
+    // }
 
     /**
-     * Set mutator for the "permissions" attribute.
-     *
-     * @param  mixed  $permissions
-     * @return void
+     * {@inheritdoc}
      */
-    public function setPermissionsAttribute(array $permissions)
-    {
-        $this->attributes['permissions'] = $permissions ? json_encode($permissions) : '';
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getRoleId()
+    public function getRoleId(): int
     {
         return $this->getKey();
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function getRoleSlug()
+    public function getRoleSlug(): string
     {
         return $this->slug;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function getUsers()
+    public function getUsers(): IteratorAggregate
     {
         return $this->users;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public static function getUsersModel()
+    public static function getUsersModel(): string
     {
         return static::$usersModel;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public static function setUsersModel($usersModel)
+    public static function setUsersModel($usersModel): void
     {
         static::$usersModel = $usersModel;
     }
@@ -138,8 +149,9 @@ class EloquentRole extends Model implements RoleInterface, PermissibleInterface
     /**
      * Dynamically pass missing methods to the permissions.
      *
-     * @param  string  $method
-     * @param  array  $parameters
+     * @param string $method
+     * @param array  $parameters
+     *
      * @return mixed
      */
     public function __call($method, $parameters)
@@ -156,9 +168,9 @@ class EloquentRole extends Model implements RoleInterface, PermissibleInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    protected function createPermissions()
+    protected function createPermissions(): PermissionsInterface
     {
         return new static::$permissionsClass($this->permissions);
     }

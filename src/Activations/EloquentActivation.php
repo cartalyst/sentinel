@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -25,12 +25,12 @@ use Illuminate\Database\Eloquent\Model;
 class EloquentActivation extends Model implements ActivationInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $table = 'activations';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $fillable = [
         'code',
@@ -39,31 +39,16 @@ class EloquentActivation extends Model implements ActivationInterface
     ];
 
     /**
-     * Get mutator for the "completed" attribute.
-     *
-     * @param  mixed  $completed
-     * @return bool
+     * {@inheritdoc}
      */
-    public function getCompletedAttribute($completed)
-    {
-        return (bool) $completed;
-    }
+    protected $casts = [
+        'completed' => 'bool',
+    ];
 
     /**
-     * Set mutator for the "completed" attribute.
-     *
-     * @param  mixed  $completed
-     * @return void
+     * {@inheritdoc}
      */
-    public function setCompletedAttribute($completed)
-    {
-        $this->attributes['completed'] = (bool) $completed;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getCode()
+    public function getCode(): string
     {
         return $this->attributes['code'];
     }

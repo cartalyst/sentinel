@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -27,34 +27,47 @@ interface ReminderRepositoryInterface
     /**
      * Create a new reminder record and code.
      *
-     * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
-     * @return mixed
+     * @param \Cartalyst\Sentinel\Users\UserInterface $user
+     *
+     * @return \Cartalyst\Sentinel\Reminders\EloquentReminder
      */
-    public function create(UserInterface $user);
+    public function create(UserInterface $user): EloquentReminder;
+
+    /**
+     * Gets the reminder for the given user.
+     *
+     * @param \Cartalyst\Sentinel\Users\UserInterface $user
+     * @param string|null                             $code
+     *
+     * @return \Cartalyst\Sentinel\Activations\EloquentReminder|null
+     */
+    public function get(UserInterface $user, string $code = null): ?EloquentReminder;
 
     /**
      * Check if a valid reminder exists.
      *
-     * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
-     * @param  string  $code
+     * @param \Cartalyst\Sentinel\Users\UserInterface $user
+     * @param string|null                             $code
+     *
      * @return bool
      */
-    public function exists(UserInterface $user, $code = null);
+    public function exists(UserInterface $user, string $code = null): bool;
 
     /**
      * Complete reminder for the given user.
      *
-     * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
-     * @param  string  $code
-     * @param  string  $password
+     * @param \Cartalyst\Sentinel\Users\UserInterface $user
+     * @param string                                  $code
+     * @param string                                  $password
+     *
      * @return bool
      */
-    public function complete(UserInterface $user, $code, $password);
+    public function complete(UserInterface $user, string $code, string $password): bool;
 
     /**
      * Remove expired reminder codes.
      *
-     * @return int
+     * @return bool
      */
-    public function removeExpired();
+    public function removeExpired(): bool;
 }

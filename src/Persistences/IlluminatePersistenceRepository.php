@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -20,10 +20,10 @@
 
 namespace Cartalyst\Sentinel\Persistences;
 
-use Cartalyst\Sentinel\Cookies\CookieInterface;
-use Cartalyst\Sentinel\Persistences\PersistableInterface;
-use Cartalyst\Sentinel\Sessions\SessionInterface;
+use Cartalyst\Sentinel\Users\UserInterface;
 use Cartalyst\Support\Traits\RepositoryTrait;
+use Cartalyst\Sentinel\Cookies\CookieInterface;
+use Cartalyst\Sentinel\Sessions\SessionInterface;
 
 class IlluminatePersistenceRepository implements PersistenceRepositoryInterface
 {
@@ -32,7 +32,7 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface
     /**
      * Single session.
      *
-     * @var boolean
+     * @var bool
      */
     protected $single = false;
 
@@ -55,42 +55,33 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface
      *
      * @var string
      */
-    protected $model = 'Cartalyst\Sentinel\Persistences\EloquentPersistence';
+    protected $model = EloquentPersistence::class;
 
     /**
      * Create a new Sentinel persistence repository.
      *
-     * @param  \Cartalyst\Sentinel\Sessions\SessionInterface  $session
-     * @param  \Cartalyst\Sentinel\Cookies\CookieInterface  $cookie
-     * @param  string  $model
-     * @param  bool  $single
+     * @param \Cartalyst\Sentinel\Sessions\SessionInterface $session
+     * @param \Cartalyst\Sentinel\Cookies\CookieInterface   $cookie
+     * @param string                                        $model
+     * @param bool                                          $single
+     *
      * @return void
      */
-    public function __construct(
-        SessionInterface $session,
-        CookieInterface $cookie,
-        $model = null,
-        $single = false
-    ) {
-        if (isset($model)) {
-            $this->model = $model;
-        }
+    public function __construct(SessionInterface $session, CookieInterface $cookie, string $model = null, bool $single = false)
+    {
+        $this->model = $model;
 
-        if (isset($session)) {
-            $this->session = $session;
-        }
+        $this->session = $session;
 
-        if (isset($cookie)) {
-            $this->cookie  = $cookie;
-        }
+        $this->cookie = $cookie;
 
         $this->single = $single;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function check()
+    public function check(): ?string
     {
         if ($code = $this->session->get()) {
             return $code;
@@ -99,35 +90,32 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface
         if ($code = $this->cookie->get()) {
             return $code;
         }
+
+        return null;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function findByPersistenceCode($code)
+    public function findByPersistenceCode(string $code): ?PersistenceInterface
     {
-        $persistence = $this->createModel()
-            ->newQuery()
-            ->where('code', $code)
-            ->first();
-
-        return $persistence ? $persistence : false;
+        return $this->createModel()->newQuery()->where('code', $code)->first();
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function findUserByPersistenceCode($code)
+    public function findUserByPersistenceCode(string $code): ?UserInterface
     {
         $persistence = $this->findByPersistenceCode($code);
 
-        return $persistence ? $persistence->user : false;
+        return $persistence ? $persistence->user : null;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function persist(PersistableInterface $persistable, $remember = false)
+    public function persist(PersistableInterface $persistable, bool $remember = false): bool
     {
         if ($this->single) {
             $this->flush($persistable);
@@ -144,28 +132,29 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface
         $persistence = $this->createModel();
 
         $persistence->{$persistable->getPersistableKey()} = $persistable->getPersistableId();
+
         $persistence->code = $code;
 
         return $persistence->save();
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function persistAndRemember(PersistableInterface $persistable)
+    public function persistAndRemember(PersistableInterface $persistable): bool
     {
         return $this->persist($persistable, true);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function forget()
+    public function forget(): ?bool
     {
         $code = $this->check();
 
         if ($code === null) {
-            return;
+            return null;
         }
 
         $this->session->forget();
@@ -175,26 +164,25 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function remove($code)
+    public function remove(string $code): ?bool
     {
-        return $this->createModel()
-            ->newQuery()
-            ->where('code', $code)
-            ->delete();
+        return $this->createModel()->newQuery()->where('code', $code)->delete();
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function flush(PersistableInterface $persistable, $forget = true)
+    public function flush(PersistableInterface $persistable, $forget = true): void
     {
         if ($forget) {
             $this->forget();
         }
 
-        foreach ($persistable->{$persistable->getPersistableRelationship()}()->get() as $persistence) {
+        $relationship = $persistable->getPersistableRelationship();
+
+        foreach ($persistable->{$relationship}()->get() as $persistence) {
             if ($persistence->code !== $this->check()) {
                 $persistence->delete();
             }

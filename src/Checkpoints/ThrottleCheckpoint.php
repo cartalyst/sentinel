@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -20,8 +20,8 @@
 
 namespace Cartalyst\Sentinel\Checkpoints;
 
-use Cartalyst\Sentinel\Throttling\ThrottleRepositoryInterface;
 use Cartalyst\Sentinel\Users\UserInterface;
+use Cartalyst\Sentinel\Throttling\ThrottleRepositoryInterface;
 
 class ThrottleCheckpoint implements CheckpointInterface
 {
@@ -42,8 +42,9 @@ class ThrottleCheckpoint implements CheckpointInterface
     /**
      * Constructor.
      *
-     * @param  \Cartalyst\Sentinel\Throttling\ThrottleRepositoryInterface  $throttle
-     * @param  string  $ipAddress
+     * @param \Cartalyst\Sentinel\Throttling\ThrottleRepositoryInterface $throttle
+     * @param string                                                     $ipAddress
+     *
      * @return void
      */
     public function __construct(ThrottleRepositoryInterface $throttle, $ipAddress = null)
@@ -56,25 +57,25 @@ class ThrottleCheckpoint implements CheckpointInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function login(UserInterface $user)
+    public function login(UserInterface $user): bool
     {
         return $this->checkThrottling('login', $user);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function check(UserInterface $user)
+    public function check(UserInterface $user): bool
     {
         return $this->checkThrottling('check', $user);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function fail(UserInterface $user = null)
+    public function fail(UserInterface $user = null): bool
     {
         // We'll check throttling firstly from any previous attempts. This
         // will throw the required exceptions if the user has already
@@ -84,16 +85,19 @@ class ThrottleCheckpoint implements CheckpointInterface
         // Now we've checked previous attempts, we'll log this latest attempt.
         // It'll be picked up the next time if the user tries again.
         $this->throttle->log($this->ipAddress, $user);
+
+        return true;
     }
 
     /**
      * Checks the throttling status of the given user.
      *
-     * @param  string  $action
-     * @param  \Cartalyst\Sentinel\Users\UserInterface|null  $user
+     * @param string                                       $action
+     * @param \Cartalyst\Sentinel\Users\UserInterface|null $user
+     *
      * @return bool
      */
-    protected function checkThrottling($action, UserInterface $user = null)
+    protected function checkThrottling(string $action, UserInterface $user = null): bool
     {
         // If we are just checking an existing logged in person, the global delay
         // shouldn't stop them being logged in at all. Only their IP address and
@@ -136,12 +140,15 @@ class ThrottleCheckpoint implements CheckpointInterface
     /**
      * Throws a throttling exception.
      *
-     * @param  string  $message
-     * @param  string  $type
-     * @param  int  $delay
+     * @param string $message
+     * @param string $type
+     * @param int    $delay
+     *
      * @throws \Cartalyst\Sentinel\Checkpoints\ThrottlingException
+     *
+     * @return void
      */
-    protected function throwException($message, $type, $delay)
+    protected function throwException(string $message, string $type, int $delay): void
     {
         $exception = new ThrottlingException($message);
 

@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -23,30 +23,34 @@ namespace Cartalyst\Sentinel\Persistences;
 interface PersistableInterface
 {
     /**
-     * Returns the persistable key name.
-     *
-     * @return string
-     */
-    public function getPersistableKey();
-
-    /**
      * Returns the persistable key value.
      *
      * @return string
      */
-    public function getPersistableId();
+    public function getPersistableId(): string;
+
+    /**
+     * Returns the persistable key name.
+     *
+     * @return string
+     */
+    public function getPersistableKey(): string;
+
+    public function setPersistableKey(string $key);
 
     /**
      * Returns the persistable relationship name.
      *
      * @return string
      */
-    public function getPersistableRelationship();
+    public function getPersistableRelationship(): string;
+
+    public function setPersistableRelationship(string $persistableRelationship);
 
     /**
      * Generates a random persist code.
      *
      * @return string
      */
-    public function generatePersistenceCode();
+    public function generatePersistenceCode(): string;
 }

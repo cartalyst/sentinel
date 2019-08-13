@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -36,9 +36,10 @@ class NativeCookie implements CookieInterface
     ];
 
     /**
-     * Create a new cookie driver.
+     * Constructor.
      *
-     * @param  string|array  $options
+     * @param array|string $options
+     *
      * @return void
      */
     public function __construct($options = [])
@@ -51,7 +52,7 @@ class NativeCookie implements CookieInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function put($value)
     {
@@ -59,7 +60,7 @@ class NativeCookie implements CookieInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function get()
     {
@@ -67,7 +68,7 @@ class NativeCookie implements CookieInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function forget()
     {
@@ -78,7 +79,8 @@ class NativeCookie implements CookieInterface
      * Takes a minutes parameter (relative to now)
      * and converts it to a lifetime (unix timestamp).
      *
-     * @param  int  $minutes
+     * @param int $minutes
+     *
      * @return int
      */
     protected function minutesToLifetime($minutes)
@@ -105,15 +107,16 @@ class NativeCookie implements CookieInterface
     /**
      * Sets a PHP cookie.
      *
-     * @param  mixed  $value
-     * @param  int  $lifetime
-     * @param  string  $path
-     * @param  string  $domain
-     * @param  bool  $secure
-     * @param  bool  $httpOnly
+     * @param mixed  $value
+     * @param int    $lifetime
+     * @param string $path
+     * @param string $domain
+     * @param bool   $secure
+     * @param bool   $httpOnly
+     *
      * @return void
      */
-    protected function setCookie($value, $lifetime, $path = null, $domain = null, $secure = null, $httpOnly = null)
+    protected function setCookie($value, int $lifetime, string $path = null, string $domain = null, bool $secure = null, bool $httpOnly = null)
     {
         setcookie(
             $this->options['name'],

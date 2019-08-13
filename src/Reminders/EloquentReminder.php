@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -25,12 +25,12 @@ use Illuminate\Database\Eloquent\Model;
 class EloquentReminder extends Model
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $table = 'reminders';
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected $fillable = [
         'code',
@@ -39,24 +39,9 @@ class EloquentReminder extends Model
     ];
 
     /**
-     * Get mutator for the "completed" attribute.
-     *
-     * @param  mixed  $completed
-     * @return bool
+     * {@inheritdoc}
      */
-    public function getCompletedAttribute($completed)
-    {
-        return (bool) $completed;
-    }
-
-    /**
-     * Set mutator for the "completed" attribute.
-     *
-     * @param  mixed  $completed
-     * @return void
-     */
-    public function setCompletedAttribute($completed)
-    {
-        $this->attributes['completed'] = (int) (bool) $completed;
-    }
+    protected $casts = [
+        'completed' => 'bool',
+    ];
 }

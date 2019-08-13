@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -21,6 +21,7 @@
 namespace Cartalyst\Sentinel\Activations;
 
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Cartalyst\Sentinel\Users\UserInterface;
 use Cartalyst\Support\Traits\RepositoryTrait;
 
@@ -33,7 +34,7 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface
      *
      * @var string
      */
-    protected $model = 'Cartalyst\Sentinel\Activations\EloquentActivation';
+    protected $model = EloquentActivation::class;
 
     /**
      * The activation expiration time, in seconds.
@@ -43,27 +44,24 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface
     protected $expires = 259200;
 
     /**
-     * Create a new Illuminate activation repository.
+     * Constructor.
      *
-     * @param  string  $model
-     * @param  int  $expires
+     * @param string $model
+     * @param int    $expires
+     *
      * @return void
      */
-    public function __construct($model = null, $expires = null)
+    public function __construct(string $model, int $expires)
     {
-        if (isset($model)) {
-            $this->model = $model;
-        }
+        $this->model = $model;
 
-        if (isset($expires)) {
-            $this->expires = $expires;
-        }
+        $this->expires = $expires;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function create(UserInterface $user)
+    public function create(UserInterface $user): ActivationInterface
     {
         $activation = $this->createModel();
 
@@ -79,9 +77,9 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function exists(UserInterface $user, $code = null)
+    public function get(UserInterface $user, string $code = null): ?ActivationInterface
     {
         $expires = $this->expires();
 
@@ -90,19 +88,28 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface
             ->newQuery()
             ->where('user_id', $user->getUserId())
             ->where('completed', false)
-            ->where('created_at', '>', $expires);
+            ->where('created_at', '>', $expires)
+        ;
 
         if ($code) {
             $activation->where('code', $code);
         }
 
-        return $activation->first() ?: false;
+        return $activation->first();
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function complete(UserInterface $user, $code)
+    public function exists(UserInterface $user, string $code = null): bool
+    {
+        return (bool) $this->get($user, $code);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function complete(UserInterface $user, string $code): bool
     {
         $expires = $this->expires();
 
@@ -113,7 +120,8 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface
             ->where('code', $code)
             ->where('completed', false)
             ->where('created_at', '>', $expires)
-            ->first();
+            ->first()
+        ;
 
         if ($activation === null) {
             return false;
@@ -130,26 +138,31 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function completed(UserInterface $user)
+    public function completed(UserInterface $user): bool
+    {
+        return $this
+            ->createModel()
+            ->newQuery()
+            ->where('user_id', $user->getUserId())
+            ->where('completed', true)
+            ->exists()
+        ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function remove(UserInterface $user): bool
     {
         $activation = $this
             ->createModel()
             ->newQuery()
             ->where('user_id', $user->getUserId())
             ->where('completed', true)
-            ->first();
-
-        return $activation ?: false;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function remove(UserInterface $user)
-    {
-        $activation = $this->completed($user);
+            ->first()
+        ;
 
         if ($activation === false) {
             return false;
@@ -159,9 +172,9 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function removeExpired()
+    public function removeExpired(): bool
     {
         $expires = $this->expires();
 
@@ -170,7 +183,8 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface
             ->newQuery()
             ->where('completed', false)
             ->where('created_at', '<', $expires)
-            ->delete();
+            ->delete()
+        ;
     }
 
     /**
@@ -178,18 +192,18 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface
      *
      * @return \Carbon\Carbon
      */
-    protected function expires()
+    protected function expires(): Carbon
     {
         return Carbon::now()->subSeconds($this->expires);
     }
 
     /**
-     * Return a random string for an activation code.
+     * Returns the random string used for the activation code.
      *
      * @return string
      */
-    protected function generateActivationCode()
+    protected function generateActivationCode(): string
     {
-        return str_random(32);
+        return Str::random(32);
     }
 }

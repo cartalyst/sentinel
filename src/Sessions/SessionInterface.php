@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -25,10 +25,11 @@ interface SessionInterface
     /**
      * Put a value in the Sentinel session.
      *
-     * @param  mixed  $value
+     * @param mixed $value
+     *
      * @return void
      */
-    public function put($value);
+    public function put($value): void;
 
     /**
      * Returns the Sentinel session value.
@@ -42,5 +43,5 @@ interface SessionInterface
      *
      * @return void
      */
-    public function forget();
+    public function forget(): void;
 }

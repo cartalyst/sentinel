@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -20,20 +20,20 @@
 
 namespace Cartalyst\Sentinel;
 
-use BadMethodCallException;
-use Cartalyst\Sentinel\Activations\ActivationRepositoryInterface;
-use Cartalyst\Sentinel\Checkpoints\CheckpointInterface;
-use Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface;
-use Cartalyst\Sentinel\Reminders\ReminderRepositoryInterface;
-use Cartalyst\Sentinel\Roles\RoleRepositoryInterface;
-use Cartalyst\Sentinel\Throttling\ThrottleRepositoryInterface;
-use Cartalyst\Sentinel\Users\UserInterface;
-use Cartalyst\Sentinel\Users\UserRepositoryInterface;
-use Cartalyst\Support\Traits\EventTrait;
 use Closure;
-use Illuminate\Contracts\Events\Dispatcher;
-use InvalidArgumentException;
 use RuntimeException;
+use BadMethodCallException;
+use InvalidArgumentException;
+use Cartalyst\Support\Traits\EventTrait;
+use Cartalyst\Sentinel\Users\UserInterface;
+use Illuminate\Contracts\Events\Dispatcher;
+use Cartalyst\Sentinel\Roles\RoleRepositoryInterface;
+use Cartalyst\Sentinel\Users\UserRepositoryInterface;
+use Cartalyst\Sentinel\Checkpoints\CheckpointInterface;
+use Cartalyst\Sentinel\Reminders\ReminderRepositoryInterface;
+use Cartalyst\Sentinel\Throttling\ThrottleRepositoryInterface;
+use Cartalyst\Sentinel\Activations\ActivationRepositoryInterface;
+use Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface;
 
 class Sentinel
 {
@@ -47,32 +47,46 @@ class Sentinel
     protected $user;
 
     /**
-     * The Persistence repository.
+     * The Persistences repository instance.
      *
      * @var \Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface
      */
     protected $persistences;
 
     /**
-     * The User repository.
+     * The Users repository instance.
      *
      * @var \Cartalyst\Sentinel\Users\UserRepositoryInterface
      */
     protected $users;
 
     /**
-     * The Role repository.
+     * The Roles repository instance.
      *
      * @var \Cartalyst\Sentinel\Roles\RoleRepositoryInterface
      */
     protected $roles;
 
     /**
-     * The Activations repository.
+     * The Activations repository instance.
      *
      * @var \Cartalyst\Sentinel\Activations\ActivationRepositoryInterface
      */
     protected $activations;
+
+    /**
+     * The Reminders repository.
+     *
+     * @var \Cartalyst\Sentinel\Reminders\ReminderRepositoryInterface
+     */
+    protected $reminders;
+
+    /**
+     * The Throttling repository instance.
+     *
+     * @var \Cartalyst\Sentinel\Throttling\ThrottleRepositoryInterface
+     */
+    protected $throttle;
 
     /**
      * Cached, available methods on the user repository, used for dynamic calls.
@@ -96,13 +110,6 @@ class Sentinel
     protected $checkpointsStatus = true;
 
     /**
-     * The Reminders repository.
-     *
-     * @var \Cartalyst\Sentinel\Reminders\ReminderRepositoryInterface
-     */
-    protected $reminders;
-
-    /**
      * The closure to retrieve the request credentials.
      *
      * @var \Closure
@@ -117,20 +124,14 @@ class Sentinel
     protected $basicResponse;
 
     /**
-     * The Throttle repository.
+     * Constructor.
      *
-     * @var \Cartalyst\Sentinel\Throttling\ThrottleRepositoryInterface
-     */
-    protected $throttle;
-
-    /**
-     * Create a new Sentinel instance.
+     * @param \Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface $persistences
+     * @param \Cartalyst\Sentinel\Users\UserRepositoryInterface               $users
+     * @param \Cartalyst\Sentinel\Roles\RoleRepositoryInterface               $roles
+     * @param \Cartalyst\Sentinel\Activations\ActivationRepositoryInterface   $activations
+     * @param \Illuminate\Contracts\Events\Dispatcher                         $dispatcher
      *
-     * @param  \Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface  $persistence
-     * @param  \Cartalyst\Sentinel\Users\UserRepositoryInterface  $users
-     * @param  \Cartalyst\Sentinel\Roles\RoleRepositoryInterface  $roles
-     * @param  \Cartalyst\Sentinel\Activations\ActivationRepositoryInterface  $activations
-     * @param  \Illuminate\Contracts\Events\Dispatcher  $dispatcher
      * @return void
      */
     public function __construct(
@@ -140,25 +141,27 @@ class Sentinel
         ActivationRepositoryInterface $activations,
         Dispatcher $dispatcher
     ) {
-        $this->persistences = $persistences;
-
         $this->users = $users;
 
         $this->roles = $roles;
 
+        $this->dispatcher = $dispatcher;
+
         $this->activations = $activations;
 
-        $this->dispatcher = $dispatcher;
+        $this->persistences = $persistences;
     }
 
     /**
      * Registers a user. You may provide a callback to occur before the user
      * is saved, or provide a true boolean as a shortcut to activation.
      *
-     * @param  array  $credentials
-     * @param  \Closure|bool  $callback
-     * @return \Cartalyst\Sentinel\Users\UserInterface|bool
+     * @param array         $credentials
+     * @param bool|\Closure $callback
+     *
      * @throws \InvalidArgumentException
+     *
+     * @return bool|\Cartalyst\Sentinel\Users\UserInterface
      */
     public function register(array $credentials, $callback = null)
     {
@@ -190,8 +193,9 @@ class Sentinel
     /**
      * Registers and activates the user.
      *
-     * @param  array  $credentials
-     * @return \Cartalyst\Sentinel\Users\UserInterface|bool
+     * @param array $credentials
+     *
+     * @return bool|\Cartalyst\Sentinel\Users\UserInterface
      */
     public function registerAndActivate(array $credentials)
     {
@@ -201,11 +205,13 @@ class Sentinel
     /**
      * Activates the given user.
      *
-     * @param  mixed  $user
-     * @return bool
+     * @param mixed $user
+     *
      * @throws \InvalidArgumentException
+     *
+     * @return bool
      */
-    public function activate($user)
+    public function activate($user): bool
     {
         if (is_string($user) || is_array($user)) {
             $users = $this->getUserRepository();
@@ -225,7 +231,7 @@ class Sentinel
 
         $activation = $activations->create($user);
 
-        $this->fireEvent('sentinel.activated', [ $user, $activation ]);
+        $this->fireEvent('sentinel.activated', [$user, $activation]);
 
         return $activations->complete($user, $activation->getCode());
     }
@@ -233,7 +239,7 @@ class Sentinel
     /**
      * Checks to see if a user is logged in.
      *
-     * @return \Cartalyst\Sentinel\Users\UserInterface|bool
+     * @return bool|\Cartalyst\Sentinel\Users\UserInterface
      */
     public function check()
     {
@@ -257,9 +263,9 @@ class Sentinel
     }
 
     /**
-     * Checks to see if a user is logged in, bypassing checkpoints
+     * Checks to see if a user is logged in, bypassing checkpoints.
      *
-     * @return \Cartalyst\Sentinel\Users\UserInterface|bool
+     * @return bool|\Cartalyst\Sentinel\Users\UserInterface
      */
     public function forceCheck()
     {
@@ -273,7 +279,7 @@ class Sentinel
      *
      * @return bool
      */
-    public function guest()
+    public function guest(): bool
     {
         return ! $this->check();
     }
@@ -281,12 +287,13 @@ class Sentinel
     /**
      * Authenticates a user, with "remember" flag.
      *
-     * @param  \Cartalyst\Sentinel\Users\UserInterface|array  $credentials
-     * @param  bool  $remember
-     * @param  bool  $login
-     * @return \Cartalyst\Sentinel\Users\UserInterface|bool
+     * @param array|\Cartalyst\Sentinel\Users\UserInterface $credentials
+     * @param bool                                          $remember
+     * @param bool                                          $login
+     *
+     * @return bool|\Cartalyst\Sentinel\Users\UserInterface
      */
-    public function authenticate($credentials, $remember = false, $login = true)
+    public function authenticate($credentials, bool $remember = false, bool $login = true)
     {
         $response = $this->fireEvent('sentinel.authenticating', $credentials, true);
 
@@ -328,8 +335,9 @@ class Sentinel
     /**
      * Authenticates a user, with the "remember" flag.
      *
-     * @param  \Cartalyst\Sentinel\Users\UserInterface|array  $credentials
-     * @return \Cartalyst\Sentinel\Users\UserInterface|bool
+     * @param array|\Cartalyst\Sentinel\Users\UserInterface $credentials
+     *
+     * @return bool|\Cartalyst\Sentinel\Users\UserInterface
      */
     public function authenticateAndRemember($credentials)
     {
@@ -339,11 +347,12 @@ class Sentinel
     /**
      * Forces an authentication to bypass checkpoints.
      *
-     * @param  \Cartalyst\Sentinel\Users\UserInterface|array  $credentials
-     * @param  bool  $remember
-     * @return \Cartalyst\Sentinel\Users\UserInterface|bool
+     * @param array|\Cartalyst\Sentinel\Users\UserInterface $credentials
+     * @param bool                                          $remember
+     *
+     * @return bool|\Cartalyst\Sentinel\Users\UserInterface
      */
-    public function forceAuthenticate($credentials, $remember = false)
+    public function forceAuthenticate($credentials, bool $remember = false)
     {
         return $this->bypassCheckpoints(function ($sentinel) use ($credentials, $remember) {
             return $sentinel->authenticate($credentials, $remember);
@@ -353,8 +362,9 @@ class Sentinel
     /**
      * Forces an authentication to bypass checkpoints, with the "remember" flag.
      *
-     * @param  \Cartalyst\Sentinel\Users\UserInterface|array  $credentials
-     * @return \Cartalyst\Sentinel\Users\UserInterface|bool
+     * @param array|\Cartalyst\Sentinel\Users\UserInterface $credentials
+     *
+     * @return bool|\Cartalyst\Sentinel\Users\UserInterface
      */
     public function forceAuthenticateAndRemember($credentials)
     {
@@ -364,8 +374,9 @@ class Sentinel
     /**
      * Attempt a stateless authentication.
      *
-     * @param  \Cartalyst\Sentinel\Users\UserInterface|array  $credentials
-     * @return \Cartalyst\Sentinel\Users\UserInterface|bool
+     * @param array|\Cartalyst\Sentinel\Users\UserInterface $credentials
+     *
+     * @return bool|\Cartalyst\Sentinel\Users\UserInterface
      */
     public function stateless($credentials)
     {
@@ -402,7 +413,7 @@ class Sentinel
      *
      * @return array
      */
-    public function getRequestCredentials()
+    public function getRequestCredentials(): array
     {
         if ($this->requestCredentials === null) {
             $this->requestCredentials = function () {
@@ -430,10 +441,11 @@ class Sentinel
     /**
      * Sets the closure which resolves the request credentials.
      *
-     * @param  \Closure  $requestCredentials
+     * @param \Closure $requestCredentials
+     *
      * @return void
      */
-    public function setRequestCredentials(Closure $requestCredentials)
+    public function setRequestCredentials(Closure $requestCredentials): void
     {
         $this->requestCredentials = $requestCredentials;
     }
@@ -441,8 +453,9 @@ class Sentinel
     /**
      * Sends a response when HTTP basic authentication fails.
      *
-     * @return mixed
      * @throws \RuntimeException
+     *
+     * @return mixed
      */
     public function getBasicResponse()
     {
@@ -469,10 +482,11 @@ class Sentinel
     /**
      * Sets the callback which creates a basic response.
      *
-     * @param  \Closure  $basicResonse
+     * @param \Closure $basicResonse
+     *
      * @return void
      */
-    public function creatingBasicResponse(Closure $basicResponse)
+    public function creatingBasicResponse(Closure $basicResponse): void
     {
         $this->basicResponse = $basicResponse;
     }
@@ -480,11 +494,12 @@ class Sentinel
     /**
      * Persists a login for the given user.
      *
-     * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
-     * @param  bool  $remember
-     * @return \Cartalyst\Sentinel\Users\UserInterface|bool
+     * @param \Cartalyst\Sentinel\Users\UserInterface $user
+     * @param bool                                    $remember
+     *
+     * @return bool|\Cartalyst\Sentinel\Users\UserInterface
      */
-    public function login(UserInterface $user, $remember = false)
+    public function login(UserInterface $user, bool $remember = false)
     {
         $method = $remember === true ? 'persistAndRemember' : 'persist';
 
@@ -502,8 +517,9 @@ class Sentinel
     /**
      * Persists a login for the given user, with the "remember" flag.
      *
-     * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
-     * @return \Cartalyst\Sentinel\Users\UserInterface|bool
+     * @param \Cartalyst\Sentinel\Users\UserInterface $user
+     *
+     * @return bool|\Cartalyst\Sentinel\Users\UserInterface
      */
     public function loginAndRemember(UserInterface $user)
     {
@@ -513,11 +529,12 @@ class Sentinel
     /**
      * Logs the current user out.
      *
-     * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
-     * @param  bool  $everywhere
+     * @param \Cartalyst\Sentinel\Users\UserInterface|null $user
+     * @param bool                                         $everywhere
+     *
      * @return bool
      */
-    public function logout(UserInterface $user = null, $everywhere = false)
+    public function logout(UserInterface $user = null, bool $everywhere = false): bool
     {
         $currentUser = $this->check();
 
@@ -539,17 +556,20 @@ class Sentinel
 
         $this->user = null;
 
-        return $this->users->recordLogout($user);
+        $this->users->recordLogout($user);
+
+        return true;
     }
 
     /**
      * Pass a closure to Sentinel to bypass checkpoints.
      *
-     * @param  \Closure  $callback
-     * @param  array  $checkpoints
+     * @param \Closure $callback
+     * @param array    $checkpoints
+     *
      * @return mixed
      */
-    public function bypassCheckpoints(Closure $callback, $checkpoints = [])
+    public function bypassCheckpoints(Closure $callback, array $checkpoints = [])
     {
         $originalCheckpoints = $this->checkpoints;
 
@@ -578,7 +598,7 @@ class Sentinel
      *
      * @return bool
      */
-    public function checkpointsStatus()
+    public function checkpointsStatus(): bool
     {
         return $this->checkpointsStatus;
     }
@@ -588,7 +608,7 @@ class Sentinel
      *
      * @return void
      */
-    public function enableCheckpoints()
+    public function enableCheckpoints(): void
     {
         $this->checkpointsStatus = true;
     }
@@ -598,19 +618,30 @@ class Sentinel
      *
      * @return void
      */
-    public function disableCheckpoints()
+    public function disableCheckpoints(): void
     {
         $this->checkpointsStatus = false;
     }
 
     /**
+     * Returns all the added Checkpoints.
+     *
+     * @return array
+     */
+    public function getCheckpoints(): array
+    {
+        return $this->checkpoints;
+    }
+
+    /**
      * Add a new checkpoint to Sentinel.
      *
-     * @param  string  $key
-     * @param  \Cartalyst\Sentinel\Checkpoints\CheckpointInterface  $checkpoint
+     * @param string                                              $key
+     * @param \Cartalyst\Sentinel\Checkpoints\CheckpointInterface $checkpoint
+     *
      * @return void
      */
-    public function addCheckpoint($key, CheckpointInterface $checkpoint)
+    public function addCheckpoint(string $key, CheckpointInterface $checkpoint): void
     {
         $this->checkpoints[$key] = $checkpoint;
     }
@@ -618,10 +649,11 @@ class Sentinel
     /**
      * Removes a checkpoint.
      *
-     * @param  string  $key
+     * @param string $key
+     *
      * @return void
      */
-    public function removeCheckpoint($key)
+    public function removeCheckpoint(string $key): void
     {
         if (isset($this->checkpoints[$key])) {
             unset($this->checkpoints[$key]);
@@ -631,10 +663,11 @@ class Sentinel
     /**
      * Removes the given checkpoints.
      *
-     * @param  array  $checkpoints
+     * @param array $checkpoints
+     *
      * @return void
      */
-    public function removeCheckpoints(array $checkpoints = [])
+    public function removeCheckpoints(array $checkpoints = []): void
     {
         foreach ($checkpoints as $checkpoint) {
             $this->removeCheckpoint($checkpoint);
@@ -646,12 +679,13 @@ class Sentinel
      * may throw their own exceptions, however, if just one returns false,
      * the cycle fails.
      *
-     * @param  string  $method
-     * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
-     * @param  bool  $halt
+     * @param string                                  $method
+     * @param \Cartalyst\Sentinel\Users\UserInterface $user
+     * @param bool                                    $halt
+     *
      * @return bool
      */
-    protected function cycleCheckpoints($method, UserInterface $user = null, $halt = true)
+    protected function cycleCheckpoints(string $method, UserInterface $user = null, bool $halt = true): bool
     {
         if (! $this->checkpointsStatus) {
             return true;
@@ -671,10 +705,11 @@ class Sentinel
     /**
      * Returns the currently logged in user, lazily checking for it.
      *
-     * @param  bool  $check
-     * @return \Cartalyst\Sentinel\Users\UserInterface
+     * @param bool $check
+     *
+     * @return \Cartalyst\Sentinel\Users\UserInterface|null
      */
-    public function getUser($check = true)
+    public function getUser(bool $check = true): ?UserInterface
     {
         if ($check === true && $this->user === null) {
             $this->check();
@@ -686,7 +721,8 @@ class Sentinel
     /**
      * Sets the user associated with Sentinel (does not log in).
      *
-     * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
+     * @param \Cartalyst\Sentinel\Users\UserInterface $user
+     *
      * @return void
      */
     public function setUser(UserInterface $user)
@@ -699,7 +735,7 @@ class Sentinel
      *
      * @return \Cartalyst\Sentinel\Users\UserRepositoryInterface
      */
-    public function getUserRepository()
+    public function getUserRepository(): UserRepositoryInterface
     {
         return $this->users;
     }
@@ -707,10 +743,11 @@ class Sentinel
     /**
      * Sets the user repository.
      *
-     * @param  \Cartalyst\Sentinel\Users\UserRepositoryInterface  $users
+     * @param \Cartalyst\Sentinel\Users\UserRepositoryInterface $users
+     *
      * @return void
      */
-    public function setUserRepository(UserRepositoryInterface $users)
+    public function setUserRepository(UserRepositoryInterface $users): void
     {
         $this->users = $users;
 
@@ -722,7 +759,7 @@ class Sentinel
      *
      * @return \Cartalyst\Sentinel\Roles\RoleRepositoryInterface
      */
-    public function getRoleRepository()
+    public function getRoleRepository(): RoleRepositoryInterface
     {
         return $this->roles;
     }
@@ -730,10 +767,11 @@ class Sentinel
     /**
      * Sets the role repository.
      *
-     * @param  \Cartalyst\Sentinel\Roles\RoleRepositoryInterface  $roles
+     * @param \Cartalyst\Sentinel\Roles\RoleRepositoryInterface $roles
+     *
      * @return void
      */
-    public function setRoleRepository(RoleRepositoryInterface $roles)
+    public function setRoleRepository(RoleRepositoryInterface $roles): void
     {
         $this->roles = $roles;
     }
@@ -743,7 +781,7 @@ class Sentinel
      *
      * @return \Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface
      */
-    public function getPersistenceRepository()
+    public function getPersistenceRepository(): PersistenceRepositoryInterface
     {
         return $this->persistences;
     }
@@ -751,10 +789,11 @@ class Sentinel
     /**
      * Sets the persistences repository.
      *
-     * @param  \Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface  $persistences
+     * @param \Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface $persistences
+     *
      * @return void
      */
-    public function setPersistenceRepository(PersistenceRepositoryInterface $persistences)
+    public function setPersistenceRepository(PersistenceRepositoryInterface $persistences): void
     {
         $this->persistences = $persistences;
     }
@@ -764,7 +803,7 @@ class Sentinel
      *
      * @return \Cartalyst\Sentinel\Activations\ActivationRepositoryInterface
      */
-    public function getActivationRepository()
+    public function getActivationRepository(): ActivationRepositoryInterface
     {
         return $this->activations;
     }
@@ -772,10 +811,11 @@ class Sentinel
     /**
      * Sets the activations repository.
      *
-     * @param  \Cartalyst\Sentinel\Activations\ActivationRepositoryInterface  $activations
+     * @param \Cartalyst\Sentinel\Activations\ActivationRepositoryInterface $activations
+     *
      * @return void
      */
-    public function setActivationRepository(ActivationRepositoryInterface $activations)
+    public function setActivationRepository(ActivationRepositoryInterface $activations): void
     {
         $this->activations = $activations;
     }
@@ -785,7 +825,7 @@ class Sentinel
      *
      * @return \Cartalyst\Sentinel\Reminders\ReminderRepositoryInterface
      */
-    public function getReminderRepository()
+    public function getReminderRepository(): ReminderRepositoryInterface
     {
         return $this->reminders;
     }
@@ -793,10 +833,11 @@ class Sentinel
     /**
      * Sets the reminders repository.
      *
-     * @param  \Cartalyst\Sentinel\Reminders\ReminderRepositoryInterface  $reminders
+     * @param \Cartalyst\Sentinel\Reminders\ReminderRepositoryInterface $reminders
+     *
      * @return void
      */
-    public function setReminderRepository(ReminderRepositoryInterface $reminders)
+    public function setReminderRepository(ReminderRepositoryInterface $reminders): void
     {
         $this->reminders = $reminders;
     }
@@ -806,7 +847,7 @@ class Sentinel
      *
      * @return \Cartalyst\Sentinel\Throttling\ThrottleRepositoryInterface
      */
-    public function getThrottleRepository()
+    public function getThrottleRepository(): ThrottleRepositoryInterface
     {
         return $this->throttle;
     }
@@ -814,10 +855,11 @@ class Sentinel
     /**
      * Sets the throttle repository.
      *
-     * @param  \Cartalyst\Sentinel\Throttling\ThrottleRepositoryInterface  $throttle
+     * @param \Cartalyst\Sentinel\Throttling\ThrottleRepositoryInterface $throttle
+     *
      * @return void
      */
-    public function setThrottleRepository(ThrottleRepositoryInterface $throttle)
+    public function setThrottleRepository(ThrottleRepositoryInterface $throttle): void
     {
         $this->throttle = $throttle;
     }
@@ -827,7 +869,7 @@ class Sentinel
      *
      * @return array
      */
-    protected function getUserMethods()
+    protected function getUserMethods(): array
     {
         if (empty($this->userMethods)) {
             $users = $this->getUserRepository();
@@ -843,10 +885,12 @@ class Sentinel
     /**
      * Dynamically pass missing methods to Sentinel.
      *
-     * @param  string  $method
-     * @param  array  $parameters
-     * @return mixed
+     * @param string $method
+     * @param array  $parameters
+     *
      * @throws \BadMethodCallException
+     *
+     * @return mixed
      */
     public function __call($method, $parameters)
     {

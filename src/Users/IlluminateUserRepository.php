@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -20,13 +20,13 @@
 
 namespace Cartalyst\Sentinel\Users;
 
-use Carbon\Carbon;
-use Cartalyst\Sentinel\Hashing\HasherInterface;
-use Cartalyst\Support\Traits\EventTrait;
-use Cartalyst\Support\Traits\RepositoryTrait;
 use Closure;
-use Illuminate\Contracts\Events\Dispatcher;
+use Carbon\Carbon;
 use InvalidArgumentException;
+use Cartalyst\Support\Traits\EventTrait;
+use Illuminate\Contracts\Events\Dispatcher;
+use Cartalyst\Support\Traits\RepositoryTrait;
+use Cartalyst\Sentinel\Hashing\HasherInterface;
 
 class IlluminateUserRepository implements UserRepositoryInterface
 {
@@ -49,9 +49,10 @@ class IlluminateUserRepository implements UserRepositoryInterface
     /**
      * Create a new Illuminate user repository.
      *
-     * @param  \Cartalyst\Sentinel\Hashing\HasherInterface  $hasher
-     * @param  \Illuminate\Contracts\Events\Dispatcher  $dispatcher
-     * @param  string  $model
+     * @param \Cartalyst\Sentinel\Hashing\HasherInterface $hasher
+     * @param \Illuminate\Contracts\Events\Dispatcher     $dispatcher
+     * @param string                                      $model
+     *
      * @return void
      */
     public function __construct(
@@ -69,18 +70,19 @@ class IlluminateUserRepository implements UserRepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function findById($id)
     {
         return $this
             ->createModel()
             ->newQuery()
-            ->find($id);
+            ->find($id)
+        ;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function findByCredentials(array $credentials)
     {
@@ -118,7 +120,7 @@ class IlluminateUserRepository implements UserRepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function findByPersistenceCode($code)
     {
@@ -127,11 +129,12 @@ class IlluminateUserRepository implements UserRepositoryInterface
             ->whereHas('persistences', function ($q) use ($code) {
                 $q->where('code', $code);
             })
-            ->first();
+            ->first()
+        ;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function recordLogin(UserInterface $user)
     {
@@ -141,7 +144,7 @@ class IlluminateUserRepository implements UserRepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function recordLogout(UserInterface $user)
     {
@@ -149,7 +152,7 @@ class IlluminateUserRepository implements UserRepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function validateCredentials(UserInterface $user, array $credentials)
     {
@@ -157,7 +160,7 @@ class IlluminateUserRepository implements UserRepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function validForCreation(array $credentials)
     {
@@ -165,7 +168,7 @@ class IlluminateUserRepository implements UserRepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function validForUpdate($user, array $credentials)
     {
@@ -177,7 +180,7 @@ class IlluminateUserRepository implements UserRepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function create(array $credentials, Closure $callback = null)
     {
@@ -203,7 +206,7 @@ class IlluminateUserRepository implements UserRepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function update($user, array $credentials)
     {
@@ -225,10 +228,12 @@ class IlluminateUserRepository implements UserRepositoryInterface
     /**
      * Parses the given credentials to return logins, password and others.
      *
-     * @param  array  $credentials
-     * @param  array  $loginNames
-     * @return array
+     * @param array $credentials
+     * @param array $loginNames
+     *
      * @throws \InvalidArgumentException
+     *
+     * @return array
      */
     protected function parseCredentials(array $credentials, array $loginNames)
     {
@@ -262,10 +267,12 @@ class IlluminateUserRepository implements UserRepositoryInterface
     /**
      * Validates the user.
      *
-     * @param  array  $credentials
-     * @param  int  $id
-     * @return bool
+     * @param array $credentials
+     * @param int   $id
+     *
      * @throws \InvalidArgumentException
+     *
+     * @return bool
      */
     protected function validateUser(array $credentials, $id = null)
     {
@@ -292,8 +299,9 @@ class IlluminateUserRepository implements UserRepositoryInterface
     /**
      * Fills a user with the given credentials, intelligently.
      *
-     * @param  \Cartalyst\Sentinel\Users\UserInterface  $user
-     * @param  array  $credentials
+     * @param \Cartalyst\Sentinel\Users\UserInterface $user
+     * @param array                                   $credentials
+     *
      * @return void
      */
     public function fill(UserInterface $user, array $credentials)
@@ -338,7 +346,8 @@ class IlluminateUserRepository implements UserRepositoryInterface
     /**
      * Sets the hasher instance.
      *
-     * @param \Cartalyst\Sentinel\Hashing\HasherInterface  $hasher
+     * @param \Cartalyst\Sentinel\Hashing\HasherInterface $hasher
+     *
      * @return void
      */
     public function setHasher(HasherInterface $hasher)

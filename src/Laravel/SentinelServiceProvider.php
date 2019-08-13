@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -20,27 +20,27 @@
 
 namespace Cartalyst\Sentinel\Laravel;
 
-use Cartalyst\Sentinel\Activations\IlluminateActivationRepository;
-use Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint;
-use Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint;
-use Cartalyst\Sentinel\Cookies\IlluminateCookie;
-use Cartalyst\Sentinel\Hashing\NativeHasher;
-use Cartalyst\Sentinel\Persistences\IlluminatePersistenceRepository;
-use Cartalyst\Sentinel\Reminders\IlluminateReminderRepository;
-use Cartalyst\Sentinel\Roles\IlluminateRoleRepository;
-use Cartalyst\Sentinel\Sentinel;
-use Cartalyst\Sentinel\Sessions\IlluminateSession;
-use Cartalyst\Sentinel\Throttling\IlluminateThrottleRepository;
-use Cartalyst\Sentinel\Users\IlluminateUserRepository;
 use Exception;
-use Illuminate\Support\ServiceProvider;
 use InvalidArgumentException;
+use Cartalyst\Sentinel\Sentinel;
+use Illuminate\Support\ServiceProvider;
+use Cartalyst\Sentinel\Hashing\NativeHasher;
 use Symfony\Component\HttpFoundation\Response;
+use Cartalyst\Sentinel\Cookies\IlluminateCookie;
+use Cartalyst\Sentinel\Sessions\IlluminateSession;
+use Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint;
+use Cartalyst\Sentinel\Roles\IlluminateRoleRepository;
+use Cartalyst\Sentinel\Users\IlluminateUserRepository;
+use Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint;
+use Cartalyst\Sentinel\Reminders\IlluminateReminderRepository;
+use Cartalyst\Sentinel\Throttling\IlluminateThrottleRepository;
+use Cartalyst\Sentinel\Activations\IlluminateActivationRepository;
+use Cartalyst\Sentinel\Persistences\IlluminatePersistenceRepository;
 
 class SentinelServiceProvider extends ServiceProvider
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function boot()
     {
@@ -49,7 +49,7 @@ class SentinelServiceProvider extends ServiceProvider
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function register()
     {
@@ -168,7 +168,7 @@ class SentinelServiceProvider extends ServiceProvider
     protected function registerHasher()
     {
         $this->app->singleton('sentinel.hasher', function () {
-            return new NativeHasher;
+            return new NativeHasher();
         });
     }
 
@@ -189,8 +189,9 @@ class SentinelServiceProvider extends ServiceProvider
     /**
      * Registers the checkpoints.
      *
-     * @return void
      * @throws \InvalidArgumentException
+     *
+     * @return void
      */
     protected function registerCheckpoints()
     {
@@ -205,7 +206,7 @@ class SentinelServiceProvider extends ServiceProvider
 
             foreach ($activeCheckpoints as $checkpoint) {
                 if (! $app->offsetExists("sentinel.checkpoint.{$checkpoint}")) {
-                    throw new InvalidArgumentException("Invalid checkpoint [$checkpoint] given.");
+                    throw new InvalidArgumentException("Invalid checkpoint [${checkpoint}] given.");
                 }
 
                 $checkpoints[$checkpoint] = $app["sentinel.checkpoint.{$checkpoint}"];
@@ -272,7 +273,7 @@ class SentinelServiceProvider extends ServiceProvider
 
             $throttling = $app['config']->get('cartalyst.sentinel.throttling');
 
-            foreach ([ 'global', 'ip', 'user' ] as $type) {
+            foreach (['global', 'ip', 'user'] as $type) {
                 ${"{$type}Interval"} = $throttling[$type]['interval'];
                 ${"{$type}Thresholds"} = $throttling[$type]['thresholds'];
             }
@@ -358,7 +359,7 @@ class SentinelServiceProvider extends ServiceProvider
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function provides()
     {
@@ -402,8 +403,9 @@ class SentinelServiceProvider extends ServiceProvider
     /**
      * Sweep expired codes.
      *
-     * @param  mixed  $repository
-     * @param  array  $lottery
+     * @param mixed $repository
+     * @param array $lottery
+     *
      * @return void
      */
     protected function sweep($repository, array $lottery)
@@ -419,7 +421,8 @@ class SentinelServiceProvider extends ServiceProvider
     /**
      * Determine if the configuration odds hit the lottery.
      *
-     * @param  array  $lottery
+     * @param array $lottery
+     *
      * @return bool
      */
     protected function configHitsLottery(array $lottery)
@@ -458,24 +461,24 @@ class SentinelServiceProvider extends ServiceProvider
 
         if (class_exists($users)) {
             if (method_exists($users, 'setRolesModel')) {
-                forward_static_call_array([ $users, 'setRolesModel' ], [ $roles ]);
+                forward_static_call_array([$users, 'setRolesModel'], [$roles]);
             }
 
             if (method_exists($users, 'setPersistencesModel')) {
-                forward_static_call_array([ $users, 'setPersistencesModel' ], [ $persistences ]);
+                forward_static_call_array([$users, 'setPersistencesModel'], [$persistences]);
             }
 
             if (method_exists($users, 'setPermissionsClass')) {
-                forward_static_call_array([ $users, 'setPermissionsClass' ], [ $config['permissions']['class'] ]);
+                forward_static_call_array([$users, 'setPermissionsClass'], [$config['permissions']['class']]);
             }
         }
 
         if (class_exists($roles) && method_exists($roles, 'setUsersModel')) {
-            forward_static_call_array([ $roles, 'setUsersModel' ], [ $users ]);
+            forward_static_call_array([$roles, 'setUsersModel'], [$users]);
         }
 
         if (class_exists($persistences) && method_exists($persistences, 'setUsersModel')) {
-            forward_static_call_array([ $persistences, 'setUsersModel' ], [ $users ]);
+            forward_static_call_array([$persistences, 'setUsersModel'], [$users]);
         }
     }
 }

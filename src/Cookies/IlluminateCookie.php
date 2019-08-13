@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -20,8 +20,8 @@
 
 namespace Cartalyst\Sentinel\Cookies;
 
-use Illuminate\Cookie\CookieJar;
 use Illuminate\Http\Request;
+use Illuminate\Cookie\CookieJar;
 
 class IlluminateCookie implements CookieInterface
 {
@@ -47,11 +47,12 @@ class IlluminateCookie implements CookieInterface
     protected $key = 'cartalyst_sentinel';
 
     /**
-     * Create a new Illuminate cookie driver.
+     * Constructor.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Illuminate\Cookie\CookieJar  $jar
-     * @param  string  $key
+     * @param \Illuminate\Http\Request     $request
+     * @param \Illuminate\Cookie\CookieJar $jar
+     * @param string                       $key
+     *
      * @return void
      */
     public function __construct(Request $request, CookieJar $jar, $key = null)
@@ -66,7 +67,7 @@ class IlluminateCookie implements CookieInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function put($value)
     {
@@ -76,7 +77,7 @@ class IlluminateCookie implements CookieInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function get()
     {
@@ -94,7 +95,7 @@ class IlluminateCookie implements CookieInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function forget()
     {

@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -21,16 +21,17 @@
 namespace Cartalyst\Sentinel\Reminders;
 
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Cartalyst\Sentinel\Users\UserInterface;
-use Cartalyst\Sentinel\Users\UserRepositoryInterface;
 use Cartalyst\Support\Traits\RepositoryTrait;
+use Cartalyst\Sentinel\Users\UserRepositoryInterface;
 
 class IlluminateReminderRepository implements ReminderRepositoryInterface
 {
     use RepositoryTrait;
 
     /**
-     * The user repository.
+     * The Users repository instance.
      *
      * @var \Cartalyst\Sentinel\Users\UserRepositoryInterface
      */
@@ -41,7 +42,7 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface
      *
      * @var string
      */
-    protected $model = 'Cartalyst\Sentinel\Reminders\EloquentReminder';
+    protected $model = EloquentReminder::class;
 
     /**
      * The expiration time in seconds.
@@ -51,30 +52,27 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface
     protected $expires = 259200;
 
     /**
-     * Create a new Illuminate reminder repository.
+     * Constructor.
      *
-     * @param  \Cartalyst\Sentinel\Users\UserRepositoryInterface  $users
-     * @param  string  $model
-     * @param  int  $expires
+     * @param \Cartalyst\Sentinel\Users\UserRepositoryInterface $users
+     * @param string                                            $model
+     * @param int                                               $expires
+     *
      * @return void
      */
-    public function __construct(UserRepositoryInterface $users, $model = null, $expires = null)
+    public function __construct(UserRepositoryInterface $users, string $model = null, int $expires = null)
     {
         $this->users = $users;
 
-        if (isset($model)) {
-            $this->model = $model;
-        }
+        $this->model = $model;
 
-        if (isset($expires)) {
-            $this->expires = $expires;
-        }
+        $this->expires = $expires;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function create(UserInterface $user)
+    public function create(UserInterface $user): EloquentReminder
     {
         $reminder = $this->createModel();
 
@@ -93,9 +91,9 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function exists(UserInterface $user, $code = null)
+    public function get(UserInterface $user, string $code = null): ?EloquentReminder
     {
         $expires = $this->expires();
 
@@ -104,19 +102,28 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface
             ->newQuery()
             ->where('user_id', $user->getUserId())
             ->where('completed', false)
-            ->where('created_at', '>', $expires);
+            ->where('created_at', '>', $expires)
+        ;
 
         if ($code) {
             $reminder->where('code', $code);
         }
 
-        return $reminder->first() ?: false;
+        return $reminder->first();
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function complete(UserInterface $user, $code, $password)
+    public function exists(UserInterface $user, string $code = null): bool
+    {
+        return (bool) $this->get($user, $code);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function complete(UserInterface $user, string $code, string $password): bool
     {
         $expires = $this->expires();
 
@@ -127,7 +134,8 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface
             ->where('code', $code)
             ->where('completed', false)
             ->where('created_at', '>', $expires)
-            ->first();
+            ->first()
+        ;
 
         if ($reminder === null) {
             return false;
@@ -154,9 +162,9 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function removeExpired()
+    public function removeExpired(): bool
     {
         $expires = $this->expires();
 
@@ -165,7 +173,8 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface
             ->newQuery()
             ->where('completed', false)
             ->where('created_at', '<', $expires)
-            ->delete();
+            ->delete()
+        ;
     }
 
     /**
@@ -173,18 +182,18 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface
      *
      * @return \Carbon\Carbon
      */
-    protected function expires()
+    protected function expires(): Carbon
     {
         return Carbon::now()->subSeconds($this->expires);
     }
 
     /**
-     * Returns a random string for a reminder code.
+     * Returns the random string used for the reminder code.
      *
      * @return string
      */
-    protected function generateReminderCode()
+    protected function generateReminderCode(): string
     {
-        return str_random(32);
+        return Str::random(32);
     }
 }

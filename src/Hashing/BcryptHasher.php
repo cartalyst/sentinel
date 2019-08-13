@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -32,25 +32,23 @@ class BcryptHasher implements HasherInterface
     public $strength = 8;
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function hash($value)
+    public function hash(string $value): string
     {
         $salt = $this->createSalt();
 
-        // Format the strength
         $strength = str_pad($this->strength, 2, '0', STR_PAD_LEFT);
 
-        // Create prefix - "$2y$"" fixes blowfish weakness
-        $prefix = PHP_VERSION_ID < 50307 ? '$2a$' : '$2y$';
+        $prefix = '$2y$';
 
         return crypt($value, $prefix.$strength.'$'.$salt.'$');
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function check($value, $hashedValue)
+    public function check(string $value, string $hashedValue): bool
     {
         return $this->slowEquals(crypt($value, $hashedValue), $hashedValue);
     }

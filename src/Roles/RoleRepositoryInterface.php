@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -25,24 +25,27 @@ interface RoleRepositoryInterface
     /**
      * Finds a role by the given primary key.
      *
-     * @param  int  $id
-     * @return \Cartalyst\Sentinel\Roles\RoleInterface
+     * @param int $id
+     *
+     * @return \Cartalyst\Sentinel\Roles\RoleInterface|null
      */
-    public function findById($id);
+    public function findById(int $id): ?RoleInterface;
 
     /**
      * Finds a role by the given slug.
      *
-     * @param  string  $slug
-     * @return \Cartalyst\Sentinel\Roles\RoleInterface
+     * @param string $slug
+     *
+     * @return \Cartalyst\Sentinel\Roles\RoleInterface|null
      */
-    public function findBySlug($slug);
+    public function findBySlug(string $slug): ?RoleInterface;
 
     /**
      * Finds a role by the given name.
      *
-     * @param  string  $name
-     * @return \Cartalyst\Sentinel\Roles\RoleInterface
+     * @param string $name
+     *
+     * @return \Cartalyst\Sentinel\Roles\RoleInterface|null
      */
-    public function findByName($name);
+    public function findByName(string $name): ?RoleInterface;
 }

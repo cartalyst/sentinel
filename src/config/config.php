@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -19,7 +19,6 @@
  */
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Session Key
@@ -52,9 +51,7 @@ return [
     */
 
     'users' => [
-
         'model' => 'Cartalyst\Sentinel\Users\EloquentUser',
-
     ],
 
     /*
@@ -67,9 +64,7 @@ return [
     */
 
     'roles' => [
-
         'model' => 'Cartalyst\Sentinel\Roles\EloquentRole',
-
     ],
 
     /*
@@ -94,9 +89,7 @@ return [
     */
 
     'permissions' => [
-
         'class' => 'Cartalyst\Sentinel\Permissions\StandardPermissions',
-
     ],
 
     /*
@@ -110,11 +103,9 @@ return [
     */
 
     'persistences' => [
-
         'model' => 'Cartalyst\Sentinel\Persistences\EloquentPersistence',
 
         'single' => false,
-
     ],
 
     /*
@@ -132,10 +123,8 @@ return [
     */
 
     'checkpoints' => [
-
         'throttle',
         'activation',
-
     ],
 
     /*
@@ -151,13 +140,11 @@ return [
     */
 
     'activations' => [
-
         'model' => 'Cartalyst\Sentinel\Activations\EloquentActivation',
 
         'expires' => 259200,
 
         'lottery' => [2, 100],
-
     ],
 
     /*
@@ -173,13 +160,11 @@ return [
     */
 
     'reminders' => [
-
         'model' => 'Cartalyst\Sentinel\Reminders\EloquentReminder',
 
         'expires' => 14400,
 
         'lottery' => [2, 100],
-
     ],
 
     /*
@@ -225,11 +210,9 @@ return [
     */
 
     'throttling' => [
-
         'model' => 'Cartalyst\Sentinel\Throttling\EloquentThrottle',
 
         'global' => [
-
             'interval' => 900,
 
             'thresholds' => [
@@ -240,25 +223,18 @@ return [
                 50 => 16,
                 60 => 32,
             ],
-
         ],
 
         'ip' => [
-
             'interval' => 900,
 
             'thresholds' => 5,
-
         ],
 
         'user' => [
-
             'interval' => 900,
 
             'thresholds' => 5,
-
         ],
-
     ],
-
 ];

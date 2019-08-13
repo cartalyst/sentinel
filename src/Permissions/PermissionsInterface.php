@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * Part of the Sentinel package.
  *
  * NOTICE OF LICENSE
@@ -25,16 +25,18 @@ interface PermissionsInterface
     /**
      * Returns if access is available for all given permissions.
      *
-     * @param  array|string  $permissions
+     * @param array|string $permissions
+     *
      * @return bool
      */
-    public function hasAccess($permissions);
+    public function hasAccess($permissions): bool;
 
     /**
      * Returns if access is available for any given permissions.
      *
-     * @param  array|string  $permissions
+     * @param array|string $permissions
+     *
      * @return bool
      */
-    public function hasAnyAccess($permissions);
+    public function hasAnyAccess($permissions): bool;
 }
