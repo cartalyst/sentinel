@@ -79,5 +79,7 @@ class ActivationCheckpoint implements CheckpointInterface
 
             throw $exception;
         }
+
+        return $completed;
     }
 }
