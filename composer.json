@@ -1,6 +1,6 @@
 {
     "name": "cartalyst/sentinel",
-    "description": "PHP 5.4+ Fully-featured Authentication & Authorization System",
+    "description": "PHP 7.2+ Fully-featured Authentication & Authorization System",
     "keywords": [
         "php",
         "cartalyst",
@@ -17,8 +17,8 @@
         }
     ],
     "require": {
-        "php": ">=5.4.0",
-        "cartalyst/support": "~1.0||~2.0",
+        "php": "^7.2",
+        "cartalyst/support": "^2.0",
         "illuminate/support": "~5.0"
     },
     "require-dev": {
