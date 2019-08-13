@@ -64,9 +64,9 @@ class NativeSessionTest extends PHPUnit_Framework_TestCase
 
     public function testForget()
     {
-        $_SESSION['__sentinel'] = 'bar';
-
         $session = new NativeSession('__sentinel');
+
+        $_SESSION['__sentinel'] = 'bar';
 
         $this->assertEquals('bar', $_SESSION['__sentinel']);
         $session->forget();
