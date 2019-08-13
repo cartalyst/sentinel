@@ -40,9 +40,10 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase
     public function testConstructor()
     {
         $throttle = m::mock('Cartalyst\Sentinel\Throttling\IlluminateThrottleRepository[createModel]', [
-            'Cartalyst\Sentinel\Throttling\EloquentThrottle', 1, 2, 3, 4, 5, 6,
+            'ThrottleMock', 1, 2, 3, 4, 5, 6,
         ]);
 
+        $this->assertEquals('ThrottleMock', $throttle->getModel());
         $this->assertEquals(1, $throttle->getGlobalInterval());
         $this->assertEquals(2, $throttle->getGlobalThresholds());
         $this->assertEquals(3, $throttle->getIpInterval());
@@ -54,25 +55,30 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase
     public function testGlobalDelayWithIntegerThreshold1()
     {
         list($throttle, $model, $query) = $this->getThrottlingMock();
-        $startTime = time();
 
         $throttle->setGlobalInterval(10);
         $throttle->setGlobalThresholds(5);
 
-        $this->addMockConnection($model);
         $query->shouldReceive('where')->with('type', 'global')->andReturn($query);
+        $query->shouldReceive('where')
+              ->with('created_at', '>', m::on(function ($interval) {
+                  $this->assertEquals(time() - 10, $interval->getTimestamp(), '', 3);
+                  return true;
+              }))
+              ->andReturn($query);
 
-        $query->shouldReceive('where')->with('created_at', '>', m::on(function ($interval) {
-            $this->assertEquals(time() - 10, $interval->getTimestamp(), '', 3);
-            return true;
-        }))->andReturn($query);
-        $query->shouldReceive('get')->andReturn($models = m::mock('Illuminate\Database\Eloquent\Collection'));
+        $query->shouldReceive('get')->andReturn(
+            $models = m::mock('Illuminate\Database\Eloquent\Collection')
+        );
 
         $models->shouldReceive('count')->andReturn(6);
-        $models->shouldReceive('first')->andReturn($first = new EloquentThrottle);
+        $models->shouldReceive('first')->andReturn(
+            $first = $this->fakeThrottle()
+        );
 
-        $first->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $first->created_at = Carbon::createFromTimestamp(time());
+        $first->shouldReceive('getAttribute')->andReturn(
+            Carbon::createFromTimestamp(time())
+        );
 
         $this->assertEquals(10, $throttle->globalDelay(), '', 3);
     }
@@ -83,20 +89,24 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase
         $throttle->setGlobalInterval(10);
         $throttle->setGlobalThresholds(200);
 
-        $this->addMockConnection($model);
         $query->shouldReceive('where')->with('type', 'global')->andReturn($query);
 
-        $query->shouldReceive('where')->with('created_at', '>', m::on(function ($interval) {
-            $this->assertEquals(time() - 10, $interval->getTimestamp(), '', 3);
-            return true;
-        }))->andReturn($query);
-        $query->shouldReceive('get')->andReturn($models = m::mock('Illuminate\Database\Eloquent\Collection'));
+        $query->shouldReceive('where')
+              ->with('created_at', '>', m::on(function ($interval) {
+                  $this->assertEquals(time() - 10, $interval->getTimestamp(), '', 3);
+                  return true;
+              }))
+              ->andReturn($query);
+        $query->shouldReceive('get')->andReturn(
+            $models = m::mock('Illuminate\Database\Eloquent\Collection')
+        );
 
         $models->shouldReceive('count')->andReturn(6);
-        $models->shouldReceive('first')->andReturn($first = new EloquentThrottle);
+        $models->shouldReceive('first')->andReturn($first = $this->fakeThrottle());
 
-        $first->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $first->created_at = Carbon::createFromTimestamp(time());
+        $first->shouldReceive('getAttribute')->andReturn(
+            Carbon::createFromTimestamp(time())
+        );
 
         $this->assertEquals(0, $throttle->globalDelay(), '', 3);
     }
@@ -107,20 +117,24 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase
         $throttle->setGlobalInterval(10);
         $throttle->setGlobalThresholds([5 => 3, 10 => 10]);
 
-        $this->addMockConnection($model);
         $query->shouldReceive('where')->with('type', 'global')->andReturn($query);
 
-        $query->shouldReceive('where')->with('created_at', '>', m::on(function ($interval) {
-            $this->assertEquals(time() - 10, $interval->getTimestamp(), '', 3);
-            return true;
-        }))->andReturn($query);
-        $query->shouldReceive('get')->andReturn($models = m::mock('Illuminate\Database\Eloquent\Collection'));
+        $query->shouldReceive('where')
+              ->with('created_at', '>', m::on(function ($interval) {
+                  $this->assertEquals(time() - 10, $interval->getTimestamp(), '', 3);
+                  return true;
+              }))
+              ->andReturn($query);
+        $query->shouldReceive('get')->andReturn(
+            $models = m::mock('Illuminate\Database\Eloquent\Collection')
+        );
 
         $models->shouldReceive('count')->andReturn(6);
-        $models->shouldReceive('last')->andReturn($last = new EloquentThrottle);
+        $models->shouldReceive('last')->andReturn($last = $this->fakeThrottle());
 
-        $last->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $last->created_at = Carbon::createFromTimestamp(time());
+        $last->shouldReceive('getAttribute')->andReturn(
+            Carbon::createFromTimestamp(time())
+        );
 
         $this->assertEquals(3, $throttle->globalDelay(), '', 3);
     }
@@ -131,20 +145,24 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase
         $throttle->setGlobalInterval(10);
         $throttle->setGlobalThresholds([5 => 3, 10 => 10]);
 
-        $this->addMockConnection($model);
         $query->shouldReceive('where')->with('type', 'global')->andReturn($query);
 
-        $query->shouldReceive('where')->with('created_at', '>', m::on(function ($interval) {
-            $this->assertEquals(time() - 10, $interval->getTimestamp(), '', 3);
-            return true;
-        }))->andReturn($query);
-        $query->shouldReceive('get')->andReturn($models = m::mock('Illuminate\Database\Eloquent\Collection'));
+        $query->shouldReceive('where')
+              ->with('created_at', '>', m::on(function ($interval) {
+                  $this->assertEquals(time() - 10, $interval->getTimestamp(), '', 3);
+                  return true;
+              }))
+              ->andReturn($query);
+        $query->shouldReceive('get')->andReturn(
+            $models = m::mock('Illuminate\Database\Eloquent\Collection')
+        );
 
         $models->shouldReceive('count')->andReturn(11);
-        $models->shouldReceive('last')->andReturn($last = new EloquentThrottle);
+        $models->shouldReceive('last')->andReturn($last = $this->fakeThrottle());
 
-        $last->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $last->created_at = Carbon::createFromTimestamp(time());
+        $last->shouldReceive('getAttribute')->andReturn(
+            Carbon::createFromTimestamp(time())
+        );
 
         $this->assertEquals(10, $throttle->globalDelay(), '', 3);
     }
@@ -155,20 +173,24 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase
         $throttle->setGlobalInterval(10);
         $throttle->setGlobalThresholds([5 => 33, 10 => 100]);
 
-        $this->addMockConnection($model);
         $query->shouldReceive('where')->with('type', 'global')->andReturn($query);
 
-        $query->shouldReceive('where')->with('created_at', '>', m::on(function ($interval) {
-            $this->assertEquals(time() - 10, $interval->getTimestamp(), '', 3);
-            return true;
-        }))->andReturn($query);
-        $query->shouldReceive('get')->andReturn($models = m::mock('Illuminate\Database\Eloquent\Collection'));
+        $query->shouldReceive('where')
+              ->with('created_at', '>', m::on(function ($interval) {
+                  $this->assertEquals(time() - 10, $interval->getTimestamp(), '', 3);
+                  return true;
+              }))
+              ->andReturn($query);
+        $query->shouldReceive('get')->andReturn(
+            $models = m::mock('Illuminate\Database\Eloquent\Collection')
+        );
 
         $models->shouldReceive('count')->andReturn(11);
-        $models->shouldReceive('last')->andReturn($last = new EloquentThrottle);
+        $models->shouldReceive('last')->andReturn($last = $this->fakeThrottle());
 
-        $last->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $last->created_at = Carbon::createFromTimestamp(time() - 200);
+        $last->shouldReceive('getAttribute')->andReturn(
+            Carbon::createFromTimestamp(time() - 200)
+        );
 
         $this->assertEquals(0, $throttle->globalDelay(), '', 3);
     }
@@ -179,21 +201,25 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase
         $throttle->setIpInterval(10);
         $throttle->setIpThresholds(5);
 
-        $this->addMockConnection($model);
         $query->shouldReceive('where')->with('type', 'ip')->andReturn($query);
         $query->shouldReceive('where')->with('ip', '127.0.0.1')->andReturn($query);
 
-        $query->shouldReceive('where')->with('created_at', '>', m::on(function ($interval) {
-            $this->assertEquals(time() - 10, $interval->getTimestamp(), '', 3);
-            return true;
-        }))->andReturn($query);
-        $query->shouldReceive('get')->andReturn($models = m::mock('Illuminate\Database\Eloquent\Collection'));
+        $query->shouldReceive('where')
+              ->with('created_at', '>', m::on(function ($interval) {
+                  $this->assertEquals(time() - 10, $interval->getTimestamp(), '', 3);
+                  return true;
+              }))
+              ->andReturn($query);
+        $query->shouldReceive('get')->andReturn(
+            $models = m::mock('Illuminate\Database\Eloquent\Collection')
+        );
 
         $models->shouldReceive('count')->andReturn(6);
-        $models->shouldReceive('first')->andReturn($first = new EloquentThrottle);
+        $models->shouldReceive('first')->andReturn($first = $this->fakeThrottle());
 
-        $first->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $first->created_at = Carbon::createFromTimestamp(time());
+        $first->shouldReceive('getAttribute')->andReturn(
+            Carbon::createFromTimestamp(time())
+        );
 
         $this->assertEquals(10, $throttle->ipDelay('127.0.0.1'), '', 3);
     }
@@ -204,21 +230,25 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase
         $throttle->setIpInterval(10);
         $throttle->setIpThresholds([5 => 3, 10 => 10]);
 
-        $this->addMockConnection($model);
         $query->shouldReceive('where')->with('type', 'ip')->andReturn($query);
         $query->shouldReceive('where')->with('ip', '127.0.0.1')->andReturn($query);
 
-        $query->shouldReceive('where')->with('created_at', '>', m::on(function ($interval) {
-            $this->assertEquals(time() - 10, $interval->getTimestamp(), '', 3);
-            return true;
-        }))->andReturn($query);
-        $query->shouldReceive('get')->andReturn($models = m::mock('Illuminate\Database\Eloquent\Collection'));
+        $query->shouldReceive('where')
+              ->with('created_at', '>', m::on(function ($interval) {
+                  $this->assertEquals(time() - 10, $interval->getTimestamp(), '', 3);
+                  return true;
+              }))
+              ->andReturn($query);
+        $query->shouldReceive('get')->andReturn(
+            $models = m::mock('Illuminate\Database\Eloquent\Collection')
+        );
 
         $models->shouldReceive('count')->andReturn(6);
-        $models->shouldReceive('last')->andReturn($last = new EloquentThrottle);
+        $models->shouldReceive('last')->andReturn($last = $this->fakeThrottle());
 
-        $last->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $last->created_at = Carbon::createFromTimestamp(time());
+        $last->shouldReceive('getAttribute')->andReturn(
+            Carbon::createFromTimestamp(time())
+        );
 
         $this->assertEquals(3, $throttle->ipDelay('127.0.0.1'), '', 3);
     }
@@ -229,21 +259,25 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase
         $throttle->setIpInterval(10);
         $throttle->setIpThresholds([5 => 3, 10 => 10]);
 
-        $this->addMockConnection($model);
         $query->shouldReceive('where')->with('type', 'ip')->andReturn($query);
         $query->shouldReceive('where')->with('ip', '127.0.0.1')->andReturn($query);
 
-        $query->shouldReceive('where')->with('created_at', '>', m::on(function ($interval) {
-            $this->assertEquals(time() - 10, $interval->getTimestamp(), '', 3);
-            return true;
-        }))->andReturn($query);
-        $query->shouldReceive('get')->andReturn($models = m::mock('Illuminate\Database\Eloquent\Collection'));
+        $query->shouldReceive('where')
+              ->with('created_at', '>', m::on(function ($interval) {
+                  $this->assertEquals(time() - 10, $interval->getTimestamp(), '', 3);
+                  return true;
+              }))
+              ->andReturn($query);
+        $query->shouldReceive('get')->andReturn(
+            $models = m::mock('Illuminate\Database\Eloquent\Collection')
+        );
 
         $models->shouldReceive('count')->andReturn(11);
-        $models->shouldReceive('last')->andReturn($last = new EloquentThrottle);
+        $models->shouldReceive('last')->andReturn($last = $this->fakeThrottle());
 
-        $last->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $last->created_at = Carbon::createFromTimestamp(time());
+        $last->shouldReceive('getAttribute')->andReturn(
+            Carbon::createFromTimestamp(time())
+        );
 
         $this->assertEquals(10, $throttle->ipDelay('127.0.0.1'), '', 3);
     }
@@ -254,21 +288,25 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase
         $throttle->setUserInterval(10);
         $throttle->setUserThresholds(5);
 
-        $this->addMockConnection($model);
         $query->shouldReceive('where')->with('type', 'user')->andReturn($query);
         $query->shouldReceive('where')->with('user_id', 1)->andReturn($query);
 
-        $query->shouldReceive('where')->with('created_at', '>', m::on(function ($interval) {
-            $this->assertEquals(time() - 10, $interval->getTimestamp(), '', 3);
-            return true;
-        }))->andReturn($query);
-        $query->shouldReceive('get')->andReturn($models = m::mock('Illuminate\Database\Eloquent\Collection'));
+        $query->shouldReceive('where')
+              ->with('created_at', '>', m::on(function ($interval) {
+                  $this->assertEquals(time() - 10, $interval->getTimestamp(), '', 3);
+                  return true;
+              }))
+              ->andReturn($query);
+        $query->shouldReceive('get')->andReturn(
+            $models = m::mock('Illuminate\Database\Eloquent\Collection')
+        );
 
         $models->shouldReceive('count')->andReturn(6);
-        $models->shouldReceive('first')->andReturn($first = new EloquentThrottle);
+        $models->shouldReceive('first')->andReturn($first = $this->fakeThrottle());
 
-        $first->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $first->created_at = Carbon::createFromTimestamp(time());
+        $first->shouldReceive('getAttribute')->andReturn(
+            Carbon::createFromTimestamp(time())
+        );
 
         $user = m::mock('Cartalyst\Sentinel\Users\UserInterface');
         $user->shouldReceive('getUserId')->andReturn(1);
@@ -282,21 +320,25 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase
         $throttle->setUserInterval(10);
         $throttle->setUserThresholds([5 => 3, 10 => 10]);
 
-        $this->addMockConnection($model);
         $query->shouldReceive('where')->with('type', 'user')->andReturn($query);
         $query->shouldReceive('where')->with('user_id', 1)->andReturn($query);
 
-        $query->shouldReceive('where')->with('created_at', '>', m::on(function ($interval) {
-            $this->assertEquals(time() - 10, $interval->getTimestamp(), '', 3);
-            return true;
-        }))->andReturn($query);
-        $query->shouldReceive('get')->andReturn($models = m::mock('Illuminate\Database\Eloquent\Collection'));
+        $query->shouldReceive('where')
+              ->with('created_at', '>', m::on(function ($interval) {
+                  $this->assertEquals(time() - 10, $interval->getTimestamp(), '', 3);
+                  return true;
+              }))
+              ->andReturn($query);
+        $query->shouldReceive('get')->andReturn(
+            $models = m::mock('Illuminate\Database\Eloquent\Collection')
+        );
 
         $models->shouldReceive('count')->andReturn(6);
-        $models->shouldReceive('last')->andReturn($last = new EloquentThrottle);
+        $models->shouldReceive('last')->andReturn($last = $this->fakeThrottle());
 
-        $last->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $last->created_at = Carbon::createFromTimestamp(time());
+        $last->shouldReceive('getAttribute')->andReturn(
+            Carbon::createFromTimestamp(time())
+        );
 
         $user = m::mock('Cartalyst\Sentinel\Users\UserInterface');
         $user->shouldReceive('getUserId')->andReturn(1);
@@ -310,21 +352,25 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase
         $throttle->setUserInterval(10);
         $throttle->setUserThresholds([5 => 3, 10 => 10]);
 
-        $this->addMockConnection($model);
         $query->shouldReceive('where')->with('type', 'user')->andReturn($query);
         $query->shouldReceive('where')->with('user_id', 1)->andReturn($query);
 
-        $query->shouldReceive('where')->with('created_at', '>', m::on(function ($interval) {
-            $this->assertEquals(time() - 10, $interval->getTimestamp(), '', 3);
-            return true;
-        }))->andReturn($query);
-        $query->shouldReceive('get')->andReturn($models = m::mock('Illuminate\Database\Eloquent\Collection'));
+        $query->shouldReceive('where')
+              ->with('created_at', '>', m::on(function ($interval) {
+                  $this->assertEquals(time() - 10, $interval->getTimestamp(), '', 3);
+                  return true;
+              }))
+              ->andReturn($query);
+        $query->shouldReceive('get')->andReturn(
+            $models = m::mock('Illuminate\Database\Eloquent\Collection')
+        );
 
         $models->shouldReceive('count')->andReturn(11);
-        $models->shouldReceive('last')->andReturn($last = new EloquentThrottle);
+        $models->shouldReceive('last')->andReturn($last = $this->fakeThrottle());
 
-        $last->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $last->created_at = Carbon::createFromTimestamp(time());
+        $last->shouldReceive('getAttribute')->andReturn(
+            Carbon::createFromTimestamp(time())
+        );
 
         $user = m::mock('Cartalyst\Sentinel\Users\UserInterface');
         $user->shouldReceive('getUserId')->andReturn(1);
@@ -336,41 +382,38 @@ class IlluminateThrottleRepositoryTest extends PHPUnit_Framework_TestCase
     {
         list($throttle, $model, $query) = $this->getThrottlingMock();
 
-        $this->addMockConnection($model);
-        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
+        $model->shouldReceive('fill');
+        $model->shouldReceive('save');
+        $model->shouldReceive('setAttribute');
 
         $query->shouldReceive('where')->with('type', 'global')->andReturn($query);
         $query->shouldReceive('where')->with('id', '=', '');
 
-        $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
-        $model->getConnection()->getQueryGrammar()->shouldReceive('compileUpdate')->twice();
-        $model->getConnection()->getQueryGrammar()->shouldReceive('prepareBindingsForUpdate')->andReturn([]);
-        $model->getConnection()->shouldReceive('update')->twice();
-
         $user = m::mock('Cartalyst\Sentinel\Users\EloquentUser');
         $user->shouldReceive('getUserId')->once()->andReturn(1);
 
-        $throttle->log('127.0.0.1', $user);
+        $this->assertNull($throttle->log('127.0.0.1', $user));
+    }
+
+    protected function fakeThrottle()
+    {
+        return m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle');
     }
 
     protected function getThrottlingMock()
     {
         $users     = m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository');
-        $throttle = m::mock('Cartalyst\Sentinel\Throttling\IlluminateThrottleRepository[createModel]', [$users]);
+        $model = m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle');
+        $query = m::mock('Illuminate\Database\Eloquent\Builder');
+        $throttle = m::mock(
+            'Cartalyst\Sentinel\Throttling\IlluminateThrottleRepository[createModel]',
+            [$users]
+        );
 
-        $throttle->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle[newQuery]'));
-
-        $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
+        $throttle->shouldReceive('createModel')->andReturn($model);
+        $model->shouldReceive('newQuery')->andReturn($query);
 
         return [$throttle, $model, $query];
     }
 
-    protected function addMockConnection($model)
-    {
-        $model->setConnectionResolver($resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'));
-        $resolver->shouldReceive('connection')->andReturn(m::mock('Illuminate\Database\Connection')->makePartial());
-        $model->getConnection()->shouldReceive('getQueryGrammar')->andReturn(m::mock('Illuminate\Database\Query\Grammars\Grammar'));
-        $model->getConnection()->shouldReceive('getPostProcessor')->andReturn(m::mock('Illuminate\Database\Query\Processors\Processor'));
-    }
 }

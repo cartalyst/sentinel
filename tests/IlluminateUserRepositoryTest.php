@@ -21,8 +21,8 @@
 namespace Cartalyst\Sentinel\tests;
 
 use Cartalyst\Sentinel\Users\EloquentUser;
-use Mockery as m;
 use PHPUnit_Framework_TestCase;
+use Mockery as m;
 
 class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase
 {
@@ -38,11 +38,14 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase
 
     public function testConstructor()
     {
-        $users = m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository[createModel,findById]', [
-            $hasher = m::mock('Cartalyst\Sentinel\Hashing\NativeHasher'),
-            null,
-            'UserMock'
-        ]);
+        $users = m::mock(
+            'Cartalyst\Sentinel\Users\IlluminateUserRepository[createModel]',
+            [
+                $hasher = m::mock('Cartalyst\Sentinel\Hashing\NativeHasher'),
+                null,
+                'UserMock'
+            ]
+        );
 
         $this->assertEquals('UserMock', $users->getModel());
     }
@@ -53,51 +56,81 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase
 
         $query->shouldReceive('find')->with(1)->once()->andReturn($model);
 
-        $users->findById(1);
+        $user = $users->findById(1);
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Users\UserInterface',
+            $user
+        );
     }
 
     public function testFindByCredentials1()
     {
         list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-        $query->shouldReceive('where')->once()->andReturn($model);
+        $model->shouldReceive('getLoginNames')->andReturn(['email']);
+        $query->shouldReceive('where')
+              ->with('email', 'foo@example.com')
+              ->once()
+              ->andReturn($model);
         $query->shouldReceive('first')->once()->andReturn($model);
 
-        $users->findByCredentials([
+        $user = $users->findByCredentials([
             'email'    => 'foo@example.com',
             'password' => 'secret',
         ]);
+
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Users\UserInterface',
+            $user
+        );
     }
 
     public function testFindByCredentials2()
     {
         list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-        $query->shouldReceive('whereNested')->once()->andReturn($model);
+        $model->shouldReceive('getLoginNames')->andReturn(['email']);
+        $query->shouldReceive('whereNested')
+              ->once()
+              ->andReturn($model);
         $query->shouldReceive('first')->once()->andReturn($model);
 
-        $users->findByCredentials([
+        $user = $users->findByCredentials([
             'login'    => 'foo@example.com',
             'password' => 'secret',
         ]);
+
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Users\UserInterface',
+            $user
+        );
     }
 
     public function testFindByCredentials3()
     {
         list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-        $query->shouldReceive('whereNested')->once()->andReturn($model);
+        $model->shouldReceive('getLoginNames')->andReturn(['email']);
+        $query->shouldReceive('whereNested')
+              ->once()
+              ->andReturn($model);
         $query->shouldReceive('first')->once()->andReturn($model);
 
-        $users->findByCredentials([
+        $user = $users->findByCredentials([
             'login' => 'foo@example.com',
         ]);
+
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Users\UserInterface',
+            $user
+        );
     }
 
     public function testFindByCredentials4()
     {
         list($users, $hasher, $model, $query) = $this->getUsersMock();
 
+        $model->shouldReceive('getLoginNames')->andReturn(['email']);
         $user = $users->findByCredentials([
             'password' => 'secret',
         ]);
@@ -109,6 +142,7 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase
     {
         list($users, $hasher, $model, $query) = $this->getUsersMock();
 
+        $model->shouldReceive('getLoginNames')->andReturn(['email']);
         $user = $users->findByCredentials([
             'username' => 'foo',
         ]);
@@ -120,6 +154,8 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase
     {
         list($users, $hasher, $model, $query) = $this->getUsersMock();
 
+        $model->shouldReceive('getLoginNames')->andReturn(['email']);
+
         $this->assertNull($users->findByCredentials([]));
     }
 
@@ -130,40 +166,52 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase
         $query->shouldReceive('whereHas')->once()->andReturn($model);
         $model->shouldReceive('first')->once()->andReturn($model);
 
-        $users->findByPersistenceCode('foobar');
+        $user = $users->findByPersistenceCode('foobar');
+
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Users\UserInterface',
+            $user
+        );
     }
 
     public function testRecordLogin()
     {
         list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-        $this->addMockConnection($model);
-        $model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
-        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
+        $model->shouldReceive('setAttribute');
+        $model->shouldReceive('save')->andReturn(true);
 
-        $users->recordLogin($model);
+        $user = $users->recordLogin($model);
+
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Users\UserInterface',
+            $user
+        );
     }
 
     public function testRecordLogout()
     {
         list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-        $this->addMockConnection($model);
-        $model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
-        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
+        $model->shouldReceive('save')->once()->andReturn(true);
 
-        $users->recordLogout($model);
+        $user = $users->recordLogout($model);
+
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Users\UserInterface',
+            $user
+        );
     }
 
     public function testValidateCredentials()
     {
         list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-        $model->password = 'secret';
-
-        $hasher->shouldReceive('check')->with('secret', 'secret')->once()->andReturn(true);
+        $model->shouldReceive('getAttribute')->andReturn('secret');
+        $hasher->shouldReceive('check')
+               ->with('secret', 'secret')
+               ->once()
+               ->andReturn(true);
 
         $valid = $users->validateCredentials($model, [
             'email'    => 'foo@example.com',
@@ -175,9 +223,9 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase
 
     public function testValidateUserForCreation()
     {
-        $user = new EloquentUser;
-
         list($users, $hasher, $model, $query) = $this->getUsersMock();
+
+        $model->shouldReceive('getLoginNames')->andReturn(['email']);
 
         $credetials = [
             'email'    => 'foo@example.com',
@@ -194,9 +242,9 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase
      */
     public function testValidateUserForCreationWithoutLogin()
     {
-        $user = new EloquentUser;
-
         list($users, $hasher, $model, $query) = $this->getUsersMock();
+
+        $model->shouldReceive('getLoginNames')->andReturn(['email']);
 
         $credetials = [
             'password' => 'secret',
@@ -210,9 +258,9 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase
      */
     public function testValidateUserForCreationWithoutPassword()
     {
-        $user = new EloquentUser;
-
         list($users, $hasher, $model, $query) = $this->getUsersMock();
+
+        $model->shouldReceive('getLoginNames')->andReturn(['email']);
 
         $credetials = [
             'email' => 'foo@example.com',
@@ -226,9 +274,9 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase
      */
     public function testValidateUserForCreationWithEmptyPassword()
     {
-        $user = new EloquentUser;
-
         list($users, $hasher, $model, $query) = $this->getUsersMock();
+
+        $model->shouldReceive('getLoginNames')->andReturn(['email']);
 
         $credetials = [
             'email'    => 'foo@example.com',
@@ -240,9 +288,12 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase
 
     public function testValidateUserForUpdate()
     {
-        $user = $this->fakeUser();
-
         list($users, $hasher, $model, $query) = $this->getUsersMock();
+
+        $model->shouldReceive('getLoginNames')->andReturn(['email']);
+
+        $user = $this->fakeUser();
+        $user->shouldReceive('getUserId');
 
         $credetials = [
             'email'    => 'foo@example.com',
@@ -258,29 +309,32 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase
     {
         list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-        $this->addMockConnection($model);
-        $model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
-        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
-
-        $hasher->shouldReceive('hash')->once()->with('secret')->andReturn(password_hash('secret', PASSWORD_DEFAULT));
+        $model->shouldReceive('getLoginNames')->andReturn(['email']);
+        $model->shouldReceive('fill');
+        $model->shouldReceive('save');
+        $hasher->shouldReceive('hash')
+               ->once()
+               ->with('secret')
+               ->andReturn(password_hash('secret', PASSWORD_DEFAULT));
 
         $user = $users->create([
             'email' => 'foo@example.com',
             'password' => 'secret',
         ]);
 
-        $this->assertInstanceOf('Cartalyst\Sentinel\Users\EloquentUser', $user);
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Users\UserInterface',
+            $user
+        );
     }
 
     public function testCreateWithValidCallback()
     {
         list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-        $this->addMockConnection($model);
-        $model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
-        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
+        $model->shouldReceive('getLoginNames')->andReturn(['email']);
+        $model->shouldReceive('fill');
+        $model->shouldReceive('save');
 
         $hasher->shouldReceive('hash')->once()->with('secret')->andReturn(password_hash('secret', PASSWORD_DEFAULT));
 
@@ -291,22 +345,28 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase
             return true;
         });
 
-        $this->assertInstanceOf('Cartalyst\Sentinel\Users\EloquentUser', $user);
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Users\UserInterface',
+            $user
+        );
     }
 
     public function testCreateWithInvalidCallback()
     {
         list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-        $this->addMockConnection($model);
-        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
+        $model->shouldReceive('getLoginNames')->andReturn(['email']);
+        $model->shouldReceive('fill');
+        $model->shouldReceive('save');
 
         $hasher->shouldReceive('hash')->once()->with('secret')->andReturn(password_hash('secret', PASSWORD_DEFAULT));
 
-        $user = $users->create([
+        $credentials = [
             'email' => 'foo@example.com',
             'password' => 'secret',
-        ], function ($user) {
+        ];
+
+        $user = $users->create($credentials, function ($user) {
             return false;
         });
 
@@ -317,83 +377,77 @@ class IlluminateUserRepositoryTest extends PHPUnit_Framework_TestCase
     {
         list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-        $this->addMockConnection($model);
-        $model->getConnection()->shouldReceive('getName');
-
-        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
-        $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId');
-
         $user = $this->fakeUser();
+        $user->shouldReceive('getLoginNames')->andReturn(['email']);
+        $user->shouldReceive('fill');
+        $user->shouldReceive('save');
 
         $updated = $users->update($user, [
             'email' => 'foo1@example.com',
         ]);
 
-        $this->assertInstanceOf('Cartalyst\Sentinel\Users\EloquentUser', $user);
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Users\UserInterface',
+            $user
+        );
     }
 
     public function testUpdate2()
     {
-        $users = m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository[createModel,findById]', [
-            $hasher = m::mock('Cartalyst\Sentinel\Hashing\NativeHasher')
-        ]);
+        list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-        $users->shouldReceive('findById')->once()->andReturn($user = $this->fakeUser());
-        $users->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Users\EloquentUser[newQuery]'));
-        $this->addMockConnection($model);
-        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
-        $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
+        $query->shouldReceive('find')->andReturn($user = $this->fakeUser());
 
-        $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
+        $user->shouldReceive('getLoginNames')->andReturn(['email']);
+        $user->shouldReceive('fill');
+        $user->shouldReceive('save');
 
         $updated = $users->update(1, [
             'email' => 'foo1@example.com',
         ]);
 
-        $this->assertInstanceOf('Cartalyst\Sentinel\Users\EloquentUser', $user);
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Users\UserInterface',
+            $user
+        );
     }
 
     public function testHasherSetterAndGetter()
     {
         list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-        $this->assertInstanceOf('Cartalyst\Sentinel\Hashing\NativeHasher', $users->getHasher());
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Hashing\NativeHasher',
+            $users->getHasher()
+        );
 
         $users->setHasher(m::mock('Cartalyst\Sentinel\Hashing\HasherInterface'));
 
-        $this->assertInstanceOf('Cartalyst\Sentinel\Hashing\HasherInterface', $users->getHasher());
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Hashing\HasherInterface',
+            $users->getHasher()
+        );
     }
 
     protected function fakeUser()
     {
-        $user = new EloquentUser;
-
-        $user->password = 'foobar';
-        $user->email = 'foo@example.com';
-
-        return $user;
+        return m::mock('Cartalyst\Sentinel\Users\EloquentUser');
     }
 
     protected function getUsersMock()
     {
-        $users = m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository[createModel]', [
-            $hasher = m::mock('Cartalyst\Sentinel\Hashing\NativeHasher')
-        ]);
+        $hasher = m::mock('Cartalyst\Sentinel\Hashing\NativeHasher');
+        $model = m::mock('Cartalyst\Sentinel\Users\EloquentUser');
+        $query = m::mock('Illuminate\Database\Eloquent\Builder');
+        $users = m::mock(
+            'Cartalyst\Sentinel\Users\IlluminateUserRepository[createModel]',
+            [$hasher]
+        );
 
-        $users->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Users\EloquentUser[newQuery]'));
-
-        $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
+        $users->shouldReceive('createModel')->andReturn($model);
+        $model->shouldReceive('newQuery')->andReturn($query);
 
         return [$users, $hasher, $model, $query];
     }
 
-    protected function addMockConnection($model)
-    {
-        $model->setConnectionResolver($resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'));
-        $resolver->shouldReceive('connection')->andReturn(m::mock('Illuminate\Database\Connection')->makePartial());
-        $model->getConnection()->shouldReceive('getQueryGrammar')->andReturn(m::mock('Illuminate\Database\Query\Grammars\Grammar'));
-        $model->getConnection()->shouldReceive('getPostProcessor')->andReturn(m::mock('Illuminate\Database\Query\Processors\Processor'));
-    }
 }
