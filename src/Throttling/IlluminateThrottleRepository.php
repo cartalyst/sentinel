@@ -21,6 +21,7 @@
 namespace Cartalyst\Sentinel\Throttling;
 
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use Cartalyst\Sentinel\Users\UserInterface;
 use Cartalyst\Support\Traits\RepositoryTrait;
 
@@ -351,7 +352,9 @@ class IlluminateThrottleRepository implements ThrottleRepositoryInterface
     protected function delay($type, $argument = null)
     {
         // Based on the given type, we will generate method and property names
-        $method = 'get'.studly_case($type).'Throttles';
+        $typeStudly = Str::studly($type);
+
+        $method = 'get'.$typeStudly.'Throttles';
 
         $thresholds = $type.'Thresholds';
 

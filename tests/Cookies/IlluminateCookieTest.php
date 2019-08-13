@@ -43,6 +43,7 @@ class IlluminateCookieTest extends TestCase
         $jar = new CookieJar();
 
         $request = m::mock(Request::class);
+        $request->shouldReceive('cookie')->with('foo')->once()->andReturn('bar');
 
         $illuminateCookie = new IlluminateCookie($request, $jar, 'foo');
 
@@ -87,6 +88,7 @@ class IlluminateCookieTest extends TestCase
         $jar = new CookieJar();
 
         $request = m::mock(Request::class);
+        $request->shouldReceive('cookie')->with('foo')->once()->andReturn(null);
 
         $illuminateCookie = new IlluminateCookie($request, $jar, 'foo');
 
