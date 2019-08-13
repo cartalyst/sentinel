@@ -40,7 +40,7 @@ class IlluminateSessionTest extends PHPUnit_Framework_TestCase
     {
         $session = new IlluminateSession($store = m::mock('Illuminate\Session\Store'), 'foo');
         $store->shouldReceive('put')->with('foo', 'bar')->once();
-        $session->put('bar');
+        $this->assertNull($session->put('bar'));
     }
 
     public function testGet()
@@ -54,6 +54,6 @@ class IlluminateSessionTest extends PHPUnit_Framework_TestCase
     {
         $session = new IlluminateSession($store = m::mock('Illuminate\Session\Store'), 'foo');
         $store->shouldReceive('forget')->with('foo')->once();
-        $session->forget();
+        $this->assertNull($session->forget());
     }
 }

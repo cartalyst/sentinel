@@ -60,7 +60,7 @@ class CICookieTest extends PHPUnit_Framework_TestCase
             'secure' => false,
         ]);
 
-        $cookie->put('bar');
+        $this->assertNull($cookie->put('bar'));
     }
 
     public function testGet()
@@ -78,6 +78,6 @@ class CICookieTest extends PHPUnit_Framework_TestCase
             'value'  => '',
             'expiry' => '',
         ])->once();
-        $cookie->forget();
+        $this->assertNull($cookie->forget());
     }
 }
