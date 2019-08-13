@@ -1,15 +1,4 @@
-# Change Log
-
-This project follows [Semantic Versioning](CONTRIBUTING.md).
-
-## Proposals
-
-We do not give estimated times for completion on `Accepted` Proposals.
-
-- [Accepted](https://github.com/cartalyst/sentinel/labels/Accepted)
-- [Rejected](https://github.com/cartalyst/sentinel/labels/Rejected)
-
----
+# Changelog
 
 ### v2.0.17 - 2017-11-28
 
