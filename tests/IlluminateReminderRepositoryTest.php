@@ -49,16 +49,18 @@ class IlluminateReminderRepositoryTest extends PHPUnit_Framework_TestCase
     {
         list($reminders, $users, $model, $query) = $this->getReminderMock();
 
-        $this->addMockConnection($model);
-        $model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
-        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
+        $model->shouldReceive('fill')->once();
+        $model->shouldReceive('setAttribute')->once();
+        $model->shouldReceive('save')->once();
 
         $user = $this->getUserMock();
 
         $activation = $reminders->create($user);
 
-        $this->assertInstanceOf('Cartalyst\Sentinel\Reminders\EloquentReminder', $activation);
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Reminders\EloquentReminder',
+            $activation
+        );
     }
 
     public function testExists()
@@ -151,12 +153,16 @@ class IlluminateReminderRepositoryTest extends PHPUnit_Framework_TestCase
 
     protected function getReminderMock()
     {
+        $model = m::mock('Cartalyst\Sentinel\Reminders\EloquentReminder');
+        $query = m::mock('Illuminate\Database\Eloquent\Builder');
         $users     = m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository');
-        $reminders = m::mock('Cartalyst\Sentinel\Reminders\IlluminateReminderRepository[createModel]', [$users]);
+        $reminders = m::mock(
+            'Cartalyst\Sentinel\Reminders\IlluminateReminderRepository[createModel]',
+            [$users]
+        );
 
-        $reminders->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Reminders\EloquentReminder[newQuery]'));
-
-        $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
+        $reminders->shouldReceive('createModel')->andReturn($model);
+        $model->shouldReceive('newQuery')->andReturn($query);
 
         return [$reminders, $users, $model, $query];
     }
@@ -179,11 +185,4 @@ class IlluminateReminderRepositoryTest extends PHPUnit_Framework_TestCase
         }))->andReturn($query);
     }
 
-    protected function addMockConnection($model)
-    {
-        $model->setConnectionResolver($resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'));
-        $resolver->shouldReceive('connection')->andReturn(m::mock('Illuminate\Database\Connection')->makePartial());
-        $model->getConnection()->shouldReceive('getQueryGrammar')->andReturn(m::mock('Illuminate\Database\Query\Grammars\Grammar'));
-        $model->getConnection()->shouldReceive('getPostProcessor')->andReturn(m::mock('Illuminate\Database\Query\Processors\Processor'));
-    }
 }
