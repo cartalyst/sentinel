@@ -43,7 +43,9 @@ class ActivationCheckpointTest extends PHPUnit_Framework_TestCase
 
         $users->shouldReceive('completed')->once()->andReturn(true);
 
-        $checkpoint->login(m::mock('Cartalyst\Sentinel\Users\EloquentUser'));
+        $this->assertTrue(
+            $checkpoint->login(m::mock('Cartalyst\Sentinel\Users\EloquentUser'))
+        );
     }
 
     /**

@@ -372,7 +372,7 @@ class EloquentUserTest extends PHPUnit_Framework_TestCase
 
         $throttle->shouldReceive('delete')->once();
 
-        $user->delete();
+        $this->assertTrue($user->delete());
     }
 
     protected function addMockConnection($model)

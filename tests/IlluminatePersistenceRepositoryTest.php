@@ -79,7 +79,7 @@ class IlluminatePersistenceRepositoryTest extends PHPUnit_Framework_TestCase
         $query->shouldReceive('where')->with('code', 'foobar')->andReturn($query);
         $query->shouldReceive('first')->once();
 
-        $persistence->findByPersistenceCode('foobar');
+        $this->assertFalse($persistence->findByPersistenceCode('foobar'));
     }
 
     public function testFindUserByPersistenceCode()
@@ -128,7 +128,7 @@ class IlluminatePersistenceRepositoryTest extends PHPUnit_Framework_TestCase
 
         $model->shouldReceive('setAttribute')->with('foo', '1')->once();
         $model->shouldReceive('setAttribute')->with('code', 'code')->once();
-        $model->shouldReceive('save')->once();
+        $model->shouldReceive('save')->once()->andReturn(true);
 
         $persistable = m::mock('Cartalyst\Sentinel\Persistences\PersistableInterface');
         $persistable->shouldReceive('generatePersistenceCode')->once()->andReturn('code');
@@ -136,7 +136,7 @@ class IlluminatePersistenceRepositoryTest extends PHPUnit_Framework_TestCase
         $persistable->shouldReceive('getPersistableId')->once()->andReturn(1);
         $session->shouldReceive('put')->with('code')->once();
 
-        $persistence->persist($persistable);
+        $this->assertTrue($persistence->persist($persistable));
     }
 
     public function testPersistSingle()
@@ -150,7 +150,7 @@ class IlluminatePersistenceRepositoryTest extends PHPUnit_Framework_TestCase
 
         $model->shouldReceive('setAttribute')->with('foo', '1')->once();
         $model->shouldReceive('setAttribute')->with('code', 'code')->once();
-        $model->shouldReceive('save')->once();
+        $model->shouldReceive('save')->once()->andReturn(true);
 
         $persistable = m::mock('Cartalyst\Sentinel\Persistences\PersistableInterface');
         $persistable->shouldReceive('getPersistableRelationship')->once()->andReturn('persistences');
@@ -161,7 +161,7 @@ class IlluminatePersistenceRepositoryTest extends PHPUnit_Framework_TestCase
         $persistable->shouldReceive('getPersistableId')->once()->andReturn(1);
         $session->shouldReceive('put')->with('code')->once();
 
-        $persistence->persist($persistable);
+        $this->assertTrue($persistence->persist($persistable));
     }
 
     public function testPersistAndRemember()
@@ -172,7 +172,7 @@ class IlluminatePersistenceRepositoryTest extends PHPUnit_Framework_TestCase
 
         $model->shouldReceive('setAttribute')->with('foo', '1')->once();
         $model->shouldReceive('setAttribute')->with('code', 'code')->once();
-        $model->shouldReceive('save')->once();
+        $model->shouldReceive('save')->once()->andReturn(true);
 
         $persistable = m::mock('Cartalyst\Sentinel\Persistences\PersistableInterface');
         $persistable->shouldReceive('generatePersistenceCode')->once()->andReturn('code');
@@ -182,7 +182,7 @@ class IlluminatePersistenceRepositoryTest extends PHPUnit_Framework_TestCase
         $session->shouldReceive('put')->with('code')->once();
         $cookie->shouldReceive('put')->with('code')->once();
 
-        $persistence->persistAndRemember($persistable);
+        $this->assertTrue($persistence->persistAndRemember($persistable));
     }
 
     public function testRemove()
@@ -192,9 +192,9 @@ class IlluminatePersistenceRepositoryTest extends PHPUnit_Framework_TestCase
 
         $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
         $query->shouldReceive('where')->once()->andReturn($model = m::mock('Illuminate\Database\Eloquent\Model'));
-        $model->shouldReceive('delete')->once();
+        $model->shouldReceive('delete')->once()->andReturn(true);
         $persistable = m::mock('Cartalyst\Sentinel\Persistences\PersistableInterface');
-        $persistence->remove($persistable);
+        $this->assertTrue($persistence->remove($persistable));
     }
 
     public function testFlush()
@@ -206,7 +206,7 @@ class IlluminatePersistenceRepositoryTest extends PHPUnit_Framework_TestCase
         $persistable->shouldReceive('persistences')->once()->andReturn($builder = m::mock('Illuminate\Database\Eloquent\Builder'));
         $builder->shouldReceive('get')->once()->andReturn([]);
         $persistable->shouldReceive('getPersistableRelationship')->once()->andReturn('persistences');
-        $persistence->flush($persistable);
+        $this->assertNull($persistence->flush($persistable));
     }
 
     public function testFlushAndForget()
@@ -238,6 +238,6 @@ class IlluminatePersistenceRepositoryTest extends PHPUnit_Framework_TestCase
 
         $query->shouldReceive('delete')->once();
         $persistable->shouldReceive('getPersistableRelationship')->once()->andReturn('persistences');
-        $persistence->flush($persistable);
+        $this->assertNull($persistence->flush($persistable));
     }
 }
