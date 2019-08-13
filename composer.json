@@ -70,6 +70,11 @@
             }
         }
     },
+    "scripts": {
+        "cs:check": "./vendor/bin/php-cs-fixer fix --verbose --ansi --show-progress=estimating --diff --dry-run --config .php_cs.php",
+        "cs:fix": "./vendor/bin/php-cs-fixer fix --verbose --ansi --show-progress=estimating --config .php_cs.php",
+        "test": "./vendor/bin/phpunit --verbose --colors=always"
+    },
     "minimum-stability": "dev",
     "prefer-stable": true
 }
