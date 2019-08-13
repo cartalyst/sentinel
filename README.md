@@ -1,46 +1,48 @@
 # Sentinel
 
-[![Build Status](https://travis-ci.org/cartalyst/sentinel.svg?branch=2.0)](https://travis-ci.org/cartalyst/sentinel)
+[![Build Status][icon-travis]][link-travis]
+[![Software License][icon-license]][link-license]
+[![Latest Version on Packagist][icon-version]][link-packagist]
+[![Total Downloads][icon-downloads]][link-packagist]
 
-Sentinel is a PHP 5.4+ fully-featured authentication & authorization system. It also provides additional features such as user roles and additional security features.
-
-Sentinel is a framework agnostic set of interfaces with default implementations, though you can substitute any implementations you see fit.
+Sentinel is a PHP 7.2+ framework agnostic fully-featured authentication & authorization system. It also provides additional features such as user roles and additional security features.
 
 An open source package by [Cartalyst](https://cartalyst.com), code well, rock on!
 
+## Version Matrix
+
+Version | Laravel   | PHP Version
+------- | --------- | ------------
+2.x     | 5.0       | >= 5.4.0
+1.x     | 4.1 - 5.0 | >= 5.4.0
+
 ## Documentation
 
-Reader-friendly Documentation can be found here. [Sentinel Manual](https://cartalyst.com/manual/sentinel/2.0).
+Reader-friendly documentation can be found [here][link-docs].
 
-Raw files can be found via this projects docs/version branch.
+Using the package, but you're stuck? Found a bug? Have a question or suggestion for improving this package? Feel free to create an issue on GitHub, we'll try to address it as soon as possible.
 
-- [2.0](https://github.com/cartalyst/sentinel/tree/docs/2.0)
-- [1.0](https://github.com/cartalyst/sentinel/tree/docs/1.0)
+## Contributing
 
-## Change Log
+Thank you for your interest, here are some of the many ways to contribute.
 
-Important versions listed below. Refer to the [Change Log](CHANGELOG.md) for a full history of the project.
+- Check out our [contributing guide](/.github/CONTRIBUTING.md)
+- Look at our [code of conduct](/.github/CODE_OF_CONDUCT.md)
 
-- [2.0](CHANGELOG.md) - 2015-02-24
-- [1.0](CHANGELOG.md) - 2014-08-05
+## Security
 
-## Support
-
-The following support channels can be used for contact.
-
-- [Twitter](https://twitter.com/cartalyst)
-- [Email](mailto:help@cartalyst.com)
-
-Bug reports, feature requests, and pull requests can be submitted by following our [Contribution Guide](CONTRIBUTING.md).
-
-## Contributing & Protocols
-
-- [Versioning](CONTRIBUTING.md#versioning)
-- [Coding Standards](CONTRIBUTING.md#coding-standards)
-- [Pull Requests](CONTRIBUTING.md#pull-requests)
+If you discover any security related issues, please email help@cartalyst.com instead of using the issue tracker.
 
 ## License
 
 This software is released under the [BSD 3-Clause](LICENSE) License.
 
-© 2011-2017 Cartalyst LLC, All rights reserved.
+[link-docs]:      https://cartalyst.com/manual/sentinel
+[link-travis]:    https://travis-ci.org/cartalyst/sentinel
+[link-license]:   https://opensource.org/licenses/MIT
+[link-packagist]: https://packagist.org/packages/cartalyst/sentinel
+
+[icon-travis]:    https://travis-ci.org/cartalyst/sentinel.svg?branch=2.0
+[icon-license]:   https://poser.pugx.org/cartalyst/sentinel/license
+[icon-version]:   https://poser.pugx.org/cartalyst/sentinel/version
+[icon-downloads]: https://poser.pugx.org/cartalyst/sentinel/downloads
