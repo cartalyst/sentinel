@@ -423,7 +423,7 @@ class IlluminateUserRepositoryTest extends TestCase
         $model->shouldReceive('newQuery')->andReturn($query);
 
         $users = m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository[createModel]', [
-            $hasher
+            $hasher,
         ]);
         $users->shouldReceive('createModel')->andReturn($model);
 

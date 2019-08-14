@@ -172,9 +172,10 @@ class IlluminateReminderRepositoryTest extends TestCase
     protected function shouldReceiveExpires($query, $operator = '>')
     {
         $query->shouldReceive('where')
-              ->with('created_at',$operator,m::on(function () {
-                  return true;
-              }))
-              ->andReturn($query);
+            ->with('created_at', $operator, m::on(function () {
+                return true;
+            }))
+            ->andReturn($query)
+        ;
     }
 }
