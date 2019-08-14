@@ -486,6 +486,9 @@ class Sentinel
      */
     public function login(UserInterface $user, $remember = false)
     {
+
+        $this->fireEvent('sentinel.logging-in', $user);
+
         $method = $remember === true ? 'persistAndRemember' : 'persist';
 
         $this->persistences->{$method}($user);
@@ -495,6 +498,7 @@ class Sentinel
         if ($response === false) {
             return false;
         }
+        $this->fireEvent('sentinel.logged-in', $user);
 
         return $this->user = $user;
     }
@@ -521,8 +525,11 @@ class Sentinel
     {
         $currentUser = $this->check();
 
+        $this->fireEvent('sentinel.logging-out', $user);
+
         if ($user && $user !== $currentUser) {
             $this->persistences->flush($user, false);
+            $this->fireEvent('sentinel.logged-out', $user);
 
             return true;
         }
@@ -530,6 +537,7 @@ class Sentinel
         $user = $user ?: $currentUser;
 
         if ($user === false) {
+            $this->fireEvent('sentinel.logged-out', $user);
             return true;
         }
 
@@ -538,6 +546,7 @@ class Sentinel
         $this->persistences->{$method}($user);
 
         $this->user = null;
+        $this->fireEvent('sentinel.logged-out', $user);
 
         return $this->users->recordLogout($user);
     }
