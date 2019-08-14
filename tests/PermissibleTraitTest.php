@@ -50,7 +50,7 @@ class PermissibleTraitTest extends PHPUnit_Framework_TestCase
     {
         $permissible = new PermissibleStub;
 
-        $this->assertInstanceOf('Cartalyst\Sentinel\Permissions\StandardPermissions', $permissible->getPermissionsInstance());
+        $this->assertInstanceOf('Cartalyst\Sentinel\Permissions\PermissionsInterface', $permissible->getPermissionsInstance());
     }
 
     public function testAddPermission()

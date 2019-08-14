@@ -43,15 +43,20 @@ class SentinelTest extends PHPUnit_Framework_TestCase
         list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
         $users->shouldReceive('validForCreation')->once()->andReturn(true);
-        $users->shouldReceive('create')->once();
+        $users->shouldReceive('create')
+              ->once()
+              ->andReturn(m::mock('Cartalyst\Sentinel\Users\UserInterface'));
 
         $method = method_exists($dispatcher, 'fire') ? 'fire' : 'dispatch';
         $dispatcher->shouldReceive($method)->twice();
 
-        $sentinel->register([
-            'email' => 'foo@example.com',
-            'password' => 'secret',
-        ]);
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Users\UserInterface',
+            $sentinel->register([
+                'email' => 'foo@example.com',
+                'password' => 'secret',
+            ])
+        );
     }
 
     public function testRegisterInvalidUser()
@@ -98,10 +103,13 @@ class SentinelTest extends PHPUnit_Framework_TestCase
         $method = method_exists($dispatcher, 'fire') ? 'fire' : 'dispatch';
         $dispatcher->shouldReceive($method)->times(4);
 
-        $sentinel->registerAndActivate([
-            'email'    => 'foo@example.com',
-            'password' => 'secret',
-        ]);
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Users\UserInterface',
+            $sentinel->registerAndActivate([
+                'email'    => 'foo@example.com',
+                'password' => 'secret',
+            ])
+        );
     }
 
     public function testActivateUserByInstance()
@@ -117,7 +125,7 @@ class SentinelTest extends PHPUnit_Framework_TestCase
         $method = method_exists($dispatcher, 'fire') ? 'fire' : 'dispatch';
         $dispatcher->shouldReceive($method)->twice();
 
-        $sentinel->activate($user);
+        $this->assertTrue($sentinel->activate($user));
     }
 
     public function testActivateUserById()
@@ -135,7 +143,7 @@ class SentinelTest extends PHPUnit_Framework_TestCase
         $method = method_exists($dispatcher, 'fire') ? 'fire' : 'dispatch';
         $dispatcher->shouldReceive($method)->twice();
 
-        $sentinel->activate('1');
+        $this->assertTrue($sentinel->activate('1'));
     }
 
     public function testActivateUserByCredentials()
@@ -156,7 +164,7 @@ class SentinelTest extends PHPUnit_Framework_TestCase
         $method = method_exists($dispatcher, 'fire') ? 'fire' : 'dispatch';
         $dispatcher->shouldReceive($method)->twice();
 
-        $sentinel->activate($credentials);
+        $this->assertTrue($sentinel->activate($credentials));
     }
 
     /**
@@ -176,7 +184,10 @@ class SentinelTest extends PHPUnit_Framework_TestCase
         $persistences->shouldReceive('check')->once()->andReturn('foobar');
         $persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser);
 
-        $sentinel->check();
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Users\UserInterface',
+            $sentinel->check()
+        );
     }
 
     public function testCheck2()
@@ -186,7 +197,7 @@ class SentinelTest extends PHPUnit_Framework_TestCase
         $persistences->shouldReceive('check')->once()->andReturn('foobar');
         $persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(false);
 
-        $sentinel->check();
+        $this->assertFalse($sentinel->check());
     }
 
     public function testCheck3()
@@ -196,7 +207,7 @@ class SentinelTest extends PHPUnit_Framework_TestCase
         $persistences->shouldReceive('check')->once();
         $persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(false);
 
-        $sentinel->check();
+        $this->assertFalse($sentinel->check());
     }
 
     public function testCheck4()
@@ -267,7 +278,10 @@ class SentinelTest extends PHPUnit_Framework_TestCase
         $method = method_exists($dispatcher, 'fire') ? 'fire' : 'dispatch';
         $dispatcher->shouldReceive($method)->times(3);
 
-        $sentinel->authenticate($credentials);
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Users\UserInterface',
+            $sentinel->authenticate($credentials)
+        );
     }
 
     public function testAuthenticate2()
@@ -284,7 +298,10 @@ class SentinelTest extends PHPUnit_Framework_TestCase
         $method = method_exists($dispatcher, 'fire') ? 'fire' : 'dispatch';
         $dispatcher->shouldReceive($method)->times(3);
 
-        $sentinel->authenticate($user);
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Users\UserInterface',
+            $sentinel->authenticate($user)
+        );
     }
 
     public function testAuthenticate3()
@@ -302,7 +319,7 @@ class SentinelTest extends PHPUnit_Framework_TestCase
 
         $dispatcher->shouldReceive('until')->once();
 
-        $sentinel->authenticate($credentials);
+        $this->assertFalse($sentinel->authenticate($credentials));
     }
 
     public function testAuthenticateAndRemember()
@@ -326,7 +343,10 @@ class SentinelTest extends PHPUnit_Framework_TestCase
         $method = method_exists($dispatcher, 'fire') ? 'fire' : 'dispatch';
         $dispatcher->shouldReceive($method)->times(3);
 
-        $sentinel->authenticateAndRemember($credentials);
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Users\UserInterface',
+            $sentinel->authenticateAndRemember($credentials)
+        );
     }
 
     public function testCheckpoints()
@@ -406,9 +426,9 @@ class SentinelTest extends PHPUnit_Framework_TestCase
         $method = method_exists($dispatcher, 'fire') ? 'fire' : 'dispatch';
         $dispatcher->shouldReceive($method)->twice();
 
-        $users->shouldReceive('recordLogout')->once();
+        $users->shouldReceive('recordLogout')->once()->andReturn(true);
 
-        $sentinel->logout($user);
+        $this->assertTrue($sentinel->logout($user));
     }
 
     public function testLogoutEverywhere()
@@ -424,9 +444,9 @@ class SentinelTest extends PHPUnit_Framework_TestCase
         $method = method_exists($dispatcher, 'fire') ? 'fire' : 'dispatch';
         $dispatcher->shouldReceive($method)->twice();
 
-        $users->shouldReceive('recordLogout')->once();
+        $users->shouldReceive('recordLogout')->once()->andReturn(true);
 
-        $sentinel->logout($user, true);
+        $this->assertTrue($sentinel->logout($user, true));
     }
 
     public function testUserIsNullAfterLogout()
@@ -483,7 +503,7 @@ class SentinelTest extends PHPUnit_Framework_TestCase
         $method = method_exists($dispatcher, 'fire') ? 'fire' : 'dispatch';
         $dispatcher->shouldReceive($method)->twice();
 
-        $sentinel->logout($user, true);
+        $this->assertTrue($sentinel->logout($user, true));
     }
 
     /**

@@ -80,7 +80,7 @@ class EloquentRoleTest extends PHPUnit_Framework_TestCase
 
         $users->shouldReceive('detach')->once();
 
-        $role->delete();
+        $this->assertTrue($role->delete());
     }
 
     protected function addMockConnection($model)

@@ -49,7 +49,10 @@ class CheckpointsTest extends PHPUnit_Framework_TestCase
 
         $sentinel->addCheckpoint('activation', $activationCheckpoint);
 
-        $sentinel->check();
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Users\UserInterface',
+            $sentinel->check()
+        );
     }
 
     public function testRemoveCheckpoint()
@@ -69,7 +72,10 @@ class CheckpointsTest extends PHPUnit_Framework_TestCase
 
         $sentinel->removeCheckpoint('activation');
 
-        $sentinel->check();
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Users\UserInterface',
+            $sentinel->check()
+        );
     }
 
     public function testBypassCheckpoint()
@@ -86,9 +92,12 @@ class CheckpointsTest extends PHPUnit_Framework_TestCase
         $sentinel->addCheckpoint('activation', $activationCheckpoint);
         $sentinel->addCheckpoint('throttle', $throttleCheckpoint);
 
-        $sentinel->bypassCheckpoints(function ($sentinel) {
-            $sentinel->check();
-        });
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Users\UserInterface',
+            $sentinel->bypassCheckpoints(function ($sentinel) {
+                return $sentinel->check();
+            })
+        );
     }
 
     public function testBypassSpecificCheckpoint()
