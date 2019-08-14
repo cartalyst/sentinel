@@ -49,9 +49,9 @@ class IlluminateActivationRepositoryTest extends TestCase
     {
         list($activations, $model, $query) = $this->getActivationMock();
 
-        $model->shouldReceive('fill')->once();
-        $model->shouldReceive('setAttribute')->once();
-        $model->shouldReceive('save')->once();
+        $model->shouldReceive('fill');
+        $model->shouldReceive('setAttribute');
+        $model->shouldReceive('save');
 
         $user = $this->getUserMock();
 

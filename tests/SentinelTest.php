@@ -251,7 +251,7 @@ class SentinelTest extends TestCase
 
         $dispatcher->shouldReceive('until')->once();
 
-        $dispatcher->shouldReceive('dispatch')->once();
+        $dispatcher->shouldReceive('dispatch')->times(3);
 
         $this->assertInstanceOf(EloquentUser::class, $sentinel->authenticate($credentials));
     }
@@ -268,7 +268,7 @@ class SentinelTest extends TestCase
         $users->shouldReceive('recordLogin')->once();
 
         $dispatcher->shouldReceive('until')->once();
-        $dispatcher->shouldReceive('dispatch')->once();
+        $dispatcher->shouldReceive('dispatch')->times(3);
 
         $this->assertInstanceOf(EloquentUser::class, $sentinel->authenticate($user));
     }
@@ -304,7 +304,7 @@ class SentinelTest extends TestCase
         $users->shouldReceive('recordLogin')->once();
 
         $dispatcher->shouldReceive('until')->once();
-        $dispatcher->shouldReceive('dispatch')->once();
+        $dispatcher->shouldReceive('dispatch')->times(3);
 
         $this->assertInstanceOf(EloquentUser::class, $sentinel->authenticateAndRemember($credentials));
     }
@@ -344,6 +344,8 @@ class SentinelTest extends TestCase
 
         $persistences->shouldReceive('persist')->once();
 
+        $dispatcher->shouldReceive('dispatch')->twice();
+
         $users->shouldReceive('recordLogin')->once();
 
         $this->assertInstanceOf(EloquentUser::class, $sentinel->login($user));
@@ -357,6 +359,8 @@ class SentinelTest extends TestCase
         $user = new EloquentUser();
 
         $persistences->shouldReceive('persist')->once();
+
+        $dispatcher->shouldReceive('dispatch')->once();
 
         $users->shouldReceive('recordLogin')->once()->andReturn(false);
 
@@ -392,7 +396,9 @@ class SentinelTest extends TestCase
         $persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->once()->andReturn($user);
         $persistences->shouldReceive('forget')->once();
 
-        $users->shouldReceive('recordLogout')->once();
+        $users->shouldReceive('recordLogout')->once()->andReturn(true);
+
+        $dispatcher->shouldReceive('dispatch')->twice();
 
         $this->assertTrue($sentinel->logout($user));
     }
@@ -408,7 +414,9 @@ class SentinelTest extends TestCase
         $persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->once()->andReturn($user);
         $persistences->shouldReceive('flush')->once();
 
-        $users->shouldReceive('recordLogout')->once();
+        $dispatcher->shouldReceive('dispatch')->twice();
+
+        $users->shouldReceive('recordLogout')->once()->andReturn(true);
 
         $this->assertTrue($sentinel->logout($user, true));
     }
@@ -423,6 +431,8 @@ class SentinelTest extends TestCase
 
         $persistences->shouldReceive('persist')->once();
         $persistences->shouldReceive('flush')->once()->with($user, false);
+
+        $dispatcher->shouldReceive('dispatch')->times(4);
 
         $users->shouldReceive('recordLogin')->once();
 
@@ -441,6 +451,8 @@ class SentinelTest extends TestCase
         $user = null;
 
         $persistences->shouldReceive('check')->once();
+
+        $dispatcher->shouldReceive('dispatch')->twice();
 
         $this->assertTrue($sentinel->logout($user, true));
     }
