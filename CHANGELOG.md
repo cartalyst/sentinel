@@ -11,11 +11,33 @@ We do not give estimated times for completion on `Accepted` Proposals.
 
 ---
 
+### v2.0.18 - 2019-08-14
+
+`ADDED`
+
+- Added support for Larastan
+- Added events for logging in and logging out
+
+`UPDATED`
+
+- Updated the `orWhere` query builder loop to lead with correct boolean constraint
+- Updated several tests for better coverage and overall quality
+
+`FIXED`
+
+- Fixed an issue with the throttling threshold not behaving as expected
+- Fixed an issue where a model with soft deletes was causing issues when force deleting
+- Fixed an issue where the default global threshold value was incorrect
+- Fixed an issue with the order of overrides registration on the Laravel service provider
+- Fixed an issue with the `checkPermission()` method not behaving not casting some permissions as `string`s
+- Fixed an issue where the `checkActivation` method on the Activations Checkpoint was not returning the completion status
+- Fixed a few docblock typos
+
 ### v2.0.17 - 2017-11-28
 
 `FIXED`
 
-- Incorrect docblock on the Illuminate Reminder Repositotry.
+- Incorrect docblock on the Illuminate Reminder Repository.
 
 `ADDED`
 
