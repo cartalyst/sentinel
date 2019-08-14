@@ -171,7 +171,7 @@ class ThrottleCheckpointTest extends TestCase
         } catch (ThrottlingException $e) {
             $this->assertSame(10, $e->getDelay());
             $this->assertSame('user', $e->getType());
-            $this->assertLessThanOrEqual(10000, Carbon::now()->addSeconds(10)->diffInMicroseconds($e->getFree()));
+            $this->assertEqualsWithDelta(Carbon::now()->addSeconds(10), $e->getFree(), 3);
         }
     }
 }

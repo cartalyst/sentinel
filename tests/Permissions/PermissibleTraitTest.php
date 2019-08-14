@@ -52,6 +52,8 @@ class PermissibleTraitTest extends TestCase
     {
         $permissible = new PermissibleStub();
 
+        $permissible::setPermissionsClass(StandardPermissions::class);
+
         $this->assertInstanceOf(StandardPermissions::class, $permissible->getPermissionsInstance());
     }
 

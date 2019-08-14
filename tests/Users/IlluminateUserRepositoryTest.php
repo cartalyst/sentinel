@@ -23,14 +23,10 @@ namespace Cartalyst\Sentinel\Tests\Users;
 use Mockery as m;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\Builder;
 use Cartalyst\Sentinel\Users\EloquentUser;
 use Cartalyst\Sentinel\Hashing\NativeHasher;
 use Cartalyst\Sentinel\Hashing\HasherInterface;
-use Illuminate\Database\Query\Grammars\Grammar;
-use Illuminate\Database\Query\Processors\Processor;
-use Illuminate\Database\ConnectionResolverInterface;
 
 class IlluminateUserRepositoryTest extends TestCase
 {
@@ -122,7 +118,7 @@ class IlluminateUserRepositoryTest extends TestCase
     /** @test */
     public function it_can_find_by_a_user_by_its_credentials_4()
     {
-        list($users, $hasher, $model, $query) = $this->getUsersMock();
+        list($users, $hasher, $model) = $this->getUsersMock();
 
         $model->shouldReceive('getLoginNames')->andReturn(['email']);
 
@@ -136,7 +132,7 @@ class IlluminateUserRepositoryTest extends TestCase
     /** @test */
     public function it_can_find_by_a_user_by_its_credentials_5()
     {
-        list($users, $hasher, $model, $query) = $this->getUsersMock();
+        list($users, $hasher, $model) = $this->getUsersMock();
 
         $model->shouldReceive('getLoginNames')->andReturn(['email']);
 
@@ -173,12 +169,10 @@ class IlluminateUserRepositoryTest extends TestCase
     /** @test */
     public function it_can_record_the_login()
     {
-        list($users, $hasher, $model, $query) = $this->getUsersMock();
+        list($users, $hasher, $model) = $this->getUsersMock();
 
-        $this->addMockConnection($model);
-        $model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
-        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
+        $model->shouldReceive('setAttribute');
+        $model->shouldReceive('save')->once()->andReturn(true);
 
         $user = $users->recordLogin($model);
 
@@ -190,10 +184,7 @@ class IlluminateUserRepositoryTest extends TestCase
     {
         list($users, $hasher, $model) = $this->getUsersMock();
 
-        $this->addMockConnection($model);
-        $model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
-        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
+        $model->shouldReceive('save')->once()->andReturn(true);
 
         $user = $users->recordLogout($model);
 
@@ -205,7 +196,7 @@ class IlluminateUserRepositoryTest extends TestCase
     {
         list($users, $hasher, $model) = $this->getUsersMock();
 
-        $model->password = 'secret';
+        $model->shouldReceive('getAttribute')->andReturn('secret');
 
         $hasher->shouldReceive('check')->with('secret', 'secret')->once()->andReturn(true);
 
@@ -222,7 +213,9 @@ class IlluminateUserRepositoryTest extends TestCase
     {
         $user = new EloquentUser();
 
-        list($users) = $this->getUsersMock();
+        list($users, $hasher, $model) = $this->getUsersMock();
+
+        $model->shouldReceive('getLoginNames')->andReturn(['email']);
 
         $credetials = [
             'email'    => 'foo@example.com',
@@ -239,7 +232,11 @@ class IlluminateUserRepositoryTest extends TestCase
     {
         $user = $this->fakeUser();
 
-        list($users) = $this->getUsersMock();
+        list($users, $hasher, $model) = $this->getUsersMock();
+
+        $user->shouldReceive('getUserId')->once()->andReturn(1);
+
+        $model->shouldReceive('getLoginNames')->andReturn(['email']);
 
         $credetials = [
             'email'    => 'foo@example.com',
@@ -256,10 +253,9 @@ class IlluminateUserRepositoryTest extends TestCase
     {
         list($users, $hasher, $model) = $this->getUsersMock();
 
-        $this->addMockConnection($model);
-        $model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
-        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
+        $model->shouldReceive('getLoginNames')->andReturn(['email']);
+        $model->shouldReceive('fill');
+        $model->shouldReceive('save')->once();
 
         $hasher->shouldReceive('hash')->once()->with('secret')->andReturn(password_hash('secret', PASSWORD_DEFAULT));
 
@@ -276,10 +272,9 @@ class IlluminateUserRepositoryTest extends TestCase
     {
         list($users, $hasher, $model) = $this->getUsersMock();
 
-        $this->addMockConnection($model);
-        $model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
-        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
+        $model->shouldReceive('getLoginNames')->andReturn(['email']);
+        $model->shouldReceive('fill');
+        $model->shouldReceive('save')->once();
 
         $hasher->shouldReceive('hash')->once()->with('secret')->andReturn(password_hash('secret', PASSWORD_DEFAULT));
 
@@ -298,8 +293,8 @@ class IlluminateUserRepositoryTest extends TestCase
     {
         list($users, $hasher, $model) = $this->getUsersMock();
 
-        $this->addMockConnection($model);
-        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
+        $model->shouldReceive('getLoginNames')->andReturn(['email']);
+        $model->shouldReceive('fill');
 
         $hasher->shouldReceive('hash')->once()->with('secret')->andReturn(password_hash('secret', PASSWORD_DEFAULT));
 
@@ -314,17 +309,14 @@ class IlluminateUserRepositoryTest extends TestCase
     }
 
     /** @test */
-    public function it_can_update_a_user_1()
+    public function it_can_update_a_user_by_instance()
     {
         list($users, $hasher, $model) = $this->getUsersMock();
 
-        $this->addMockConnection($model);
-        $model->getConnection()->shouldReceive('getName');
-        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
-        $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId');
-
         $user = $this->fakeUser();
+        $user->shouldReceive('getLoginNames')->andReturn(['email']);
+        $user->shouldReceive('fill');
+        $user->shouldReceive('save')->once();
 
         $user = $users->update($user, [
             'email' => 'foo1@example.com',
@@ -334,21 +326,16 @@ class IlluminateUserRepositoryTest extends TestCase
     }
 
     /** @test */
-    public function it_can_update_a_user_2()
+    public function it_can_update_a_user_by_id()
     {
-        $hasher = m::mock(NativeHasher::class);
+        list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-        $users = m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository[createModel,findById]', [$hasher]);
+        $user = $this->fakeUser();
+        $user->shouldReceive('getLoginNames')->andReturn(['email']);
+        $user->shouldReceive('fill');
+        $user->shouldReceive('save')->once();
 
-        $model = m::mock('Cartalyst\Sentinel\Users\EloquentUser[newQuery]');
-        $this->addMockConnection($model);
-        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
-        $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
-        $model->shouldReceive('newQuery')->andReturn($query = m::mock(Builder::class));
-
-        $users->shouldReceive('findById')->once()->andReturn($user = $this->fakeUser());
-        $users->shouldReceive('createModel')->andReturn($model);
+        $query->shouldReceive('find')->once()->with(1)->andReturn($user);
 
         $user = $users->update(1, [
             'email' => 'foo1@example.com',
@@ -375,7 +362,9 @@ class IlluminateUserRepositoryTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('No [login] credential was passed.');
 
-        list($users) = $this->getUsersMock();
+        list($users, $hasher, $model) = $this->getUsersMock();
+
+        $model->shouldReceive('getLoginNames')->andReturn(['email']);
 
         $credetials = [
             'password' => 'secret',
@@ -390,7 +379,9 @@ class IlluminateUserRepositoryTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('You have not passed a [password].');
 
-        list($users) = $this->getUsersMock();
+        list($users, $hasher, $model) = $this->getUsersMock();
+
+        $model->shouldReceive('getLoginNames')->andReturn(['email']);
 
         $credetials = [
             'email' => 'foo@example.com',
@@ -405,7 +396,9 @@ class IlluminateUserRepositoryTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('You have not passed a [password].');
 
-        list($users) = $this->getUsersMock();
+        list($users, $hasher, $model) = $this->getUsersMock();
+
+        $model->shouldReceive('getLoginNames')->andReturn(['email']);
 
         $credetials = [
             'email'    => 'foo@example.com',
@@ -417,34 +410,23 @@ class IlluminateUserRepositoryTest extends TestCase
 
     protected function fakeUser()
     {
-        $user = new EloquentUser();
-
-        $user->password = 'foobar';
-        $user->email    = 'foo@example.com';
-
-        return $user;
+        return m::mock('Cartalyst\Sentinel\Users\EloquentUser');
     }
 
     protected function getUsersMock()
     {
+        $hasher = m::mock(NativeHasher::class);
+
+        $query = m::mock(Builder::class);
+
+        $model = m::mock('Cartalyst\Sentinel\Users\EloquentUser');
+        $model->shouldReceive('newQuery')->andReturn($query);
+
         $users = m::mock('Cartalyst\Sentinel\Users\IlluminateUserRepository[createModel]', [
-            $hasher = m::mock(NativeHasher::class),
+            $hasher
         ]);
-
-        $users->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Users\EloquentUser[newQuery]'));
-
-        $model->shouldReceive('newQuery')->andReturn($query = m::mock(Builder::class));
+        $users->shouldReceive('createModel')->andReturn($model);
 
         return [$users, $hasher, $model, $query];
-    }
-
-    protected function addMockConnection($model)
-    {
-        $resolver = m::mock(ConnectionResolverInterface::class);
-        $resolver->shouldReceive('connection')->andReturn(m::mock(Connection::class)->makePartial());
-
-        $model->setConnectionResolver($resolver);
-        $model->getConnection()->shouldReceive('getQueryGrammar')->andReturn(m::mock(Grammar::class));
-        $model->getConnection()->shouldReceive('getPostProcessor')->andReturn(m::mock(Processor::class));
     }
 }
