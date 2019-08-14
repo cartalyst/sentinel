@@ -536,7 +536,7 @@ class Sentinel
      * @param \Cartalyst\Sentinel\Users\UserInterface|null $user
      * @param bool                                         $everywhere
      *
-     * @return bool
+     * @return \Cartalyst\Sentinel\Users\UserInterface|bool
      */
     public function logout(UserInterface $user = null, bool $everywhere = false): bool
     {
