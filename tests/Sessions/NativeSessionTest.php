@@ -70,9 +70,9 @@ class NativeSessionTest extends TestCase
     /** @test */
     public function it_can_forget_a_value_from_the_session()
     {
-        $_SESSION['__sentinel'] = 'bar';
-
         $session = new NativeSession('__sentinel');
+
+        $_SESSION['__sentinel'] = 'bar';
 
         $this->assertSame('bar', $_SESSION['__sentinel']);
 
