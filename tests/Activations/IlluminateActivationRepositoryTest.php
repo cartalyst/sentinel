@@ -22,11 +22,7 @@ namespace Cartalyst\Sentinel\Tests\Activations;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use Illuminate\Database\Connection;
 use Cartalyst\Sentinel\Users\UserInterface;
-use Illuminate\Database\Query\Grammars\Grammar;
-use Illuminate\Database\Query\Processors\Processor;
-use Illuminate\Database\ConnectionResolverInterface;
 use Cartalyst\Sentinel\Activations\EloquentActivation;
 use Cartalyst\Sentinel\Activations\IlluminateActivationRepository;
 
@@ -53,11 +49,9 @@ class IlluminateActivationRepositoryTest extends TestCase
     {
         list($activations, $model, $query) = $this->getActivationMock();
 
-        $this->addMockConnection($model);
-
-        $model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
-        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
+        $model->shouldReceive('fill')->once();
+        $model->shouldReceive('setAttribute')->once();
+        $model->shouldReceive('save')->once();
 
         $user = $this->getUserMock();
 
@@ -214,7 +208,7 @@ class IlluminateActivationRepositoryTest extends TestCase
     {
         $query = m::mock('Illuminate\Database\Eloquent\Builder');
 
-        $model = m::mock('Cartalyst\Sentinel\Activations\EloquentActivation[newQuery]');
+        $model = m::mock('Cartalyst\Sentinel\Activations\EloquentActivation');
         $model->shouldReceive('newQuery')->andReturn($query);
 
         $activations = m::mock('Cartalyst\Sentinel\Activations\IlluminateActivationRepository[createModel]', ['ActivationModelMock', 259200]);
@@ -237,15 +231,5 @@ class IlluminateActivationRepositoryTest extends TestCase
         $query->shouldReceive('where')->with('created_at', $operator, m::on(function () {
             return true;
         }))->andReturn($query);
-    }
-
-    protected function addMockConnection($model)
-    {
-        $resolver = m::mock(ConnectionResolverInterface::class);
-        $resolver->shouldReceive('connection')->andReturn(m::mock(Connection::class)->makePartial());
-
-        $model->setConnectionResolver($resolver);
-        $model->getConnection()->shouldReceive('getQueryGrammar')->andReturn(m::mock(Grammar::class));
-        $model->getConnection()->shouldReceive('getPostProcessor')->andReturn(m::mock(Processor::class));
     }
 }

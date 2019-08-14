@@ -22,11 +22,7 @@ namespace Cartalyst\Sentinel\Tests\Reminders;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use Illuminate\Database\Connection;
-use Illuminate\Database\Query\Grammars\Grammar;
 use Cartalyst\Sentinel\Reminders\EloquentReminder;
-use Illuminate\Database\Query\Processors\Processor;
-use Illuminate\Database\ConnectionResolverInterface;
 use Cartalyst\Sentinel\Users\IlluminateUserRepository;
 use Cartalyst\Sentinel\Reminders\IlluminateReminderRepository;
 
@@ -55,11 +51,9 @@ class IlluminateReminderRepositoryTest extends TestCase
     {
         list($reminders, $users, $model, $query) = $this->getReminderMock();
 
-        $this->addMockConnection($model);
-
-        $model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
-        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
+        $model->shouldReceive('fill');
+        $model->shouldReceive('setAttribute');
+        $model->shouldReceive('save')->once();
 
         $user = $this->getUserMock();
 
@@ -157,7 +151,7 @@ class IlluminateReminderRepositoryTest extends TestCase
 
         $query = m::mock('Illuminate\Database\Eloquent\Builder');
 
-        $model = m::mock('Cartalyst\Sentinel\Reminders\EloquentReminder[newQuery]');
+        $model = m::mock('Cartalyst\Sentinel\Reminders\EloquentReminder');
         $model->shouldReceive('newQuery')->andReturn($query);
 
         $reminders = m::mock('Cartalyst\Sentinel\Reminders\IlluminateReminderRepository[createModel]', [$users]);
@@ -177,18 +171,10 @@ class IlluminateReminderRepositoryTest extends TestCase
 
     protected function shouldReceiveExpires($query, $operator = '>')
     {
-        $query->shouldReceive('where')->with('created_at', $operator, m::on(function () {
-            return true;
-        }))->andReturn($query);
-    }
-
-    protected function addMockConnection($model)
-    {
-        $resolver = m::mock(ConnectionResolverInterface::class);
-        $resolver->shouldReceive('connection')->andReturn(m::mock(Connection::class)->makePartial());
-
-        $model->setConnectionResolver($resolver);
-        $model->getConnection()->shouldReceive('getQueryGrammar')->andReturn(m::mock(Grammar::class));
-        $model->getConnection()->shouldReceive('getPostProcessor')->andReturn(m::mock(Processor::class));
+        $query->shouldReceive('where')
+              ->with('created_at',$operator,m::on(function () {
+                  return true;
+              }))
+              ->andReturn($query);
     }
 }
