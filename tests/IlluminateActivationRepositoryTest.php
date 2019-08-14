@@ -47,17 +47,18 @@ class IlluminateActivationRepositoryTest extends PHPUnit_Framework_TestCase
     {
         list($activations, $model, $query) = $this->getActivationMock();
 
-        $this->addMockConnection($model);
-        $model->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
-        $model->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-
-        $model->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->once();
+        $model->shouldReceive('fill');
+        $model->shouldReceive('setAttribute');
+        $model->shouldReceive('save');
 
         $user = $this->getUserMock();
 
         $activation = $activations->create($user);
 
-        $this->assertInstanceOf('Cartalyst\Sentinel\Activations\EloquentActivation', $activation);
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Activations\EloquentActivation',
+            $activation
+        );
     }
 
     public function testExists()
@@ -119,11 +120,14 @@ class IlluminateActivationRepositoryTest extends PHPUnit_Framework_TestCase
 
         $query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
         $query->shouldReceive('where')->with('completed', true)->andReturn($query);
-        $query->shouldReceive('first')->once();
+        $query->shouldReceive('first')->once()->andReturn($model);
 
         $user = $this->getUserMock();
 
-        $activations->completed($user);
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Activations\ActivationInterface',
+            $activations->completed($user)
+        );
     }
 
     public function testRemoveReturnsFalseIfNoCompleteActivationIsFound()
@@ -136,7 +140,7 @@ class IlluminateActivationRepositoryTest extends PHPUnit_Framework_TestCase
 
         $user = $this->getUserMock();
 
-        $activations->remove($user);
+        $this->assertFalse($activations->remove($user));
     }
 
     public function testRemoveValidActivation()
@@ -147,11 +151,11 @@ class IlluminateActivationRepositoryTest extends PHPUnit_Framework_TestCase
         $query->shouldReceive('where')->with('completed', true)->andReturn($query);
         $query->shouldReceive('first')->once()->andReturn($activation = m::mock('Cartalyst\Sentinel\Activations\EloquentActivation'));
 
-        $activation->shouldReceive('delete')->once();
+        $activation->shouldReceive('delete')->once()->andReturn(true);
 
         $user = $this->getUserMock();
 
-        $activations->remove($user);
+        $this->assertTrue($activations->remove($user));
     }
 
     public function testRemoveExpired()
@@ -170,10 +174,11 @@ class IlluminateActivationRepositoryTest extends PHPUnit_Framework_TestCase
     protected function getActivationMock()
     {
         $activations = m::mock('Cartalyst\Sentinel\Activations\IlluminateActivationRepository[createModel]');
-        $model       = m::mock('Cartalyst\Sentinel\Activations\EloquentActivation[newQuery]');
+        $model = m::mock('Cartalyst\Sentinel\Activations\EloquentActivation');
+        $query = m::mock('Illuminate\Database\Eloquent\Builder');
 
         $activations->shouldReceive('createModel')->andReturn($model);
-        $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
+        $model->shouldReceive('newQuery')->andReturn($query);
 
         return [$activations, $model, $query];
     }
@@ -194,14 +199,5 @@ class IlluminateActivationRepositoryTest extends PHPUnit_Framework_TestCase
             $this->assertEquals(time() - $expires, $timestamp->getTimestamp(), '', 3);
             return true;
         }))->andReturn($query);
-    }
-
-
-    protected function addMockConnection($model)
-    {
-        $model->setConnectionResolver($resolver = m::mock('Illuminate\Database\ConnectionResolverInterface'));
-        $resolver->shouldReceive('connection')->andReturn(m::mock('Illuminate\Database\Connection')->makePartial());
-        $model->getConnection()->shouldReceive('getQueryGrammar')->andReturn(m::mock('Illuminate\Database\Query\Grammars\Grammar'));
-        $model->getConnection()->shouldReceive('getPostProcessor')->andReturn(m::mock('Illuminate\Database\Query\Processors\Processor'));
     }
 }

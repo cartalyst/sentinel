@@ -50,7 +50,7 @@ class FuelPHPSessionTest extends PHPUnit_Framework_TestCase
     {
         $session = new FuelPHPSession($store = m::mock('Fuel\Core\Session_Driver'), 'foo');
         $store->shouldReceive('set')->with('foo', 'bar')->once();
-        $session->put('bar');
+        $this->assertNull($session->put('bar'));
     }
 
     public function testGet()
@@ -64,6 +64,6 @@ class FuelPHPSessionTest extends PHPUnit_Framework_TestCase
     {
         $session = new FuelPHPSession($store = m::mock('Fuel\Core\Session_Driver'), 'foo');
         $store->shouldReceive('delete')->with('foo')->once();
-        $session->forget();
+        $this->assertNull($session->forget());
     }
 }

@@ -38,45 +38,66 @@ class IlluminateRoleRepositoryTest extends PHPUnit_Framework_TestCase
     public function testConstructor()
     {
         $roles = m::mock('Cartalyst\Sentinel\Roles\IlluminateRoleRepository[createModel]', [
-            'Cartalyst\Sentinel\Roles\EloquentRole', 1, 2, 3, 4, 5, 6,
+            'RoleMock'
         ]);
+
+        $this->assertEquals('RoleMock', $roles->getModel());
     }
 
     public function testFindById()
     {
-        $roles = m::mock('Cartalyst\Sentinel\Roles\IlluminateRoleRepository[createModel]');
+        list($roles, $model, $query) = $this->getRolesMock();
 
-        $roles->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Roles\EloquentRole[newQuery]'));
+        $query->shouldReceive('find')->with(1)->andReturn($model);
 
-        $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
-        $query->shouldReceive('find')->with(1)->andReturn($query);
+        $role = $roles->findById(1);
 
-        $roles->findById(1);
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Roles\RoleInterface',
+            $role
+        );
     }
 
     public function testFindBySlug()
     {
-        $roles = m::mock('Cartalyst\Sentinel\Roles\IlluminateRoleRepository[createModel]');
+        list($roles, $model, $query) = $this->getRolesMock();
 
-        $roles->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Roles\EloquentRole[newQuery]'));
-
-        $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
         $query->shouldReceive('where')->with('slug', 'foo')->andReturn($query);
-        $query->shouldReceive('first')->once();
+        $query->shouldReceive('first')->once()->andReturn($model);
 
-        $roles->findBySlug('foo');
+        $role = $roles->findBySlug('foo');
+
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Roles\RoleInterface',
+            $role
+        );
     }
 
     public function testFindByName()
     {
+        list($roles, $model, $query) = $this->getRolesMock();
+
+        $query->shouldReceive('where')->with('name', 'foo')->andReturn($query);
+        $query->shouldReceive('first')->once()->andReturn($model);
+
+        $role = $roles->findByName('foo');
+
+        $this->assertInstanceOf(
+            'Cartalyst\Sentinel\Roles\RoleInterface',
+            $role
+        );
+    }
+
+
+    protected function getRolesMock()
+    {
+        $model = m::mock('Cartalyst\Sentinel\Roles\EloquentRole');
+        $query = m::mock('Illuminate\Database\Eloquent\Builder');
         $roles = m::mock('Cartalyst\Sentinel\Roles\IlluminateRoleRepository[createModel]');
 
-        $roles->shouldReceive('createModel')->andReturn($model = m::mock('Cartalyst\Sentinel\Roles\EloquentRole[newQuery]'));
+        $roles->shouldReceive('createModel')->andReturn($model);
+        $model->shouldReceive('newQuery')->andReturn($query);
 
-        $model->shouldReceive('newQuery')->andReturn($query = m::mock('Illuminate\Database\Eloquent\Builder'));
-        $query->shouldReceive('where')->with('name', 'foo')->andReturn($query);
-        $query->shouldReceive('first')->once();
-
-        $roles->findByName('foo');
+        return [$roles, $model, $query];
     }
 }
