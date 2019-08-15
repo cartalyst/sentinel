@@ -93,18 +93,8 @@ class IlluminateUserRepository implements UserRepositoryInterface
 
         $query = $instance->newQuery();
 
-        if (is_array($logins)) {
-            foreach ($logins as $key => $value) {
-                $query->where($key, $value);
-            }
-        } else {
-            $query->whereNested(function ($query) use ($loginNames, $logins) {
-                foreach ($loginNames as $index => $name) {
-                    $method = $index === 0 ? 'where' : 'orWhere';
-
-                    $query->{$method}($name, $logins);
-                }
-            });
+        foreach ($logins as $key => $value) {
+            $query->where($key, $value);
         }
 
         return $query->first();
@@ -232,15 +222,7 @@ class IlluminateUserRepository implements UserRepositoryInterface
 
         list($logins, $password, $attributes) = $this->parseCredentials($credentials, $loginNames);
 
-        if (is_array($logins)) {
-            $user->fill($logins);
-        } else {
-            $loginName = reset($loginNames);
-
-            $user->fill([
-                $loginName => $logins,
-            ]);
-        }
+        $user->fill($logins);
 
         $user->fill($attributes);
 
