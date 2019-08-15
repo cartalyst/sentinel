@@ -127,6 +127,23 @@ class CheckpointsTest extends TestCase
     }
 
     /** @test */
+    public function it_can_remove_checkpoints_at_runtime()
+    {
+        $activationCheckpoint = m::mock(ActivationCheckpoint::class, [$this->activations]);
+        $throttleCheckpoint   = m::mock(ThrottleCheckpoint::class, [$this->throttle]);
+
+        $this->sentinel->addCheckpoint('activation', $activationCheckpoint);
+        $this->sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+
+        $this->sentinel->removeCheckpoints([
+            'activation',
+            'throttle',
+        ]);
+
+        $this->assertCount(0, $this->sentinel->getCheckpoints());
+    }
+
+    /** @test */
     public function it_can_bypass_all_checkpoints()
     {
         $this->persistences->shouldReceive('check')->once()->andReturn('foobar');
