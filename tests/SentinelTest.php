@@ -22,10 +22,12 @@ namespace Cartalyst\Sentinel\Tests;
 
 use Mockery as m;
 use RuntimeException;
+use BadMethodCallException;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Cartalyst\Sentinel\Sentinel;
 use Cartalyst\Sentinel\Users\EloquentUser;
+use Cartalyst\Sentinel\Roles\EloquentRole;
 use Illuminate\Contracts\Events\Dispatcher;
 use Cartalyst\Sentinel\Roles\IlluminateRoleRepository;
 use Cartalyst\Sentinel\Users\IlluminateUserRepository;
@@ -565,6 +567,80 @@ class SentinelTest extends TestCase
         list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
 
         $sentinel->getBasicResponse();
+    }
+
+    /** @test */
+    public function an_exception_will_be_thrown_when_calling_methods_which_are_only_available_when_a_user_is_logged_in()
+    {
+        $this->expectException(BadMethodCallException::class);
+        $this->expectExceptionMessage('Method Cartalyst\Sentinel\Sentinel::getRoles() can only be called if a user is logged in.');
+
+        list($sentinel, $persistences) = $this->createSentinel();
+        $persistences->shouldReceive('check')->once()->andReturn(null);
+
+        $sentinel->getRoles();
+    }
+
+    /** @test */
+    public function an_exception_will_be_thrown_when_calling_invalid_methods()
+    {
+        $this->expectException(BadMethodCallException::class);
+        $this->expectExceptionMessage('Call to undefined method Cartalyst\Sentinel\Sentinel::methodThatDoesntExist()');
+
+        list($sentinel) = $this->createSentinel();
+
+        $sentinel->methodThatDoesntExist();
+    }
+
+    /** @test */
+    public function it_can_pass_method_calls_to_a_user_repository_directly()
+    {
+        list($sentinel, $persistences, $users) = $this->createSentinel();
+
+        $users->shouldReceive('findById')->once()->andReturn(m::mock(EloquentUser::class));
+
+        $user = $sentinel->findById(1);
+
+        $this->assertInstanceOf(EloquentUser::class, $user);
+    }
+
+    /** @test */
+    public function it_can_pass_method_calls_to_a_user_repository_via_findUserBy()
+    {
+        list($sentinel, $persistences, $users) = $this->createSentinel();
+
+        $users->shouldReceive('findById')->once()->andReturn(m::mock(EloquentUser::class));
+
+        $user = $sentinel->findUserById(1);
+
+        $this->assertInstanceOf(EloquentUser::class, $user);
+    }
+
+    /** @test */
+    public function it_can_pass_method_calls_to_a_role_repository_via_findRoleBy()
+    {
+        list($sentinel, $persistences, $users, $roles) = $this->createSentinel();
+
+        $roles->shouldReceive('findById')->once()->andReturn(m::mock(EloquentRole::class));
+
+        $user = $sentinel->findRoleById(1);
+
+        $this->assertInstanceOf(EloquentRole::class, $user);
+    }
+
+    /** @test */
+    public function it_can_pass_methods_via_the_user_repository_when_a_user_is_logged_in()
+    {
+
+        list($sentinel, $persistences, $users, $roles) = $this->createSentinel();
+
+        $user = m::mock(EloquentUser::class);
+        $user->shouldReceive('hasAccess')->andReturn(true);
+
+        $persistences->shouldReceive('check')->andReturn(true);
+        $persistences->shouldReceive('findUserByPersistenceCode')->andReturn($user);
+
+        $this->assertTrue($sentinel->hasAccess());
     }
 
     protected function createSentinel()
