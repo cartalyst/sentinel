@@ -27,26 +27,26 @@ interface UserInterface
      *
      * @return int
      */
-    public function getUserId();
+    public function getUserId(): int;
 
     /**
      * Returns the user login.
      *
      * @return string
      */
-    public function getUserLogin();
+    public function getUserLogin(): string;
 
     /**
      * Returns the user login attribute name.
      *
      * @return string
      */
-    public function getUserLoginName();
+    public function getUserLoginName(): string;
 
     /**
      * Returns the user password.
      *
      * @return string
      */
-    public function getUserPassword();
+    public function getUserPassword(): string;
 }

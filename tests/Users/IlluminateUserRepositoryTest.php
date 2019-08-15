@@ -174,9 +174,7 @@ class IlluminateUserRepositoryTest extends TestCase
         $model->shouldReceive('setAttribute');
         $model->shouldReceive('save')->once()->andReturn(true);
 
-        $user = $users->recordLogin($model);
-
-        $this->assertInstanceOf(EloquentUser::class, $user);
+        $this->assertTrue($users->recordLogin($model));
     }
 
     /** @test */
@@ -186,9 +184,7 @@ class IlluminateUserRepositoryTest extends TestCase
 
         $model->shouldReceive('save')->once()->andReturn(true);
 
-        $user = $users->recordLogout($model);
-
-        $this->assertInstanceOf(EloquentUser::class, $user);
+        $this->assertTrue($users->recordLogout($model));
     }
 
     /** @test */
@@ -305,7 +301,7 @@ class IlluminateUserRepositoryTest extends TestCase
             return false;
         });
 
-        $this->assertFalse($user);
+        $this->assertNull($user);
     }
 
     /** @test */

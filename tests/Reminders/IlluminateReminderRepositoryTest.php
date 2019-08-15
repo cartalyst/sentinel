@@ -85,12 +85,14 @@ class IlluminateReminderRepositoryTest extends TestCase
     {
         list($reminders, $users, $model, $query) = $this->getReminderMock();
 
+        $user = $this->getUserMock();
+
         $reminder = m::mock(EloquentReminder::class);
         $reminder->shouldReceive('fill')->once();
         $reminder->shouldReceive('save')->once();
 
         $users->shouldReceive('validForUpdate')->once()->andReturn(true);
-        $users->shouldReceive('update')->once()->andReturn(true);
+        $users->shouldReceive('update')->once()->andReturn($user);
 
         $query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
         $query->shouldReceive('where')->with('code', 'foobar')->andReturn($query);
@@ -98,8 +100,6 @@ class IlluminateReminderRepositoryTest extends TestCase
         $query->shouldReceive('first')->once()->andReturn($reminder);
 
         $this->shouldReceiveExpires($query);
-
-        $user = $this->getUserMock();
 
         $status = $reminders->complete($user, 'foobar', 'secret');
 
