@@ -87,8 +87,8 @@ interface PersistenceRepositoryInterface
     /**
      * Flushes persistences for the given user.
      *
-     * @param \Cartalyst\Sentinel\Persistence\PersistableInterface $persistable
-     * @param bool                                                 $forget
+     * @param \Cartalyst\Sentinel\Persistences\PersistableInterface $persistable
+     * @param bool                                                  $forget
      *
      * @return void
      */

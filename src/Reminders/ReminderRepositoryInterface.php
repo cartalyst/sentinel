@@ -39,7 +39,7 @@ interface ReminderRepositoryInterface
      * @param \Cartalyst\Sentinel\Users\UserInterface $user
      * @param string|null                             $code
      *
-     * @return \Cartalyst\Sentinel\Activations\EloquentReminder|null
+     * @return \Cartalyst\Sentinel\Reminders\EloquentReminder|null
      */
     public function get(UserInterface $user, string $code = null): ?EloquentReminder;
 
