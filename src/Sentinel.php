@@ -22,8 +22,8 @@ namespace Cartalyst\Sentinel;
 
 use Closure;
 use RuntimeException;
-use Illuminate\Support\Str;
 use BadMethodCallException;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Cartalyst\Support\Traits\EventTrait;
 use Cartalyst\Sentinel\Users\UserInterface;

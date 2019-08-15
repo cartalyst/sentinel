@@ -26,8 +26,8 @@ use BadMethodCallException;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Cartalyst\Sentinel\Sentinel;
-use Cartalyst\Sentinel\Users\EloquentUser;
 use Cartalyst\Sentinel\Roles\EloquentRole;
+use Cartalyst\Sentinel\Users\EloquentUser;
 use Illuminate\Contracts\Events\Dispatcher;
 use Cartalyst\Sentinel\Roles\IlluminateRoleRepository;
 use Cartalyst\Sentinel\Users\IlluminateUserRepository;
@@ -513,6 +513,56 @@ class SentinelTest extends TestCase
     }
 
     /** @test */
+    public function it_can_pass_method_calls_to_a_user_repository_directly()
+    {
+        list($sentinel, $persistences, $users) = $this->createSentinel();
+
+        $users->shouldReceive('findById')->once()->andReturn(m::mock(EloquentUser::class));
+
+        $user = $sentinel->findById(1);
+
+        $this->assertInstanceOf(EloquentUser::class, $user);
+    }
+
+    /** @test */
+    public function it_can_pass_method_calls_to_a_user_repository_via_findUserBy()
+    {
+        list($sentinel, $persistences, $users) = $this->createSentinel();
+
+        $users->shouldReceive('findById')->once()->andReturn(m::mock(EloquentUser::class));
+
+        $user = $sentinel->findUserById(1);
+
+        $this->assertInstanceOf(EloquentUser::class, $user);
+    }
+
+    /** @test */
+    public function it_can_pass_method_calls_to_a_role_repository_via_findRoleBy()
+    {
+        list($sentinel, $persistences, $users, $roles) = $this->createSentinel();
+
+        $roles->shouldReceive('findById')->once()->andReturn(m::mock(EloquentRole::class));
+
+        $user = $sentinel->findRoleById(1);
+
+        $this->assertInstanceOf(EloquentRole::class, $user);
+    }
+
+    /** @test */
+    public function it_can_pass_methods_via_the_user_repository_when_a_user_is_logged_in()
+    {
+        list($sentinel, $persistences, $users, $roles) = $this->createSentinel();
+
+        $user = m::mock(EloquentUser::class);
+        $user->shouldReceive('hasAccess')->andReturn(true);
+
+        $persistences->shouldReceive('check')->andReturn(true);
+        $persistences->shouldReceive('findUserByPersistenceCode')->andReturn($user);
+
+        $this->assertTrue($sentinel->hasAccess());
+    }
+
+    /** @test */
     public function an_exception_will_be_thrown_when_activating_an_invalid_user()
     {
         $this->expectException(InvalidArgumentException::class);
@@ -590,57 +640,6 @@ class SentinelTest extends TestCase
         list($sentinel) = $this->createSentinel();
 
         $sentinel->methodThatDoesntExist();
-    }
-
-    /** @test */
-    public function it_can_pass_method_calls_to_a_user_repository_directly()
-    {
-        list($sentinel, $persistences, $users) = $this->createSentinel();
-
-        $users->shouldReceive('findById')->once()->andReturn(m::mock(EloquentUser::class));
-
-        $user = $sentinel->findById(1);
-
-        $this->assertInstanceOf(EloquentUser::class, $user);
-    }
-
-    /** @test */
-    public function it_can_pass_method_calls_to_a_user_repository_via_findUserBy()
-    {
-        list($sentinel, $persistences, $users) = $this->createSentinel();
-
-        $users->shouldReceive('findById')->once()->andReturn(m::mock(EloquentUser::class));
-
-        $user = $sentinel->findUserById(1);
-
-        $this->assertInstanceOf(EloquentUser::class, $user);
-    }
-
-    /** @test */
-    public function it_can_pass_method_calls_to_a_role_repository_via_findRoleBy()
-    {
-        list($sentinel, $persistences, $users, $roles) = $this->createSentinel();
-
-        $roles->shouldReceive('findById')->once()->andReturn(m::mock(EloquentRole::class));
-
-        $user = $sentinel->findRoleById(1);
-
-        $this->assertInstanceOf(EloquentRole::class, $user);
-    }
-
-    /** @test */
-    public function it_can_pass_methods_via_the_user_repository_when_a_user_is_logged_in()
-    {
-
-        list($sentinel, $persistences, $users, $roles) = $this->createSentinel();
-
-        $user = m::mock(EloquentUser::class);
-        $user->shouldReceive('hasAccess')->andReturn(true);
-
-        $persistences->shouldReceive('check')->andReturn(true);
-        $persistences->shouldReceive('findUserByPersistenceCode')->andReturn($user);
-
-        $this->assertTrue($sentinel->hasAccess());
     }
 
     protected function createSentinel()
