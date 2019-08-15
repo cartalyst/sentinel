@@ -29,7 +29,7 @@ interface CookieInterface
      *
      * @return void
      */
-    public function put($value);
+    public function put($value): void;
 
     /**
      * Returns the Sentinel cookie value.
@@ -43,5 +43,5 @@ interface CookieInterface
      *
      * @return void
      */
-    public function forget();
+    public function forget(): void;
 }

@@ -42,12 +42,16 @@ class EloquentUser extends Model implements PermissibleInterface, PersistableInt
     use PermissibleTrait;
 
     /**
-     * {@inheritdoc}
+     * The table associated with the model.
+     *
+     * @var string
      */
     protected $table = 'users';
 
     /**
-     * {@inheritdoc}
+     * The attributes that are mass assignable.
+     *
+     * @var array
      */
     protected $fillable = [
         'email',
@@ -58,7 +62,9 @@ class EloquentUser extends Model implements PermissibleInterface, PersistableInt
     ];
 
     /**
-     * {@inheritdoc}
+     * The attributes that should be cast to native types.
+     *
+     * @var array
      */
     protected $casts = [
         'permissions' => 'json',
@@ -89,48 +95,48 @@ class EloquentUser extends Model implements PermissibleInterface, PersistableInt
     protected $loginNames = ['email'];
 
     /**
-     * The Eloquent roles model name.
+     * The Roles model FQCN.
      *
      * @var string
      */
     protected static $rolesModel = EloquentRole::class;
 
     /**
-     * The Eloquent persistences model name.
+     * The Persistences model FQCN.
      *
      * @var string
      */
     protected static $persistencesModel = EloquentPersistence::class;
 
     /**
-     * The Eloquent activations model name.
+     * The Activations model FQCN.
      *
      * @var string
      */
     protected static $activationsModel = EloquentActivation::class;
 
     /**
-     * The Eloquent reminders model name.
+     * The Reminders model FQCN.
      *
      * @var string
      */
     protected static $remindersModel = EloquentReminder::class;
 
     /**
-     * The Eloquent throttling model name.
+     * The Throttling model FQCN.
      *
      * @var string
      */
     protected static $throttlingModel = EloquentThrottle::class;
 
     /**
-     * Returns the roles relationship.
+     * Returns the activations relationship.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function roles(): BelongsToMany
+    public function activations(): HasMany
     {
-        return $this->belongsToMany(static::$rolesModel, 'role_users', 'user_id', 'role_id')->withTimestamps();
+        return $this->hasMany(static::$activationsModel, 'user_id');
     }
 
     /**
@@ -144,16 +150,6 @@ class EloquentUser extends Model implements PermissibleInterface, PersistableInt
     }
 
     /**
-     * Returns the activations relationship.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function activations(): HasMany
-    {
-        return $this->hasMany(static::$activationsModel, 'user_id');
-    }
-
-    /**
      * Returns the reminders relationship.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -161,6 +157,16 @@ class EloquentUser extends Model implements PermissibleInterface, PersistableInt
     public function reminders(): HasMany
     {
         return $this->hasMany(static::$remindersModel, 'user_id');
+    }
+
+    /**
+     * Returns the roles relationship.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(static::$rolesModel, 'role_users', 'user_id', 'role_id')->withTimestamps();
     }
 
     /**

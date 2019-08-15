@@ -22,6 +22,7 @@ namespace Cartalyst\Sentinel\Tests\Activations;
 
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use Illuminate\Database\Eloquent\Builder;
 use Cartalyst\Sentinel\Users\UserInterface;
 use Cartalyst\Sentinel\Activations\EloquentActivation;
 use Cartalyst\Sentinel\Activations\IlluminateActivationRepository;
@@ -47,7 +48,7 @@ class IlluminateActivationRepositoryTest extends TestCase
     /** @test */
     public function it_can_create_an_activation_code()
     {
-        list($activations, $model, $query) = $this->getActivationMock();
+        list($activations, $model) = $this->getActivationMock();
 
         $model->shouldReceive('fill');
         $model->shouldReceive('setAttribute');
@@ -68,6 +69,7 @@ class IlluminateActivationRepositoryTest extends TestCase
         $query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
         $query->shouldReceive('where')->with('completed', false)->andReturn($query);
         $query->shouldReceive('where')->with('code', 'foo')->andReturn($query);
+        $query->shouldReceive('when')->andReturn($query, 'foo');
         $query->shouldReceive('first')->once();
 
         $this->shouldReceiveExpires($query);
@@ -207,9 +209,9 @@ class IlluminateActivationRepositoryTest extends TestCase
 
     protected function getActivationMock()
     {
-        $query = m::mock('Illuminate\Database\Eloquent\Builder');
+        $query = m::mock(Builder::class);
 
-        $model = m::mock('Cartalyst\Sentinel\Activations\EloquentActivation');
+        $model = m::mock(EloquentActivation::class);
         $model->shouldReceive('newQuery')->andReturn($query);
 
         $activations = m::mock('Cartalyst\Sentinel\Activations\IlluminateActivationRepository[createModel]', ['ActivationModelMock', 259200]);

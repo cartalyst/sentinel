@@ -29,7 +29,7 @@ class NullCookie implements CookieInterface
      *
      * @return void
      */
-    public function put($value)
+    public function put($value): void
     {
     }
 
@@ -48,7 +48,7 @@ class NullCookie implements CookieInterface
      *
      * @return void
      */
-    public function forget()
+    public function forget(): void
     {
     }
 }

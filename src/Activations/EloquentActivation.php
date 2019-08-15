@@ -25,12 +25,16 @@ use Illuminate\Database\Eloquent\Model;
 class EloquentActivation extends Model implements ActivationInterface
 {
     /**
-     * {@inheritdoc}
+     * The table associated with the model.
+     *
+     * @var string
      */
     protected $table = 'activations';
 
     /**
-     * {@inheritdoc}
+     * The attributes that are mass assignable.
+     *
+     * @var array
      */
     protected $fillable = [
         'code',
@@ -39,7 +43,9 @@ class EloquentActivation extends Model implements ActivationInterface
     ];
 
     /**
-     * {@inheritdoc}
+     * The attributes that should be cast to native types.
+     *
+     * @var array
      */
     protected $casts = [
         'completed' => 'bool',

@@ -25,7 +25,7 @@ use Illuminate\Support\Str;
 trait PermissionsTrait
 {
     /**
-     * The permissions.
+     * The main permissions.
      *
      * @var array
      */

@@ -26,7 +26,7 @@ use Cartalyst\Sentinel\Throttling\ThrottleRepositoryInterface;
 class ThrottleCheckpoint implements CheckpointInterface
 {
     /**
-     * The throttle repository.
+     * The Throttle repository instance.
      *
      * @var \Cartalyst\Sentinel\Throttling\ThrottleRepositoryInterface
      */

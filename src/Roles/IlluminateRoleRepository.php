@@ -27,7 +27,7 @@ class IlluminateRoleRepository implements RoleRepositoryInterface
     use RepositoryTrait;
 
     /**
-     * The Eloquent role model name.
+     * The Eloquent role model FQCN.
      *
      * @var string
      */

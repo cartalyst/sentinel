@@ -27,7 +27,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class EloquentPersistence extends Model implements PersistenceInterface
 {
     /**
-     * {@inheritdoc}
+     * The table associated with the model.
+     *
+     * @var string
      */
     protected $table = 'persistences';
 

@@ -69,7 +69,7 @@ class IlluminateCookie implements CookieInterface
     /**
      * {@inheritdoc}
      */
-    public function put($value)
+    public function put($value): void
     {
         $cookie = $this->jar->forever($this->key, $value);
 
@@ -97,7 +97,7 @@ class IlluminateCookie implements CookieInterface
     /**
      * {@inheritdoc}
      */
-    public function forget()
+    public function forget(): void
     {
         $cookie = $this->jar->forget($this->key);
 

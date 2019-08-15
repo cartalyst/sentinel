@@ -23,7 +23,7 @@ namespace Cartalyst\Sentinel\Permissions;
 interface PermissibleInterface
 {
     /**
-     * Returns the permissions instance.
+     * Returns the Permissions instance.
      *
      * @return \Cartalyst\Sentinel\Permissions\PermissionsInterface
      */

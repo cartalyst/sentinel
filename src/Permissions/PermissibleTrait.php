@@ -30,7 +30,7 @@ trait PermissibleTrait
     protected $permissionsInstance;
 
     /**
-     * The permissions instance class name.
+     * The Permissions instance FQCN.
      *
      * @var string
      */

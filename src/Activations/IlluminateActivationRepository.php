@@ -30,7 +30,7 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface
     use RepositoryTrait;
 
     /**
-     * The Eloquent activation model name.
+     * The Activation model FQCN.
      *
      * @var string
      */
@@ -67,7 +67,9 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface
 
         $code = $this->generateActivationCode();
 
-        $activation->fill(compact('code'));
+        $activation->fill([
+            'code' => $code,
+        ]);
 
         $activation->user_id = $user->getUserId();
 
@@ -83,19 +85,17 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface
     {
         $expires = $this->expires();
 
-        $activation = $this
+        return $this
             ->createModel()
             ->newQuery()
             ->where('user_id', $user->getUserId())
             ->where('completed', false)
             ->where('created_at', '>', $expires)
+            ->when($code, function ($query, $code) {
+                return $query->where('code', $code);
+            })
+            ->first()
         ;
-
-        if ($code) {
-            $activation->where('code', $code);
-        }
-
-        return $activation->first();
     }
 
     /**
@@ -123,7 +123,7 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface
             ->first()
         ;
 
-        if ($activation === null) {
+        if (! $activation) {
             return false;
         }
 
@@ -142,13 +142,9 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface
      */
     public function completed(UserInterface $user): bool
     {
-        return $this
-            ->createModel()
-            ->newQuery()
-            ->where('user_id', $user->getUserId())
-            ->where('completed', true)
-            ->exists()
-        ;
+        $userId = $user->getUserId();
+
+        return $this->createModel()->newQuery()->where('user_id', $userId)->where('completed', true)->exists();
     }
 
     /**
@@ -156,15 +152,11 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface
      */
     public function remove(UserInterface $user): bool
     {
-        $activation = $this
-            ->createModel()
-            ->newQuery()
-            ->where('user_id', $user->getUserId())
-            ->where('completed', true)
-            ->first()
-        ;
+        $userId = $user->getUserId();
 
-        if ($activation === false) {
+        $activation = $this->createModel()->newQuery()->where('user_id', $userId)->where('completed', true)->first();
+
+        if (! $activation) {
             return false;
         }
 
@@ -178,13 +170,7 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface
     {
         $expires = $this->expires();
 
-        return $this
-            ->createModel()
-            ->newQuery()
-            ->where('completed', false)
-            ->where('created_at', '<', $expires)
-            ->delete()
-        ;
+        return $this->createModel()->newQuery()->where('completed', false)->where('created_at', '<', $expires)->delete();
     }
 
     /**

@@ -33,21 +33,21 @@ class IlluminateUserRepository implements UserRepositoryInterface
     use EventTrait, RepositoryTrait;
 
     /**
-     * The hasher instance.
+     * The Hasher instance.
      *
      * @var \Cartalyst\Sentinel\Hashing\HasherInterface
      */
     protected $hasher;
 
     /**
-     * The Eloquent user model name.
+     * The User model FQCN.
      *
      * @var string
      */
     protected $model = EloquentUser::class;
 
     /**
-     * Create a new Illuminate user repository.
+     * Constructor.
      *
      * @param \Cartalyst\Sentinel\Hashing\HasherInterface $hasher
      * @param \Illuminate\Contracts\Events\Dispatcher     $dispatcher

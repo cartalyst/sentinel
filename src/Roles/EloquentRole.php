@@ -33,12 +33,16 @@ class EloquentRole extends Model implements PermissibleInterface, RoleInterface
     use PermissibleTrait;
 
     /**
-     * {@inheritdoc}
+     * The table associated with the model.
+     *
+     * @var string
      */
     protected $table = 'roles';
 
     /**
-     * {@inheritdoc}
+     * The attributes that are mass assignable.
+     *
+     * @var array
      */
     protected $fillable = [
         'name',
@@ -47,14 +51,16 @@ class EloquentRole extends Model implements PermissibleInterface, RoleInterface
     ];
 
     /**
-     * {@inheritdoc}
+     * The attributes that should be cast to native types.
+     *
+     * @var array
      */
     protected $casts = [
         'permissions' => 'json',
     ];
 
     /**
-     * The Eloquent users model name.
+     * The Users model FQCN.
      *
      * @var string
      */
@@ -81,30 +87,6 @@ class EloquentRole extends Model implements PermissibleInterface, RoleInterface
     {
         return $this->belongsToMany(static::$usersModel, 'role_users', 'role_id', 'user_id')->withTimestamps();
     }
-
-    // /**
-    //  * Get mutator for the "permissions" attribute.
-    //  *
-    //  * @param mixed $permissions
-    //  *
-    //  * @return array
-    //  */
-    // public function getPermissionsAttribute($permissions)
-    // {
-    //     return $permissions ? json_decode($permissions, true) : [];
-    // }
-
-    // /**
-    //  * Set mutator for the "permissions" attribute.
-    //  *
-    //  * @param mixed $permissions
-    //  *
-    //  * @return void
-    //  */
-    // public function setPermissionsAttribute(array $permissions)
-    // {
-    //     $this->attributes['permissions'] = $permissions ? json_encode($permissions) : '';
-    // }
 
     /**
      * {@inheritdoc}

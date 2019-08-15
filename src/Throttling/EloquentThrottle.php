@@ -25,12 +25,16 @@ use Illuminate\Database\Eloquent\Model;
 class EloquentThrottle extends Model
 {
     /**
-     * {@inheritdoc}
+     * The table associated with the model.
+     *
+     * @var string
      */
     protected $table = 'throttle';
 
     /**
-     * {@inheritdoc}
+     * The attributes that are mass assignable.
+     *
+     * @var array
      */
     protected $fillable = [
         'ip',
