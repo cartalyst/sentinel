@@ -72,7 +72,7 @@ class IlluminateActivationRepositoryTest extends TestCase
         $query->shouldReceive('when')->with('foo', m::on(function ($argument) use ($query) {
             $query->shouldReceive('where')->with('code', 'bar')->andReturn(true);
 
-            return $argument($query, 'bar');
+            return $argument($query, 'bar') == $query;
         }))->andReturn($query);
         $query->shouldReceive('first')->once();
 
