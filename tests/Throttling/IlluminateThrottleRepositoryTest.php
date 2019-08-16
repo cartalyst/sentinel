@@ -359,6 +359,19 @@ class IlluminateThrottleRepositoryTest extends TestCase
         $this->assertEqualsWithDelta(10, $this->throttle->userDelay($user), 3);
     }
 
+
+    /** @test */
+    public function testDelayHandlesNoThrottle()
+    {
+        $models = m::mock(Collection::class);
+        $models->shouldReceive('count')->andReturn(0);
+
+        $this->query->shouldReceive('where')->andReturn($this->query);
+        $this->query->shouldReceive('get')->andReturn($models);
+
+        $this->assertEquals($this->throttle->GlobalDelay(), 0);
+    }
+
     /** @test */
     public function testLog()
     {
