@@ -80,6 +80,26 @@ class IlluminateReminderRepositoryTest extends TestCase
         $this->assertFalse($status);
     }
 
+
+    /** @test */
+    public function it_can_determine_if_a_reminder_exists_with_a_code()
+    {
+        list($reminders, $users, $model, $query) = $this->getReminderMock();
+
+        $query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
+        $query->shouldReceive('where')->with('completed', false)->andReturn($query);
+        $query->shouldReceive('where')->with('code', 'foobar')->andReturn($query);
+        $query->shouldReceive('first')->once();
+
+        $this->shouldReceiveExpires($query);
+
+        $user = $this->getUserMock();
+
+        $status = $reminders->exists($user, 'foobar');
+
+        $this->assertFalse($status);
+    }
+
     /** @test */
     public function it_can_complete_a_reminder()
     {
@@ -104,6 +124,25 @@ class IlluminateReminderRepositoryTest extends TestCase
         $status = $reminders->complete($user, 'foobar', 'secret');
 
         $this->assertTrue($status);
+    }
+
+
+    /** @test */
+    public function it_cannot_complete_a_reminder_that_does_not_exist()
+    {
+        list($reminders, $users, $model, $query) = $this->getReminderMock();
+
+        $query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
+        $query->shouldReceive('where')->with('code', 'foobar')->andReturn($query);
+        $query->shouldReceive('where')->with('completed', false)->andReturn($query);
+        $query->shouldReceive('first')->once()->andReturn(null);
+        $this->shouldReceiveExpires($query);
+
+        $user = $this->getUserMock();
+
+        $status = $reminders->complete($user, 'foobar', 'secret');
+
+        $this->assertFalse($status);
     }
 
     /** @test */

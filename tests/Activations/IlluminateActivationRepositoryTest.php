@@ -21,6 +21,7 @@
 namespace Cartalyst\Sentinel\Tests\Activations;
 
 use Mockery as m;
+use Carbon\Carbon;
 use PHPUnit\Framework\TestCase;
 use Illuminate\Database\Eloquent\Builder;
 use Cartalyst\Sentinel\Users\UserInterface;
@@ -66,10 +67,15 @@ class IlluminateActivationRepositoryTest extends TestCase
     {
         list($activations, $model, $query) = $this->getActivationMock();
 
+        $expires = Carbon::now()->subSeconds(259200);
+
         $query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
         $query->shouldReceive('where')->with('completed', false)->andReturn($query);
-        $query->shouldReceive('where')->with('code', 'foo')->andReturn($query);
-        $query->shouldReceive('when')->andReturn($query, 'foo');
+        $query->shouldReceive('where')->with('created_at', '>', m::type(Carbon::class))->andReturn($query);
+        $query->shouldReceive('when')->with('foo', m::on( function ($argument) use ($query) {
+            $query->shouldReceive('where')->with('code', 'bar')->andReturn(true);
+            return $argument($query, 'bar');
+        }))->andReturn($query);
         $query->shouldReceive('first')->once();
 
         $this->shouldReceiveExpires($query);
