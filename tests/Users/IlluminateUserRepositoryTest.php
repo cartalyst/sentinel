@@ -90,6 +90,7 @@ class IlluminateUserRepositoryTest extends TestCase
         $query->shouldReceive('whereNested')->with(m::on(function ($argument) use ($query) {
             $query->shouldReceive('where')->with('email', 'foo@example.com');
             $query->shouldReceive('orWhere')->with('username', 'foo@example.com');
+
             return null === $argument($query);
         }))->andReturn($model);
         $query->shouldReceive('first')->once()->andReturn($model);
@@ -111,6 +112,7 @@ class IlluminateUserRepositoryTest extends TestCase
 
         $query->shouldReceive('whereNested')->with(m::on(function ($argument) use ($query) {
             $query->shouldReceive('where')->with('email', 'foo@example.com');
+
             return null === $argument($query);
         }))->andReturn($model);
         $query->shouldReceive('first')->once()->andReturn($model);
@@ -167,6 +169,7 @@ class IlluminateUserRepositoryTest extends TestCase
 
         $query->shouldReceive('whereHas')->with('persistences', m::on(function ($argument) use ($query) {
             $query->shouldReceive('where')->with('code', 'foobar');
+
             return null === $argument($query);
         }))->andReturn($model);
         $model->shouldReceive('first')->once()->andReturn($model);

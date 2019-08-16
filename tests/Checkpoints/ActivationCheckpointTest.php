@@ -70,13 +70,13 @@ class ActivationCheckpointTest extends TestCase
     }
 
     /** @test */
-    public function can_return_true_when_fail_is_called () {
-        $users = m::mock(IlluminateActivationRepository::class);
+    public function can_return_true_when_fail_is_called()
+    {
+        $users      = m::mock(IlluminateActivationRepository::class);
         $checkpoint = new ActivationCheckpoint($users);
 
         $this->assertTrue($checkpoint->fail());
     }
-
 
     /** @test */
     public function an_exception_will_be_thrown_when_the_user_is_not_activated_and_determining_if_the_user_is_logged_in()

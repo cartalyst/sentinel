@@ -80,7 +80,6 @@ class IlluminateReminderRepositoryTest extends TestCase
         $this->assertFalse($status);
     }
 
-
     /** @test */
     public function it_can_determine_if_a_reminder_exists_with_a_code()
     {
@@ -125,7 +124,6 @@ class IlluminateReminderRepositoryTest extends TestCase
 
         $this->assertTrue($status);
     }
-
 
     /** @test */
     public function it_cannot_complete_a_reminder_that_does_not_exist()

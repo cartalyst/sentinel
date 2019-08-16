@@ -35,8 +35,8 @@ class NativeSessionTest extends TestCase
         m::close();
     }
 
-    /** 
-     * @test 
+    /**
+     * @test
      * @runInSeparateProcess
      * */
     public function it_can_start_the_session()

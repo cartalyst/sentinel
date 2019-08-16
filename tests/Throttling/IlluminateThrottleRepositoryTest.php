@@ -359,7 +359,6 @@ class IlluminateThrottleRepositoryTest extends TestCase
         $this->assertEqualsWithDelta(10, $this->throttle->userDelay($user), 3);
     }
 
-
     /** @test */
     public function testDelayHandlesNoThrottle()
     {
@@ -369,7 +368,7 @@ class IlluminateThrottleRepositoryTest extends TestCase
         $this->query->shouldReceive('where')->andReturn($this->query);
         $this->query->shouldReceive('get')->andReturn($models);
 
-        $this->assertEquals($this->throttle->GlobalDelay(), 0);
+        $this->assertSame($this->throttle->GlobalDelay(), 0);
     }
 
     /** @test */

@@ -25,7 +25,6 @@ use Cartalyst\Sentinel\Cookies\NativeCookie;
 
 class NativeCookieTest extends TestCase
 {
-
     /**
      * @runInSeparateProcess
      * @test
@@ -33,11 +32,11 @@ class NativeCookieTest extends TestCase
     public function it_can_set_different_options_for_cookie()
     {
         $options = [
-            'name' => 'foo',
-            'domain' => 'bar',
-            'path' => 'foobar',
-            'secure' => true,
-            'http_only' => true
+            'name'      => 'foo',
+            'domain'    => 'bar',
+            'path'      => 'foobar',
+            'secure'    => true,
+            'http_only' => true,
         ];
         $cookie = new NativeCookie($options);
 
@@ -45,9 +44,9 @@ class NativeCookieTest extends TestCase
 
         $headers = xdebug_get_headers();
 
-        $this->assertStringContainsString('foo=%22mockCookie%22;',$headers[0]);
-        $this->assertStringContainsString('path=foobar;',$headers[0]);
-        $this->assertStringContainsString('domain=bar;',$headers[0]);
+        $this->assertStringContainsString('foo=%22mockCookie%22;', $headers[0]);
+        $this->assertStringContainsString('path=foobar;', $headers[0]);
+        $this->assertStringContainsString('domain=bar;', $headers[0]);
     }
 
     /**
@@ -56,15 +55,15 @@ class NativeCookieTest extends TestCase
      * */
     public function it_can_set_a_cookie()
     {
-        $cookie = new NativeCookie('__sentinel');
+        $cookie  = new NativeCookie('__sentinel');
         $expires = (time() + (2628000 * 60)) - time();
 
         $this->assertNull($cookie->put('mockCookie'));
 
         $headers = xdebug_get_headers();
 
-        $this->assertStringContainsString('__sentinel=%22mockCookie%22;',$headers[0]);
-        $this->assertStringContainsString('Max-Age=' . $expires . ';',$headers[0]);
+        $this->assertStringContainsString('__sentinel=%22mockCookie%22;', $headers[0]);
+        $this->assertStringContainsString('Max-Age='.$expires.';', $headers[0]);
     }
 
     /** @test */
@@ -85,14 +84,14 @@ class NativeCookieTest extends TestCase
      * */
     public function it_can_forget_a_cookie()
     {
-        $cookie = new NativeCookie('__sentinel');
+        $cookie  = new NativeCookie('__sentinel');
         $expires = 0;
 
         $this->assertNull($cookie->forget());
 
         $headers = xdebug_get_headers();
 
-        $this->assertStringContainsString('__sentinel=null;',$headers[0]);
-        $this->assertStringContainsString('Max-Age=' . $expires . ';',$headers[0]);
+        $this->assertStringContainsString('__sentinel=null;', $headers[0]);
+        $this->assertStringContainsString('Max-Age='.$expires.';', $headers[0]);
     }
 }
