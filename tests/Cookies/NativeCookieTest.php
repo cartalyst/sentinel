@@ -18,13 +18,33 @@
  * @link       http://cartalyst.com
  */
 
-namespace Cartalyst\Sentinel\Tests\Cookies;
+namespace Cartalyst\Sentinel\Cookies;
 
+use Mockery as m;
 use PHPUnit\Framework\TestCase;
-use Cartalyst\Sentinel\Cookies\NativeCookie;
+
+function setcookie($name, $value, $expires, $path, $domain, $secure, $httponly)
+{
+    return NativeCookieTest::$globalFunctions->setcookie(
+        $name,
+        $value,
+        $expires,
+        $path,
+        $domain,
+        $secure,
+        $httponly
+    );
+}
 
 class NativeCookieTest extends TestCase
 {
+    public static $globalFunctions;
+
+    protected function setUp(): void
+    {
+        self::$globalFunctions = m::mock();
+    }
+
     /**
      * @runInSeparateProcess
      * @test
@@ -40,13 +60,17 @@ class NativeCookieTest extends TestCase
         ];
         $cookie = new NativeCookie($options);
 
+        self::$globalFunctions->shouldReceive('setcookie')->with(
+            'foo',
+            json_encode('mockCookie'),
+            time() + (2628000 * 60),
+            'foobar',
+            'bar',
+            true,
+            true
+        );
+
         $this->assertNull($cookie->put('mockCookie'));
-
-        $headers = xdebug_get_headers();
-
-        $this->assertStringContainsString('foo=%22mockCookie%22;', $headers[0]);
-        $this->assertStringContainsString('path=foobar;', $headers[0]);
-        $this->assertStringContainsString('domain=bar;', $headers[0]);
     }
 
     /**
@@ -58,12 +82,17 @@ class NativeCookieTest extends TestCase
         $cookie  = new NativeCookie('__sentinel');
         $expires = (time() + (2628000 * 60)) - time();
 
+        self::$globalFunctions->shouldReceive('setcookie')->with(
+            '__sentinel',
+            json_encode('mockCookie'),
+            time() + (2628000 * 60),
+            '/',
+            '',
+            false,
+            false
+        );
+
         $this->assertNull($cookie->put('mockCookie'));
-
-        $headers = xdebug_get_headers();
-
-        $this->assertStringContainsString('__sentinel=%22mockCookie%22;', $headers[0]);
-        $this->assertStringContainsString('Max-Age='.$expires.';', $headers[0]);
     }
 
     /** @test */
@@ -84,14 +113,18 @@ class NativeCookieTest extends TestCase
      * */
     public function it_can_forget_a_cookie()
     {
-        $cookie  = new NativeCookie('__sentinel');
-        $expires = 0;
+        $cookie = new NativeCookie('__sentinel');
+
+        self::$globalFunctions->shouldReceive('setcookie')->with(
+            '__sentinel',
+            'null',
+            time() + (-2628000 * 60),
+            '/',
+            '',
+            false,
+            false
+        );
 
         $this->assertNull($cookie->forget());
-
-        $headers = xdebug_get_headers();
-
-        $this->assertStringContainsString('__sentinel=null;', $headers[0]);
-        $this->assertStringContainsString('Max-Age='.$expires.';', $headers[0]);
     }
 }
