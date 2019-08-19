@@ -72,7 +72,7 @@ class NativeCookie implements CookieInterface
      */
     public function forget(): void
     {
-        $this->put(null, -2628000);
+        $this->setCookie(null, $this->minutesToLifetime(-2628000));
     }
 
     /**
