@@ -403,7 +403,7 @@ class EloquentUserTest extends TestCase
     /** @test */
     public function it_can_get_the_roles_of_a_user()
     {
-        $user = new EloquentUser();
+        $user     = new EloquentUser();
         $user->id = 0;
 
         $this->addMockConnection($user);
@@ -435,12 +435,12 @@ class EloquentUserTest extends TestCase
     /** @test */
     public function it_can_pass_methods_to_permissions_instance()
     {
-        $mockRole = m::mock(EloquentRole::class);
+        $mockRole              = m::mock(EloquentRole::class);
         $mockRole->permissions = [];
 
-        $user = new EloquentUser();
+        $user              = new EloquentUser();
         $user->permissions = ['foo' => true, 'bar' => false];
-        $user->roles = [$mockRole];
+        $user->roles       = [$mockRole];
 
         $this->assertTrue($user->hasAccess('foo'));
         $this->assertFalse($user->hasAccess('bar'));
@@ -484,6 +484,5 @@ class EloquentUserTest extends TestCase
         $model->getConnection()->shouldReceive('query')->andReturnUsing(function () use ($connection, $grammar, $processor) {
             return new Builder($connection, $grammar, $processor);
         });
-
     }
 }
