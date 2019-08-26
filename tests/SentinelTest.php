@@ -31,6 +31,7 @@ use Cartalyst\Sentinel\Users\EloquentUser;
 use Illuminate\Contracts\Events\Dispatcher;
 use Cartalyst\Sentinel\Roles\IlluminateRoleRepository;
 use Cartalyst\Sentinel\Users\IlluminateUserRepository;
+use Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint;
 use Cartalyst\Sentinel\Activations\ActivationInterface;
 use Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint;
 use Cartalyst\Sentinel\Checkpoints\NotActivatedException;
@@ -324,6 +325,46 @@ class SentinelTest extends TestCase
     }
 
     /** @test */
+    public function it_can_bypass_all_checkpoints()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+
+        $persistences->shouldReceive('check')->once()->andReturn('foobar');
+        $persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser());
+
+        $activationCheckpoint = m::mock(ActivationCheckpoint::class);
+
+        $throttleCheckpoint = m::mock(ThrottleCheckpoint::class);
+
+        $sentinel->addCheckpoint('activation', $activationCheckpoint);
+        $sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+
+        $sentinel->bypassCheckpoints(function ($sentinel) {
+            $this->assertNotNull($sentinel->check());
+        });
+    }
+
+    /** @test */
+    public function it_can_bypass_a_specific_endpoint()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $persistences->shouldReceive('check')->once()->andReturn('foobar');
+        $persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser());
+
+        $activationCheckpoint = m::mock(ActivationCheckpoint::class);
+
+        $throttleCheckpoint = m::mock(ThrottleCheckpoint::class);
+        $throttleCheckpoint->shouldReceive('check')->once();
+
+        $sentinel->addCheckpoint('activation', $activationCheckpoint);
+        $sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+
+        $sentinel->bypassCheckpoints(function ($s) {
+            $this->assertNotNull($s->check());
+        }, ['activation']);
+    }
+
+    /** @test */
     public function it_can_get_the_checkpoint_status()
     {
         list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
@@ -335,6 +376,152 @@ class SentinelTest extends TestCase
         $sentinel->enableCheckpoints();
 
         $this->assertTrue($sentinel->checkpointsStatus());
+    }
+
+    /** @test */
+    public function it_can_disable_all_checkpoints()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $this->assertTrue($sentinel->checkpointsStatus());
+
+        $sentinel->disableCheckpoints();
+
+        $this->assertFalse($sentinel->checkpointsStatus());
+
+        $persistences->shouldReceive('check')->once()->andReturn('foobar');
+        $persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser());
+
+        $activationCheckpoint = m::mock(ActivationCheckpoint::class);
+        $throttleCheckpoint   = m::mock(ThrottleCheckpoint::class);
+
+        $sentinel->addCheckpoint('activation', $activationCheckpoint);
+        $sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+
+        $this->assertNotNull($sentinel->check());
+    }
+
+    /** @test */
+    public function it_can_enable_all_checkpoints()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $persistences->shouldReceive('check')->once()->andReturn('foobar');
+        $persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser());
+
+        $this->assertTrue($sentinel->checkpointsStatus());
+
+        $sentinel->disableCheckpoints();
+
+        $this->assertFalse($sentinel->checkpointsStatus());
+
+        $sentinel->enableCheckpoints();
+
+        $this->assertTrue($sentinel->checkpointsStatus());
+
+        $activationCheckpoint = m::mock(ActivationCheckpoint::class);
+        $throttleCheckpoint   = m::mock(ThrottleCheckpoint::class);
+
+        $activationCheckpoint->shouldReceive('check')->once();
+
+        $sentinel->addCheckpoint('activation', $activationCheckpoint);
+        $sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+
+        $this->assertNotNull($sentinel->check());
+    }
+
+    /** @test */
+    public function it_can_add_checkpoint_at_runtime()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $activationCheckpoint = m::mock(ActivationCheckpoint::class);
+
+        $sentinel->addCheckpoint('activation', $activationCheckpoint);
+
+        $this->assertCount(1, $sentinel->getCheckpoints());
+        $this->assertArrayHasKey('activation', $sentinel->getCheckpoints());
+    }
+
+    /** @test */
+    public function it_can_remove_checkpoint_at_runtime()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $activationCheckpoint = m::mock(ActivationCheckpoint::class);
+        $throttleCheckpoint   = m::mock(ThrottleCheckpoint::class);
+
+        $sentinel->addCheckpoint('activation', $activationCheckpoint);
+        $sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+
+        $sentinel->removeCheckpoint('activation');
+
+        $this->assertCount(1, $sentinel->getCheckpoints());
+        $this->assertArrayNotHasKey('activation', $sentinel->getCheckpoints());
+    }
+
+    /** @test */
+    public function it_can_remove_checkpoints_at_runtime()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $activationCheckpoint = m::mock(ActivationCheckpoint::class);
+        $throttleCheckpoint   = m::mock(ThrottleCheckpoint::class);
+
+        $sentinel->addCheckpoint('activation', $activationCheckpoint);
+        $sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+
+        $sentinel->removeCheckpoints([
+            'activation',
+            'throttle',
+        ]);
+
+        $this->assertCount(0, $sentinel->getCheckpoints());
+    }
+
+    /** @test */
+    public function the_check_checkpoint_will_be_invoked()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $persistences->shouldReceive('check')->once()->andReturn('foobar');
+        $persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser());
+
+        $throttleCheckpoint = m::mock(ThrottleCheckpoint::class);
+        $throttleCheckpoint->shouldReceive('check')->once()->andReturn(false);
+
+        $sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+
+        $this->assertFalse($sentinel->check());
+    }
+
+    /** @test */
+    public function the_login_checkpoint_will_be_invoked()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $dispatcher->shouldReceive('until')->once();
+
+        $throttleCheckpoint = m::mock(ThrottleCheckpoint::class);
+        $throttleCheckpoint->shouldReceive('login')->once()->andReturn(false);
+
+        $sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+
+        $this->assertFalse($sentinel->authenticate(new EloquentUser()));
+    }
+
+    /** @test */
+    public function the_fail_checkpoint_will_be_invoked()
+    {
+        list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
+        $credentials = [
+            'login'    => 'foo@example.com',
+            'password' => 'secret',
+        ];
+
+        $dispatcher->shouldReceive('until')->once();
+
+        $users->shouldReceive('findByCredentials')->with($credentials)->once();
+
+        $throttleCheckpoint = m::mock(ThrottleCheckpoint::class);
+        $throttleCheckpoint->shouldReceive('fail')->once()->andReturn(false);
+
+        $sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+
+        $this->assertFalse($sentinel->authenticate($credentials));
     }
 
     /** @test */
