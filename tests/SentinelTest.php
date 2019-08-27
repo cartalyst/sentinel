@@ -41,16 +41,64 @@ use Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface;
 class SentinelTest extends TestCase
 {
     /**
+     * The Illuminate Events Dispatcher instance.
+     *
+     * @var \Illuminate\Contracts\Events\Dispatcher
+     */
+    protected $dispatcher;
+
+    /**
+     * The Sentinel instance.
+     *
+     * @var \Cartalyst\Sentinel\Sentinel
+     */
+    protected $sentinel;
+
+    /**
+     * The Users repository instance.
+     *
+     * @var \Cartalyst\Sentinel\Users\UserRepositoryInterface
+     */
+    protected $users;
+
+    /**
+     * The Roles repository instance.
+     *
+     * @var \Cartalyst\Sentinel\Roles\RoleRepositoryInterface
+     */
+    protected $roles;
+
+    /**
+     * The Activations repository instance.
+     *
+     * @var \Cartalyst\Sentinel\Activations\ActivationRepositoryInterface
+     */
+    protected $activations;
+
+    /**
+     * The Persistences repository instance.
+     *
+     * @var \Cartalyst\Sentinel\Persistences\PersistenceRepositoryInterface
+     */
+    protected $persistences;
+
+    /**
      * {@inheritdoc}
      */
     protected function setUp(): void
     {
+        $this->persistences = m::mock(PersistenceRepositoryInterface::class);
+        $this->users        = m::mock(UserRepositoryInterface::class);
+        $this->roles        = m::mock(RoleRepositoryInterface::class);
+        $this->activations  = m::mock(ActivationRepositoryInterface::class);
+        $this->dispatcher   = m::mock(Dispatcher::class);
+
         $this->sentinel = new Sentinel(
-            $this->persistences = m::mock(PersistenceRepositoryInterface::class),
-            $this->users = m::mock(UserRepositoryInterface::class),
-            $this->roles = m::mock(RoleRepositoryInterface::class),
-            $this->activations = m::mock(ActivationRepositoryInterface::class),
-            $this->dispatcher = m::mock(Dispatcher::class)
+            $this->persistences,
+            $this->users,
+            $this->roles,
+            $this->activations,
+            $this->dispatcher
         );
     }
 
@@ -71,24 +119,28 @@ class SentinelTest extends TestCase
     /** @test */
     public function it_can_register_a_valid_user()
     {
+        $user = m::mock(EloquentUser::class);
+
         $this->users->shouldReceive('validForCreation')->once()->andReturn(true);
-        $this->users->shouldReceive('create')->once()->andReturn(m::mock(EloquentUser::class));
+        $this->users->shouldReceive('create')->once()->andReturn($user);
 
         $this->dispatcher->shouldReceive('dispatch')->twice();
 
-        $user = $this->sentinel->register([
+        $result = $this->sentinel->register([
             'email'    => 'foo@example.com',
             'password' => 'secret',
         ]);
 
-        $this->assertInstanceOf(EloquentUser::class, $user);
+        $this->assertSame($result, $user);
     }
 
     /** @test */
     public function it_can_register_and_activate_a_valid_user()
     {
+        $user = m::mock(EloquentUser::class);
+
         $this->users->shouldReceive('validForCreation')->once()->andReturn(true);
-        $this->users->shouldReceive('create')->once()->andReturn(m::mock(EloquentUser::class));
+        $this->users->shouldReceive('create')->once()->andReturn($user);
 
         $activation = m::mock(ActivationInterface::class);
         $activation->shouldReceive('getCode')->once()->andReturn('a_random_code');
@@ -98,12 +150,12 @@ class SentinelTest extends TestCase
 
         $this->dispatcher->shouldReceive('dispatch')->times(4);
 
-        $user = $this->sentinel->registerAndActivate([
+        $result = $this->sentinel->registerAndActivate([
             'email'    => 'foo@example.com',
             'password' => 'secret',
         ]);
 
-        $this->assertInstanceOf(EloquentUser::class, $user);
+        $this->assertSame($result, $user);
     }
 
     /** @test */
@@ -113,20 +165,22 @@ class SentinelTest extends TestCase
 
         $this->dispatcher->shouldReceive('dispatch')->once();
 
-        $user = $this->sentinel->register([
+        $result = $this->sentinel->register([
             'email' => 'foo@example.com',
         ]);
 
-        $this->assertFalse($user);
+        $this->assertFalse($result);
     }
 
     /** @test */
     public function it_can_activate_a_user_using_its_id()
     {
+        $user = m::mock(EloquentUser::class);
+
         $activation = m::mock(ActivationInterface::class);
         $activation->shouldReceive('getCode')->once()->andReturn('a_random_code');
 
-        $this->users->shouldReceive('findById')->with('1')->once()->andReturn(m::mock(EloquentUser::class));
+        $this->users->shouldReceive('findById')->with('1')->once()->andReturn($user);
 
         $this->activations->shouldReceive('create')->once()->andReturn($activation);
         $this->activations->shouldReceive('complete')->once()->andReturn(true);
@@ -183,7 +237,7 @@ class SentinelTest extends TestCase
         $this->persistences->shouldReceive('check')->once()->andReturn('foobar');
         $this->persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn($user);
 
-        $this->assertInstanceOf(EloquentUser::class, $this->sentinel->check());
+        $this->assertSame($user, $this->sentinel->check());
     }
 
     /** @test */
@@ -198,8 +252,10 @@ class SentinelTest extends TestCase
     /** @test */
     public function it_can_force_the_check_if_the_user_is_logged_in()
     {
+        $user = m::mock(EloquentUser::class);
+
         $this->persistences->shouldReceive('check')->once();
-        $this->persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(m::mock(EloquentUser::class));
+        $this->persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn($user);
 
         $checkpoint = m::mock(CheckpointInterface::class);
 
@@ -208,19 +264,6 @@ class SentinelTest extends TestCase
         $valid = $this->sentinel->forceCheck();
 
         $this->assertFalse($valid);
-    }
-
-    /** @test */
-    public function it_can_check_checkpoints()
-    {
-        $checkpoint = m::mock(CheckpointInterface::class);
-        $checkpoint->shouldReceive('check')->andReturn(false);
-        $this->sentinel->addCheckpoint('foobar', $checkpoint);
-
-        $this->persistences->shouldReceive('check')->once()->andReturn(true);
-        $this->persistences->shouldReceive('findUserByPersistenceCode')->andReturn(m::mock(EloquentUser::class));
-
-        $this->assertFalse($this->sentinel->check());
     }
 
     public function testGuest1()
@@ -259,7 +302,7 @@ class SentinelTest extends TestCase
 
         $this->dispatcher->shouldReceive('dispatch')->times(3);
 
-        $this->assertInstanceOf(EloquentUser::class, $this->sentinel->authenticate($credentials));
+        $this->assertSame($user, $this->sentinel->authenticate($credentials));
     }
 
     /** @test */
@@ -274,7 +317,7 @@ class SentinelTest extends TestCase
         $this->dispatcher->shouldReceive('until')->once();
         $this->dispatcher->shouldReceive('dispatch')->times(3);
 
-        $this->assertInstanceOf(EloquentUser::class, $this->sentinel->authenticate($user));
+        $this->assertSame($user, $this->sentinel->authenticate($user));
     }
 
     /** @test */
@@ -306,7 +349,7 @@ class SentinelTest extends TestCase
         $this->dispatcher->shouldReceive('until')->once();
         $this->dispatcher->shouldReceive('dispatch')->times(3);
 
-        $this->assertInstanceOf(EloquentUser::class, $this->sentinel->authenticateAndRemember($credentials));
+        $this->assertSame($user, $this->sentinel->authenticateAndRemember($credentials));
     }
 
     /** @test */
@@ -321,7 +364,7 @@ class SentinelTest extends TestCase
         $this->dispatcher->shouldReceive('until');
         $this->dispatcher->shouldReceive('dispatch');
 
-        $this->assertInstanceOf(EloquentUser::class, $this->sentinel->authenticate($user));
+        $this->assertSame($user, $this->sentinel->authenticate($user));
     }
 
     /** @test */
@@ -374,7 +417,47 @@ class SentinelTest extends TestCase
 
         $this->sentinel->setUser($user);
 
-        $this->assertInstanceOf(EloquentUser::class, $this->sentinel->getUser());
+        $this->assertSame($user, $this->sentinel->getUser());
+    }
+
+    /** @test */
+    public function it_can_bypass_all_checkpoints()
+    {
+        $user = m::mock(EloquentUser::class);
+
+        $this->persistences->shouldReceive('check')->once()->andReturn('foobar');
+        $this->persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn($user);
+
+        $activationCheckpoint = m::mock(CheckpointInterface::class);
+        $throttleCheckpoint   = m::mock(CheckpointInterface::class);
+
+        $this->sentinel->addCheckpoint('activation', $activationCheckpoint);
+        $this->sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+
+        $this->sentinel->bypassCheckpoints(function ($sentinel) {
+            $this->assertNotNull($sentinel->check());
+        });
+    }
+
+    /** @test */
+    public function it_can_bypass_a_specific_endpoint()
+    {
+        $user = m::mock(EloquentUser::class);
+
+        $this->persistences->shouldReceive('check')->once()->andReturn('foobar');
+        $this->persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn($user);
+
+        $activationCheckpoint = m::mock(CheckpointInterface::class);
+
+        $throttleCheckpoint = m::mock(CheckpointInterface::class);
+        $throttleCheckpoint->shouldReceive('check')->once();
+
+        $this->sentinel->addCheckpoint('activation', $activationCheckpoint);
+        $this->sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+
+        $this->sentinel->bypassCheckpoints(function ($s) {
+            $this->assertNotNull($s->check());
+        }, ['activation']);
     }
 
     /** @test */
@@ -390,6 +473,152 @@ class SentinelTest extends TestCase
     }
 
     /** @test */
+    public function it_can_disable_all_checkpoints()
+    {
+        $user = m::mock(EloquentUser::class);
+
+        $this->assertTrue($this->sentinel->checkpointsStatus());
+
+        $this->sentinel->disableCheckpoints();
+
+        $this->assertFalse($this->sentinel->checkpointsStatus());
+
+        $this->persistences->shouldReceive('check')->once()->andReturn('foobar');
+        $this->persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn($user);
+
+        $activationCheckpoint = m::mock(CheckpointInterface::class);
+        $throttleCheckpoint   = m::mock(CheckpointInterface::class);
+
+        $this->sentinel->addCheckpoint('activation', $activationCheckpoint);
+        $this->sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+
+        $this->assertNotNull($this->sentinel->check());
+    }
+
+    /** @test */
+    public function it_can_enable_all_checkpoints()
+    {
+        $user = m::mock(EloquentUser::class);
+
+        $this->persistences->shouldReceive('check')->once()->andReturn('foobar');
+        $this->persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn($user);
+
+        $this->assertTrue($this->sentinel->checkpointsStatus());
+
+        $this->sentinel->disableCheckpoints();
+
+        $this->assertFalse($this->sentinel->checkpointsStatus());
+
+        $this->sentinel->enableCheckpoints();
+
+        $this->assertTrue($this->sentinel->checkpointsStatus());
+
+        $activationCheckpoint = m::mock(CheckpointInterface::class);
+        $throttleCheckpoint   = m::mock(CheckpointInterface::class);
+
+        $activationCheckpoint->shouldReceive('check')->once();
+
+        $this->sentinel->addCheckpoint('activation', $activationCheckpoint);
+        $this->sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+
+        $this->assertNotNull($this->sentinel->check());
+    }
+
+    /** @test */
+    public function it_can_add_checkpoint_at_runtime()
+    {
+        $activationCheckpoint = m::mock(CheckpointInterface::class);
+
+        $this->sentinel->addCheckpoint('activation', $activationCheckpoint);
+
+        $this->assertCount(1, $this->sentinel->getCheckpoints());
+        $this->assertArrayHasKey('activation', $this->sentinel->getCheckpoints());
+    }
+
+    /** @test */
+    public function it_can_remove_checkpoint_at_runtime()
+    {
+        $activationCheckpoint = m::mock(CheckpointInterface::class);
+        $throttleCheckpoint   = m::mock(CheckpointInterface::class);
+
+        $this->sentinel->addCheckpoint('activation', $activationCheckpoint);
+        $this->sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+
+        $this->sentinel->removeCheckpoint('activation');
+
+        $this->assertCount(1, $this->sentinel->getCheckpoints());
+        $this->assertArrayNotHasKey('activation', $this->sentinel->getCheckpoints());
+    }
+
+    /** @test */
+    public function it_can_remove_checkpoints_at_runtime()
+    {
+        $activationCheckpoint = m::mock(CheckpointInterface::class);
+        $throttleCheckpoint   = m::mock(CheckpointInterface::class);
+
+        $this->sentinel->addCheckpoint('activation', $activationCheckpoint);
+        $this->sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+
+        $this->sentinel->removeCheckpoints([
+            'activation',
+            'throttle',
+        ]);
+
+        $this->assertCount(0, $this->sentinel->getCheckpoints());
+    }
+
+    /** @test */
+    public function the_check_checkpoint_will_be_invoked()
+    {
+        $user = m::mock(EloquentUser::class);
+
+        $this->persistences->shouldReceive('check')->once()->andReturn('foobar');
+        $this->persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn($user);
+
+        $throttleCheckpoint = m::mock(CheckpointInterface::class);
+        $throttleCheckpoint->shouldReceive('check')->once()->andReturn(false);
+
+        $this->sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+
+        $this->assertFalse($this->sentinel->check());
+    }
+
+    /** @test */
+    public function the_login_checkpoint_will_be_invoked()
+    {
+        $user = m::mock(EloquentUser::class);
+
+        $this->dispatcher->shouldReceive('until')->once();
+
+        $throttleCheckpoint = m::mock(CheckpointInterface::class);
+        $throttleCheckpoint->shouldReceive('login')->once()->andReturn(false);
+
+        $this->sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+
+        $this->assertFalse($this->sentinel->authenticate($user));
+    }
+
+    /** @test */
+    public function the_fail_checkpoint_will_be_invoked()
+    {
+        $credentials = [
+            'login'    => 'foo@example.com',
+            'password' => 'secret',
+        ];
+
+        $this->dispatcher->shouldReceive('until')->once();
+
+        $this->users->shouldReceive('findByCredentials')->with($credentials)->once();
+
+        $throttleCheckpoint = m::mock(CheckpointInterface::class);
+        $throttleCheckpoint->shouldReceive('fail')->once()->andReturn(false);
+
+        $this->sentinel->addCheckpoint('throttle', $throttleCheckpoint);
+
+        $this->assertFalse($this->sentinel->authenticate($credentials));
+    }
+
+    /** @test */
     public function it_can_login_with_a_valid_user()
     {
         $user = m::mock(EloquentUser::class);
@@ -400,7 +629,7 @@ class SentinelTest extends TestCase
 
         $this->users->shouldReceive('recordLogin')->once()->andReturn(true);
 
-        $this->assertInstanceOf(EloquentUser::class, $this->sentinel->login($user));
+        $this->assertSame($user, $this->sentinel->login($user));
     }
 
     /** @test */
@@ -495,62 +724,6 @@ class SentinelTest extends TestCase
         $this->dispatcher->shouldReceive('dispatch')->twice();
 
         $this->assertTrue($this->sentinel->logout($user, true));
-    }
-
-    /** @test */
-    public function it_can_bypass_the_checkpoints()
-    {
-        $user = m::mock(EloquentUser::class);
-
-        $foo = m::mock(CheckpointInterface::class);
-        $foo->shouldReceive('check')->never();
-        $bar = m::mock(CheckpointInterface::class);
-        $bar->shouldReceive('check')->once()->andReturn(true);
-
-        $this->sentinel->addCheckpoint('foo', $foo);
-        $this->sentinel->addCheckpoint('bar', $bar);
-
-        $this->persistences->shouldReceive('check')->once()->andReturn('foobar');
-        $this->persistences->shouldReceive('findUserByPersistenceCode')->with('foobar')->andReturn(new EloquentUser());
-
-        $this->sentinel->bypassCheckpoints(function ($args) {
-            $this->assertSame($this->sentinel, $args);
-
-            return $args->check();
-        }, ['foo']);
-        $this->assertSame($this->sentinel->getCheckpoints()['foo'], $foo);
-        $this->assertSame($this->sentinel->getCheckpoints()['bar'], $bar);
-    }
-
-    /** @test */
-    public function it_can_remove_individual_checkpoints()
-    {
-        $this->sentinel->addCheckpoint('foo', m::mock(CheckpointInterface::class));
-        $this->sentinel->addCheckpoint('bar', m::mock(CheckpointInterface::class));
-
-        $this->assertTrue(array_key_exists('foo', $this->sentinel->getCheckpoints()));
-        $this->assertTrue(array_key_exists('bar', $this->sentinel->getCheckpoints()));
-
-        $this->sentinel->removeCheckpoint('foo');
-        $this->assertFalse(array_key_exists('foo', $this->sentinel->getCheckpoints()));
-        $this->assertTrue(array_key_exists('bar', $this->sentinel->getCheckpoints()));
-    }
-
-    /** @test */
-    public function it_can_remove_multiple_checkpoints()
-    {
-        $this->sentinel->addCheckpoint('foo', m::mock(CheckpointInterface::class));
-        $this->sentinel->addCheckpoint('bar', m::mock(CheckpointInterface::class));
-        $this->sentinel->addCheckpoint('baz', m::mock(CheckpointInterface::class));
-
-        $this->assertTrue(array_key_exists('foo', $this->sentinel->getCheckpoints()));
-        $this->assertTrue(array_key_exists('bar', $this->sentinel->getCheckpoints()));
-        $this->assertTrue(array_key_exists('baz', $this->sentinel->getCheckpoints()));
-
-        $this->sentinel->removeCheckpoints(['foo', 'bar']);
-        $this->assertFalse(array_key_exists('foo', $this->sentinel->getCheckpoints()));
-        $this->assertFalse(array_key_exists('bar', $this->sentinel->getCheckpoints()));
-        $this->assertTrue(array_key_exists('baz', $this->sentinel->getCheckpoints()));
     }
 
     /** @test */
