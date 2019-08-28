@@ -38,7 +38,7 @@ class NativeSessionTest extends TestCase
     /**
      * @test
      * @runInSeparateProcess
-     * */
+     */
     public function it_can_start_the_session()
     {
         $session = new NativeSession('__sentinel');

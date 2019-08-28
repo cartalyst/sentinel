@@ -48,7 +48,7 @@ class NativeCookieTest extends TestCase
     /**
      * @runInSeparateProcess
      * @test
-     * */
+     */
     public function it_can_set_different_options_for_cookie()
     {
         $options = [
@@ -76,7 +76,7 @@ class NativeCookieTest extends TestCase
     /**
      * @runInSeparateProcess
      * @test
-     * */
+     */
     public function it_can_set_a_cookie()
     {
         $cookie  = new NativeCookie('__sentinel');
@@ -110,7 +110,7 @@ class NativeCookieTest extends TestCase
     /**
      * @runInSeparateProcess
      * @test
-     * */
+     */
     public function it_can_forget_a_cookie()
     {
         $cookie = new NativeCookie('__sentinel');
