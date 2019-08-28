@@ -51,13 +51,6 @@ class NativeCookieTest extends TestCase
     /** @test */
     public function it_can_set_different_options_for_cookie()
     {
-        $options = [
-            'name'      => 'foo',
-            'domain'    => 'bar',
-            'path'      => 'foobar',
-            'secure'    => true,
-            'http_only' => true,
-        ];
         $cookie = new NativeCookie([
             'name'      => 'foo',
             'domain'    => 'bar',
