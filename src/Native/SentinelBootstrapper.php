@@ -280,9 +280,9 @@ class SentinelBootstrapper
      *
      * @return \Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint
      */
-    protected function createThrottleCheckpoint(IlluminateThrottleRepository $throtte, $ipAddress)
+    protected function createThrottleCheckpoint(IlluminateThrottleRepository $throttle, $ipAddress)
     {
-        return new ThrottleCheckpoint($throtte, $ipAddress);
+        return new ThrottleCheckpoint($throttle, $ipAddress);
     }
 
     /**
