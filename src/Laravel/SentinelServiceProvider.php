@@ -332,6 +332,7 @@ class SentinelServiceProvider extends ServiceProvider
 
             $sentinel->setActivationRepository($app['sentinel.activations']);
             $sentinel->setReminderRepository($app['sentinel.reminders']);
+            $sentinel->setThrottleRepository($app['sentinel.throttling']);
 
             $sentinel->setRequestCredentials(function () use ($app) {
                 $request = $app['request'];
