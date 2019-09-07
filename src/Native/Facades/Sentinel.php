@@ -69,7 +69,7 @@ class Sentinel
      *
      * @param \Cartalyst\Sentinel\Native\SentinelBootstrapper $bootstrapper
      *
-     * @return void
+     * @return \Cartalyst\Sentinel\Native\SentinelBootstrapper
      */
     public static function instance(SentinelBootstrapper $bootstrapper = null)
     {
