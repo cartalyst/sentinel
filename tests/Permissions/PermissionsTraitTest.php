@@ -85,7 +85,7 @@ class PermissionsTraitTest extends TestCase
     public function personal_permissions_take_priority_over_pattern_match()
     {
         $permissions = new PermissionsStub([
-            'user.*'    => true,
+            'user.*'      => true,
             'user.delete' => false,
         ]);
 

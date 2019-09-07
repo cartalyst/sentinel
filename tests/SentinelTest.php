@@ -29,9 +29,9 @@ use Cartalyst\Sentinel\Sentinel;
 use Cartalyst\Sentinel\Roles\EloquentRole;
 use Cartalyst\Sentinel\Users\EloquentUser;
 use Illuminate\Contracts\Events\Dispatcher;
+use Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint;
 use Cartalyst\Sentinel\Roles\IlluminateRoleRepository;
 use Cartalyst\Sentinel\Users\IlluminateUserRepository;
-use Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint;
 use Cartalyst\Sentinel\Activations\ActivationInterface;
 use Cartalyst\Sentinel\Checkpoints\ActivationCheckpoint;
 use Cartalyst\Sentinel\Checkpoints\NotActivatedException;
@@ -432,7 +432,7 @@ class SentinelTest extends TestCase
     public function it_can_add_checkpoint_at_runtime()
     {
         list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
-        $activationCheckpoint = m::mock(ActivationCheckpoint::class);
+        $activationCheckpoint                                                     = m::mock(ActivationCheckpoint::class);
 
         $sentinel->addCheckpoint('activation', $activationCheckpoint);
 
@@ -444,8 +444,8 @@ class SentinelTest extends TestCase
     public function it_can_remove_checkpoint_at_runtime()
     {
         list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
-        $activationCheckpoint = m::mock(ActivationCheckpoint::class);
-        $throttleCheckpoint   = m::mock(ThrottleCheckpoint::class);
+        $activationCheckpoint                                                     = m::mock(ActivationCheckpoint::class);
+        $throttleCheckpoint                                                       = m::mock(ThrottleCheckpoint::class);
 
         $sentinel->addCheckpoint('activation', $activationCheckpoint);
         $sentinel->addCheckpoint('throttle', $throttleCheckpoint);
@@ -460,8 +460,8 @@ class SentinelTest extends TestCase
     public function it_can_remove_checkpoints_at_runtime()
     {
         list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
-        $activationCheckpoint = m::mock(ActivationCheckpoint::class);
-        $throttleCheckpoint   = m::mock(ThrottleCheckpoint::class);
+        $activationCheckpoint                                                     = m::mock(ActivationCheckpoint::class);
+        $throttleCheckpoint                                                       = m::mock(ThrottleCheckpoint::class);
 
         $sentinel->addCheckpoint('activation', $activationCheckpoint);
         $sentinel->addCheckpoint('throttle', $throttleCheckpoint);
@@ -507,7 +507,7 @@ class SentinelTest extends TestCase
     public function the_fail_checkpoint_will_be_invoked()
     {
         list($sentinel, $persistences, $users, $roles, $activations, $dispatcher) = $this->createSentinel();
-        $credentials = [
+        $credentials                                                              = [
             'login'    => 'foo@example.com',
             'password' => 'secret',
         ];
