@@ -72,7 +72,8 @@ class ActivationCheckpointTest extends TestCase
     /** @test */
     public function can_return_true_when_fail_is_called()
     {
-        $users      = m::mock(IlluminateActivationRepository::class);
+        $users = m::mock(IlluminateActivationRepository::class);
+
         $checkpoint = new ActivationCheckpoint($users);
 
         $this->assertTrue($checkpoint->fail());
