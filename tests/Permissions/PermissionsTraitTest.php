@@ -82,6 +82,19 @@ class PermissionsTraitTest extends TestCase
     }
 
     /** @test */
+    public function personal_permissions_take_priority_over_pattern_match()
+    {
+        $permissions = new PermissionsStub([
+            'user.*'      => true,
+            'user.delete' => false,
+        ]);
+
+        $this->assertTrue($permissions->hasAccess('user.*'));
+        $this->assertTrue($permissions->hasAccess('user.test'));
+        $this->assertFalse($permissions->hasAccess('user.delete'));
+    }
+
+    /** @test */
     public function permissions_as_class_names_can_be_used()
     {
         $permissions = new PermissionsStub([

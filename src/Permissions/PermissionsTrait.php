@@ -202,11 +202,9 @@ trait PermissionsTrait
      */
     protected function checkPermission(array $prepared, string $permission): bool
     {
-        if (array_key_exists($permission, $prepared) && $prepared[$permission] === true) {
-            return true;
+        if (array_key_exists($permission, $prepared)) {
+            return $prepared[$permission] === true;
         }
-
-        $permission = (string) $permission;
 
         foreach ($prepared as $key => $value) {
             $key = (string) $key;

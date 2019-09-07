@@ -125,6 +125,12 @@ class SentinelBootstrapper
 
         $single = $this->config['persistences']['single'];
 
+        $users = $this->config['users']['model'];
+
+        if (class_exists($users) && method_exists($users, 'setPersistencesModel')) {
+            forward_static_call_array([$users, 'setPersistencesModel'], [$model]);
+        }
+
         return new IlluminatePersistenceRepository($session, $cookie, $model, $single);
     }
 
@@ -280,9 +286,9 @@ class SentinelBootstrapper
      *
      * @return \Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoint
      */
-    protected function createThrottleCheckpoint(IlluminateThrottleRepository $throtte, $ipAddress)
+    protected function createThrottleCheckpoint(IlluminateThrottleRepository $throttle, $ipAddress)
     {
-        return new ThrottleCheckpoint($throtte, $ipAddress);
+        return new ThrottleCheckpoint($throttle, $ipAddress);
     }
 
     /**
