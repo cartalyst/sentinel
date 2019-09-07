@@ -2,8 +2,8 @@
 
 ### v3.0.0 - TBA
 
-- Added support for PHP ^7.2 only
-- Added support for Laravel ^6.0
+- BC Break: PHP 7.2 is the minimum required PHP version
+- BC Break: Laravel 6.0 is the minimum supported Laravel version
 - Added PHP 7 Scalar type hints
 - Added PHP 7 Return type hints
 - Added `Sentinel::getCheckpoints()` method to retrieve all the added Checkpoints
@@ -14,6 +14,9 @@
 - Updated the `Sentinel::getReminderRepository()->exists();` method to always return a boolean
 - Updated the `findByPersistenceCode()` to return a `PersistenceInterface` or `null` instead of `PersistenceInterface` or `bool`
 - Updated the `findUserByPersistenceCode()` to return `UserInterface` or `null` instead of `UserInterface` or `bool`
+- Fixed an issue where a call for EloquentUser::setPersistences was missing during bootstrap
+- Fixed an issue where personal permissions were not taking priority over pattern matching
+- Removed unnecessary dependencies
 - Removed integrations for both CodeIgniter and FuelPHP
 
 ### v2.0.18 - 2019-08-14
