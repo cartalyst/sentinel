@@ -48,7 +48,7 @@ interface PermissibleInterface
      *
      * @return \Cartalyst\Sentinel\Permissions\PermissibleInterface
      */
-    public function updatePermission(string $permission, bool $value = true, bool  $create = false): PermissibleInterface;
+    public function updatePermission(string $permission, bool $value = true, bool $create = false): PermissibleInterface;
 
     /**
      * Removes a permission.

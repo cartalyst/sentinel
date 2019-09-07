@@ -25,6 +25,7 @@ use PHPUnit\Framework\TestCase;
 use Illuminate\Database\Connection;
 use Cartalyst\Sentinel\Roles\EloquentRole;
 use Cartalyst\Sentinel\Users\EloquentUser;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Query\Grammars\Grammar;
 use Illuminate\Database\Query\Processors\Processor;
 use Illuminate\Database\ConnectionResolverInterface;
@@ -60,6 +61,28 @@ class EloquentRoleTest extends TestCase
         $role->permissions = $permissions;
 
         $this->assertSame($permissions, $role->permissions);
+    }
+
+    /** @test */
+    public function it_can_get_the_users_for_the_role()
+    {
+        $role = new EloquentRole();
+
+        $this->addMockConnection($role);
+
+        $this->assertInstanceOf(Collection::class, $role->getUsers());
+    }
+
+    /** @test */
+    public function it_can_pass_methods_to_the_permissions_instance()
+    {
+        $role = new EloquentRole();
+
+        $this->addMockConnection($role);
+
+        $permissions = [];
+
+        $this->assertFalse($role->hasAnyAccess($permissions));
     }
 
     /** @test */

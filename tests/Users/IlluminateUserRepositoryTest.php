@@ -63,7 +63,7 @@ class IlluminateUserRepositoryTest extends TestCase
     }
 
     /** @test */
-    public function it_can_find_by_a_user_by_its_credentials_1()
+    public function it_can_find_a_user_by_its_credentials_1()
     {
         list($users, $hasher, $model, $query) = $this->getUsersMock();
 
@@ -81,13 +81,18 @@ class IlluminateUserRepositoryTest extends TestCase
     }
 
     /** @test */
-    public function it_can_find_by_a_user_by_its_credentials_2()
+    public function it_can_find_a_user_by_its_credentials_2()
     {
         list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-        $model->shouldReceive('getLoginNames')->andReturn(['email']);
+        $model->shouldReceive('getLoginNames')->andReturn(['email', 'username']);
 
-        $query->shouldReceive('whereNested')->once()->andReturn($model);
+        $query->shouldReceive('whereNested')->with(m::on(function ($argument) use ($query) {
+            $query->shouldReceive('where')->with('email', 'foo@example.com');
+            $query->shouldReceive('orWhere')->with('username', 'foo@example.com');
+
+            return null === $argument($query);
+        }))->andReturn($model);
         $query->shouldReceive('first')->once()->andReturn($model);
 
         $user = $users->findByCredentials([
@@ -99,13 +104,17 @@ class IlluminateUserRepositoryTest extends TestCase
     }
 
     /** @test */
-    public function it_can_find_by_a_user_by_its_credentials_3()
+    public function it_can_find_a_user_by_its_credentials_3()
     {
         list($users, $hasher, $model, $query) = $this->getUsersMock();
 
         $model->shouldReceive('getLoginNames')->andReturn(['email']);
 
-        $query->shouldReceive('whereNested')->once()->andReturn($model);
+        $query->shouldReceive('whereNested')->with(m::on(function ($argument) use ($query) {
+            $query->shouldReceive('where')->with('email', 'foo@example.com');
+
+            return null === $argument($query);
+        }))->andReturn($model);
         $query->shouldReceive('first')->once()->andReturn($model);
 
         $user = $users->findByCredentials([
@@ -116,7 +125,7 @@ class IlluminateUserRepositoryTest extends TestCase
     }
 
     /** @test */
-    public function it_can_find_by_a_user_by_its_credentials_4()
+    public function it_cannot_find_a_user_by_invalid_credentials_1()
     {
         list($users, $hasher, $model) = $this->getUsersMock();
 
@@ -130,7 +139,7 @@ class IlluminateUserRepositoryTest extends TestCase
     }
 
     /** @test */
-    public function it_can_find_by_a_user_by_its_credentials_5()
+    public function it_cannot_find_a_user_by_invalid_credentials_2()
     {
         list($users, $hasher, $model) = $this->getUsersMock();
 
@@ -144,7 +153,7 @@ class IlluminateUserRepositoryTest extends TestCase
     }
 
     /** @test */
-    public function it_can_find_by_a_user_by_its_credentials_6()
+    public function it_cannot_find_a_user_by_invalid_credentials_3()
     {
         list($users, $hasher, $model) = $this->getUsersMock();
 
@@ -158,7 +167,11 @@ class IlluminateUserRepositoryTest extends TestCase
     {
         list($users, $hasher, $model, $query) = $this->getUsersMock();
 
-        $query->shouldReceive('whereHas')->once()->andReturn($model);
+        $query->shouldReceive('whereHas')->with('persistences', m::on(function ($argument) use ($query) {
+            $query->shouldReceive('where')->with('code', 'foobar');
+
+            return null === $argument($query);
+        }))->andReturn($model);
         $model->shouldReceive('first')->once()->andReturn($model);
 
         $user = $users->findByPersistenceCode('foobar');
@@ -242,6 +255,25 @@ class IlluminateUserRepositoryTest extends TestCase
         $valid = $users->validForUpdate($user, $credetials);
 
         $this->assertTrue($valid);
+    }
+
+    /** @test */
+    public function it_can_create_a_user_using_login()
+    {
+        list($users, $hasher, $model) = $this->getUsersMock();
+
+        $model->shouldReceive('getLoginNames')->andReturn(['email']);
+        $model->shouldReceive('fill');
+        $model->shouldReceive('save')->once();
+
+        $hasher->shouldReceive('hash')->once()->with('secret')->andReturn(password_hash('secret', PASSWORD_DEFAULT));
+
+        $user = $users->create([
+            'login'    => 'foo@example.com',
+            'password' => 'secret',
+        ]);
+
+        $this->assertInstanceOf(EloquentUser::class, $user);
     }
 
     /** @test */

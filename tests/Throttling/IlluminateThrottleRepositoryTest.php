@@ -360,6 +360,18 @@ class IlluminateThrottleRepositoryTest extends TestCase
     }
 
     /** @test */
+    public function testDelayHandlesNoThrottle()
+    {
+        $models = m::mock(Collection::class);
+        $models->shouldReceive('count')->andReturn(0);
+
+        $this->query->shouldReceive('where')->andReturn($this->query);
+        $this->query->shouldReceive('get')->andReturn($models);
+
+        $this->assertSame($this->throttle->GlobalDelay(), 0);
+    }
+
+    /** @test */
     public function testLog()
     {
         $user = m::mock(UserInterface::class);

@@ -35,6 +35,17 @@ class NativeSessionTest extends TestCase
         m::close();
     }
 
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
+    public function it_can_start_the_session()
+    {
+        $session = new NativeSession('__sentinel');
+
+        $this->assertInstanceOf(NativeSession::class, $session);
+    }
+
     /** @test */
     public function it_can_put_a_value_on_session()
     {

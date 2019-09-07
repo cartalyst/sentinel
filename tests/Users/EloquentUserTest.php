@@ -23,6 +23,7 @@ namespace Cartalyst\Sentinel\Tests\Users;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Illuminate\Database\Connection;
+use Illuminate\Database\Query\Builder;
 use Cartalyst\Sentinel\Users\EloquentUser;
 use Cartalyst\Sentinel\Roles\RoleInterface;
 use Illuminate\Database\Eloquent\Collection;
@@ -98,6 +99,45 @@ class EloquentUserTest extends TestCase
         $user->setPersistencesModel('PersistenceMock');
 
         $this->assertSame('PersistenceMock', $user->getPersistencesModel());
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
+    public function it_can_set_and_get_the_activations_model()
+    {
+        $user = new EloquentUser();
+
+        $user->setActivationsModel('ActivationMock');
+
+        $this->assertSame('ActivationMock', $user->getActivationsModel());
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
+    public function it_can_set_and_get_the_reminders_model()
+    {
+        $user = new EloquentUser();
+
+        $user->setRemindersModel('ReminderMock');
+
+        $this->assertSame('ReminderMock', $user->getRemindersModel());
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
+    public function it_can_set_and_get_the_throttling_model()
+    {
+        $user = new EloquentUser();
+
+        $user->setThrottlingModel('ThrottleMock');
+
+        $this->assertSame('ThrottleMock', $user->getThrottlingModel());
     }
 
     /** @test */
@@ -203,6 +243,36 @@ class EloquentUserTest extends TestCase
         $this->addMockConnection($user);
 
         $this->assertInstanceOf(HasMany::class, $user->persistences());
+    }
+
+    /** @test */
+    public function it_can_get_the_reminders_relationship()
+    {
+        $user = new EloquentUser();
+
+        $this->addMockConnection($user);
+
+        $this->assertInstanceOf(HasMany::class, $user->reminders());
+    }
+
+    /** @test */
+    public function it_can_get_the_activations_relationship()
+    {
+        $user = new EloquentUser();
+
+        $this->addMockConnection($user);
+
+        $this->assertInstanceOf(HasMany::class, $user->activations());
+    }
+
+    /** @test */
+    public function it_can_get_the_throttles_relationship()
+    {
+        $user = new EloquentUser();
+
+        $this->addMockConnection($user);
+
+        $this->assertInstanceOf(HasMany::class, $user->throttle());
     }
 
     /** @test */
@@ -333,14 +403,47 @@ class EloquentUserTest extends TestCase
     /** @test */
     public function it_can_get_the_roles_of_a_user()
     {
+        $user     = new EloquentUser();
+        $user->id = 0;
+
+        $this->addMockConnection($user);
+
+        $user->getConnection()->shouldReceive('getName');
+        $user->getConnection()->shouldReceive('select');
+        $user->getConnection()->getQueryGrammar()->shouldReceive('compileSelect');
+        $user->getConnection()->getPostProcessor()->shouldReceive('processSelect')->andReturn([]);
+
+        $this->assertInstanceOf(Collection::class, $user->getRoles());
+    }
+
+    /** @test */
+    public function it_can_pass_methods_to_parent()
+    {
         $user = new EloquentUser();
 
         $this->addMockConnection($user);
-        $user->getConnection()->getPostProcessor()->shouldReceive('processSelect')->andReturn([]);
-        $user->getConnection()->shouldReceive('select');
-        $user->getConnection()->getQueryGrammar()->shouldReceive('compileSelect');
+        $user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
+        $user->getConnection()->getQueryGrammar()->shouldReceive('wrap');
+        $user->getConnection()->shouldReceive('raw');
+        $user->getConnection()->getQueryGrammar()->shouldReceive('compileUpdate');
+        $user->getConnection()->getQueryGrammar()->shouldReceive('prepareBindingsForUpdate')->andReturn([]);
+        $user->getConnection()->shouldReceive('update')->andReturn(true);
 
-        $this->assertInstanceOf(Collection::class, $user->getRoles());
+        $this->assertTrue($user->increment('test'));
+    }
+
+    /** @test */
+    public function it_can_pass_methods_to_permissions_instance()
+    {
+        $mockRole              = m::mock(EloquentRole::class);
+        $mockRole->permissions = [];
+
+        $user              = new EloquentUser();
+        $user->permissions = ['foo' => true, 'bar' => false];
+        $user->roles       = [$mockRole];
+
+        $this->assertTrue($user->hasAccess('foo'));
+        $this->assertFalse($user->hasAccess('bar'));
     }
 
     /** @test */
@@ -372,10 +475,14 @@ class EloquentUserTest extends TestCase
     protected function addMockConnection($model)
     {
         $resolver = m::mock(ConnectionResolverInterface::class);
-        $resolver->shouldReceive('connection')->andReturn(m::mock(Connection::class)->makePartial());
+        $resolver->shouldReceive('connection')->andReturn($connection = m::mock(Connection::class));
 
         $model->setConnectionResolver($resolver);
-        $model->getConnection()->shouldReceive('getQueryGrammar')->andReturn(m::mock(Grammar::class));
-        $model->getConnection()->shouldReceive('getPostProcessor')->andReturn(m::mock(Processor::class));
+        $model->getConnection()->shouldReceive('getQueryGrammar')->andReturn($grammar = m::mock(Grammar::class));
+        $model->getConnection()->shouldReceive('getPostProcessor')->andReturn($processor = m::mock(Processor::class));
+
+        $model->getConnection()->shouldReceive('query')->andReturnUsing(function () use ($connection, $grammar, $processor) {
+            return new Builder($connection, $grammar, $processor);
+        });
     }
 }
