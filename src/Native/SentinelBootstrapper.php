@@ -125,6 +125,12 @@ class SentinelBootstrapper
 
         $single = $this->config['persistences']['single'];
 
+        $users = $this->config['users']['model'];
+
+        if (class_exists($users) && method_exists($users, 'setPersistencesModel')) {
+            forward_static_call_array([$users, 'setPersistencesModel'], [$model]);
+        }
+
         return new IlluminatePersistenceRepository($session, $cookie, $model, $single);
     }
 
