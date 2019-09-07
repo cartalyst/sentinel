@@ -16,6 +16,8 @@
 - Updated the `findUserByPersistenceCode()` to return `UserInterface` or `null` instead of `UserInterface` or `bool`
 - Fixed an issue where a call for EloquentUser::setPersistences was missing during bootstrap
 - Fixed an issue where personal permissions were not taking priority over pattern matching
+- Fixed an issue where the Throttling repository was not being set properly
+- Fixed an issue with the Native Cookie forget method
 - Removed unnecessary dependencies
 - Removed integrations for both CodeIgniter and FuelPHP
 
