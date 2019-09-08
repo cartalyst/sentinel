@@ -72,7 +72,7 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function create(UserInterface $user): EloquentReminder
+    public function create(UserInterface $user)
     {
         $reminder = $this->createModel();
 
@@ -93,7 +93,7 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function get(UserInterface $user, string $code = null): ?EloquentReminder
+    public function get(UserInterface $user, string $code = null)
     {
         $expires = $this->expires();
 

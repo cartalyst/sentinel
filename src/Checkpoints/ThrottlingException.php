@@ -30,14 +30,14 @@ class ThrottlingException extends RuntimeException
      *
      * @var int
      */
-    protected $delay;
+    protected $delay = 0;
 
     /**
      * The throttling type which caused the exception.
      *
      * @var string
      */
-    protected $type;
+    protected $type = '';
 
     /**
      * Returns the delay.

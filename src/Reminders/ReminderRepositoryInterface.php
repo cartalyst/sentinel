@@ -29,9 +29,9 @@ interface ReminderRepositoryInterface
      *
      * @param \Cartalyst\Sentinel\Users\UserInterface $user
      *
-     * @return \Cartalyst\Sentinel\Reminders\EloquentReminder
+     * @return \Illuminate\Database\Eloquent\Model
      */
-    public function create(UserInterface $user): EloquentReminder;
+    public function create(UserInterface $user);
 
     /**
      * Gets the reminder for the given user.
@@ -39,9 +39,9 @@ interface ReminderRepositoryInterface
      * @param \Cartalyst\Sentinel\Users\UserInterface $user
      * @param string|null                             $code
      *
-     * @return \Cartalyst\Sentinel\Reminders\EloquentReminder|null
+     * @return \Illuminate\Database\Eloquent\Model|null
      */
-    public function get(UserInterface $user, string $code = null): ?EloquentReminder;
+    public function get(UserInterface $user, string $code = null);
 
     /**
      * Check if a valid reminder exists.
