@@ -226,12 +226,12 @@ class IlluminateUserRepositoryTest extends TestCase
 
         $model->shouldReceive('getLoginNames')->andReturn(['email']);
 
-        $credetials = [
+        $credentials = [
             'email'    => 'foo@example.com',
             'password' => 'secret',
         ];
 
-        $valid = $users->validForCreation($credetials);
+        $valid = $users->validForCreation($credentials);
 
         $this->assertTrue($valid);
     }
@@ -247,12 +247,12 @@ class IlluminateUserRepositoryTest extends TestCase
 
         $model->shouldReceive('getLoginNames')->andReturn(['email']);
 
-        $credetials = [
+        $credentials = [
             'email'    => 'foo@example.com',
             'password' => 'secret',
         ];
 
-        $valid = $users->validForUpdate($user, $credetials);
+        $valid = $users->validForUpdate($user, $credentials);
 
         $this->assertTrue($valid);
     }
@@ -394,11 +394,11 @@ class IlluminateUserRepositoryTest extends TestCase
 
         $model->shouldReceive('getLoginNames')->andReturn(['email']);
 
-        $credetials = [
+        $credentials = [
             'password' => 'secret',
         ];
 
-        $users->validForCreation($credetials);
+        $users->validForCreation($credentials);
     }
 
     /** @test */
@@ -411,11 +411,11 @@ class IlluminateUserRepositoryTest extends TestCase
 
         $model->shouldReceive('getLoginNames')->andReturn(['email']);
 
-        $credetials = [
+        $credentials = [
             'email' => 'foo@example.com',
         ];
 
-        $users->validForCreation($credetials);
+        $users->validForCreation($credentials);
     }
 
     /** @test */
@@ -428,12 +428,12 @@ class IlluminateUserRepositoryTest extends TestCase
 
         $model->shouldReceive('getLoginNames')->andReturn(['email']);
 
-        $credetials = [
+        $credentials = [
             'email'    => 'foo@example.com',
             'password' => null,
         ];
 
-        $users->validForCreation($credetials);
+        $users->validForCreation($credentials);
     }
 
     protected function fakeUser()
