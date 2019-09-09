@@ -145,7 +145,7 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface
 
         $valid = $this->users->validForUpdate($user, $credentials);
 
-        if ($valid === false) {
+        if (! $valid) {
             return false;
         }
 

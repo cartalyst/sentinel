@@ -174,7 +174,7 @@ class Sentinel
 
         $valid = $this->users->validForCreation($credentials);
 
-        if ($valid === false) {
+        if (! $valid) {
             return false;
         }
 
@@ -309,7 +309,7 @@ class Sentinel
 
             $valid = $user !== null ? $this->users->validateCredentials($user, $credentials) : false;
 
-            if ($user === null || $valid === false) {
+            if ($user === null || ! $valid) {
                 $this->cycleCheckpoints('fail', $user, false);
 
                 return false;
@@ -320,10 +320,8 @@ class Sentinel
             return false;
         }
 
-        if ($login === true) {
-            $method = $remember === true ? 'loginAndRemember' : 'login';
-
-            if (! $user = $this->{$method}($user)) {
+        if ($login) {
+            if (! $user = $this->login($user, $remember)) {
                 return false;
             }
         }
@@ -504,13 +502,11 @@ class Sentinel
     {
         $this->fireEvent('sentinel.logging-in', $user);
 
-        $method = $remember === true ? 'persistAndRemember' : 'persist';
-
-        $this->persistences->{$method}($user);
+        $this->persistences->persist($user, $remember);
 
         $response = $this->users->recordLogin($user);
 
-        if ($response === false) {
+        if (! $response) {
             return false;
         }
 
@@ -705,7 +701,7 @@ class Sentinel
         foreach ($this->checkpoints as $checkpoint) {
             $response = $checkpoint->{$method}($user);
 
-            if ($response === false && $halt === true) {
+            if (! $response && $halt) {
                 return false;
             }
         }
@@ -722,7 +718,7 @@ class Sentinel
      */
     public function getUser(bool $check = true): ?UserInterface
     {
-        if ($check === true && $this->user === null) {
+        if ($check && $this->user === null) {
             $this->check();
         }
 
