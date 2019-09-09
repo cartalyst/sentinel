@@ -340,7 +340,7 @@ class SentinelTest extends TestCase
             'password' => 'secret',
         ];
 
-        $this->persistences->shouldReceive('persistAndRemember')->once();
+        $this->persistences->shouldReceive('persist')->once();
 
         $this->users->shouldReceive('findByCredentials')->with($credentials)->once()->andReturn($user);
         $this->users->shouldReceive('validateCredentials')->once()->andReturn(true);

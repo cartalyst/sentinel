@@ -125,7 +125,7 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface
 
         $this->session->put($code);
 
-        if ($remember === true) {
+        if ($remember) {
             $this->cookie->put($code);
         }
 
