@@ -15,7 +15,7 @@
  * @author     Cartalyst LLC
  * @license    BSD License (3-clause)
  * @copyright  (c) 2011-2019, Cartalyst LLC
- * @link       http://cartalyst.com
+ * @link       https://cartalyst.com
  */
 
 use Illuminate\Support\Facades\Schema;
