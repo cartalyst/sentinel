@@ -83,6 +83,7 @@ class IlluminateReminderRepositoryTest extends TestCase
         $this->query     = null;
         $this->model     = null;
         $this->reminders = null;
+
         m::close();
     }
 

@@ -57,6 +57,7 @@ class IlluminateUserRepositoryTest extends TestCase
         $this->query  = null;
         $this->model  = null;
         $this->users  = null;
+
         m::close();
     }
 

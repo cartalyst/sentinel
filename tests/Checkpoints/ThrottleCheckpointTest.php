@@ -69,6 +69,7 @@ class ThrottleCheckpointTest extends TestCase
         $this->throttle   = null;
         $this->user       = null;
         $this->checkpoint = null;
+
         m::close();
     }
 

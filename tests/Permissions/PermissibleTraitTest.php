@@ -43,6 +43,7 @@ class PermissibleTraitTest extends TestCase
     protected function tearDown(): void
     {
         $this->permissible = null;
+
         m::close();
     }
 

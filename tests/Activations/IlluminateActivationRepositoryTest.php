@@ -51,6 +51,9 @@ class IlluminateActivationRepositoryTest extends TestCase
      */
     protected $query;
 
+    /**
+     * {@inheritdoc}
+     */
     protected function setUp(): void
     {
         $this->query = m::mock(Builder::class);
@@ -70,6 +73,7 @@ class IlluminateActivationRepositoryTest extends TestCase
         $this->query       = null;
         $this->model       = null;
         $this->activations = null;
+
         m::close();
     }
 

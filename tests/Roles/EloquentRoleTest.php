@@ -47,6 +47,7 @@ class EloquentRoleTest extends TestCase
     protected function tearDown(): void
     {
         $this->role = null;
+
         m::close();
     }
 

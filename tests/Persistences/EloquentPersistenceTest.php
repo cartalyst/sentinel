@@ -53,6 +53,7 @@ class EloquentPersistenceTest extends TestCase
     protected function tearDown(): void
     {
         $this->persistence = null;
+
         m::close();
     }
 

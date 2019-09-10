@@ -68,6 +68,7 @@ class ActivationCheckpointTest extends TestCase
         $this->activations = null;
         $this->user        = null;
         $this->checkpoint  = null;
+
         m::close();
     }
 
