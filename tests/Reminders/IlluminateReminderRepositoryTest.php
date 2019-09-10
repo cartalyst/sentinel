@@ -49,7 +49,7 @@ class IlluminateReminderRepositoryTest extends TestCase
     /** @test */
     public function it_can_create_a_reminder_code()
     {
-        list($reminders, $users, $model, $query) = $this->getReminderMock();
+        [$reminders, $users, $model, $query] = $this->getReminderMock();
 
         $model->shouldReceive('fill');
         $model->shouldReceive('setAttribute');
@@ -65,7 +65,7 @@ class IlluminateReminderRepositoryTest extends TestCase
     /** @test */
     public function it_can_determine_if_a_reminder_exists()
     {
-        list($reminders, $users, $model, $query) = $this->getReminderMock();
+        [$reminders, $users, $model, $query] = $this->getReminderMock();
 
         $query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
         $query->shouldReceive('where')->with('completed', false)->andReturn($query);
@@ -83,7 +83,7 @@ class IlluminateReminderRepositoryTest extends TestCase
     /** @test */
     public function it_can_determine_if_a_reminder_exists_with_a_code()
     {
-        list($reminders, $users, $model, $query) = $this->getReminderMock();
+        [$reminders, $users, $model, $query] = $this->getReminderMock();
 
         $query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
         $query->shouldReceive('where')->with('completed', false)->andReturn($query);
@@ -102,7 +102,7 @@ class IlluminateReminderRepositoryTest extends TestCase
     /** @test */
     public function it_can_complete_a_reminder()
     {
-        list($reminders, $users, $model, $query) = $this->getReminderMock();
+        [$reminders, $users, $model, $query] = $this->getReminderMock();
 
         $user = $this->getUserMock();
 
@@ -128,7 +128,7 @@ class IlluminateReminderRepositoryTest extends TestCase
     /** @test */
     public function it_cannot_complete_a_reminder_that_does_not_exist()
     {
-        list($reminders, $users, $model, $query) = $this->getReminderMock();
+        [$reminders, $users, $model, $query] = $this->getReminderMock();
 
         $query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
         $query->shouldReceive('where')->with('code', 'foobar')->andReturn($query);
@@ -146,7 +146,7 @@ class IlluminateReminderRepositoryTest extends TestCase
     /** @test */
     public function it_cannot_complete_a_reminder_that_has_expired()
     {
-        list($reminders, $users, $model, $query) = $this->getReminderMock();
+        [$reminders, $users, $model, $query] = $this->getReminderMock();
 
         $reminder = m::mock(EloquentReminder::class);
 
@@ -169,7 +169,7 @@ class IlluminateReminderRepositoryTest extends TestCase
     /** @test */
     public function it_can_remove_expired_reminders()
     {
-        list($reminders, $users, $model, $query) = $this->getReminderMock();
+        [$reminders, $users, $model, $query] = $this->getReminderMock();
 
         $query->shouldReceive('where')->with('completed', false)->andReturn($query);
 

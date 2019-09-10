@@ -53,7 +53,7 @@ class IlluminateUserRepositoryTest extends TestCase
     /** @test */
     public function it_can_find_a_user_by_its_id()
     {
-        list($users, $hasher, $model, $query) = $this->getUsersMock();
+        [$users, $hasher, $model, $query] = $this->getUsersMock();
 
         $query->shouldReceive('find')->with(1)->once()->andReturn($model);
 
@@ -65,7 +65,7 @@ class IlluminateUserRepositoryTest extends TestCase
     /** @test */
     public function it_can_find_a_user_by_its_credentials_1()
     {
-        list($users, $hasher, $model, $query) = $this->getUsersMock();
+        [$users, $hasher, $model, $query] = $this->getUsersMock();
 
         $model->shouldReceive('getLoginNames')->andReturn(['email']);
 
@@ -83,7 +83,7 @@ class IlluminateUserRepositoryTest extends TestCase
     /** @test */
     public function it_can_find_a_user_by_its_credentials_2()
     {
-        list($users, $hasher, $model, $query) = $this->getUsersMock();
+        [$users, $hasher, $model, $query] = $this->getUsersMock();
 
         $model->shouldReceive('getLoginNames')->andReturn(['email', 'username']);
 
@@ -106,7 +106,7 @@ class IlluminateUserRepositoryTest extends TestCase
     /** @test */
     public function it_can_find_a_user_by_its_credentials_3()
     {
-        list($users, $hasher, $model, $query) = $this->getUsersMock();
+        [$users, $hasher, $model, $query] = $this->getUsersMock();
 
         $model->shouldReceive('getLoginNames')->andReturn(['email']);
 
@@ -127,7 +127,7 @@ class IlluminateUserRepositoryTest extends TestCase
     /** @test */
     public function it_cannot_find_a_user_by_invalid_credentials_1()
     {
-        list($users, $hasher, $model) = $this->getUsersMock();
+        [$users, $hasher, $model] = $this->getUsersMock();
 
         $model->shouldReceive('getLoginNames')->andReturn(['email']);
 
@@ -141,7 +141,7 @@ class IlluminateUserRepositoryTest extends TestCase
     /** @test */
     public function it_cannot_find_a_user_by_invalid_credentials_2()
     {
-        list($users, $hasher, $model) = $this->getUsersMock();
+        [$users, $hasher, $model] = $this->getUsersMock();
 
         $model->shouldReceive('getLoginNames')->andReturn(['email']);
 
@@ -155,7 +155,7 @@ class IlluminateUserRepositoryTest extends TestCase
     /** @test */
     public function it_cannot_find_a_user_by_invalid_credentials_3()
     {
-        list($users, $hasher, $model) = $this->getUsersMock();
+        [$users, $hasher, $model] = $this->getUsersMock();
 
         $model->shouldReceive('getLoginNames')->andReturn(['email']);
 
@@ -165,7 +165,7 @@ class IlluminateUserRepositoryTest extends TestCase
     /** @test */
     public function it_can_find_a_user_by_its_persistence_code()
     {
-        list($users, $hasher, $model, $query) = $this->getUsersMock();
+        [$users, $hasher, $model, $query] = $this->getUsersMock();
 
         $query->shouldReceive('whereHas')->with('persistences', m::on(function ($argument) use ($query) {
             $query->shouldReceive('where')->with('code', 'foobar');
@@ -182,7 +182,7 @@ class IlluminateUserRepositoryTest extends TestCase
     /** @test */
     public function it_can_record_the_login()
     {
-        list($users, $hasher, $model) = $this->getUsersMock();
+        [$users, $hasher, $model] = $this->getUsersMock();
 
         $model->shouldReceive('setAttribute');
         $model->shouldReceive('save')->once()->andReturn(true);
@@ -193,7 +193,7 @@ class IlluminateUserRepositoryTest extends TestCase
     /** @test */
     public function it_can_record_the_logout()
     {
-        list($users, $hasher, $model) = $this->getUsersMock();
+        [$users, $hasher, $model] = $this->getUsersMock();
 
         $model->shouldReceive('save')->once()->andReturn(true);
 
@@ -203,7 +203,7 @@ class IlluminateUserRepositoryTest extends TestCase
     /** @test */
     public function it_can_validate_the_credentials()
     {
-        list($users, $hasher, $model) = $this->getUsersMock();
+        [$users, $hasher, $model] = $this->getUsersMock();
 
         $model->shouldReceive('getAttribute')->andReturn('secret');
 
@@ -222,7 +222,7 @@ class IlluminateUserRepositoryTest extends TestCase
     {
         $user = new EloquentUser();
 
-        list($users, $hasher, $model) = $this->getUsersMock();
+        [$users, $hasher, $model] = $this->getUsersMock();
 
         $model->shouldReceive('getLoginNames')->andReturn(['email']);
 
@@ -241,7 +241,7 @@ class IlluminateUserRepositoryTest extends TestCase
     {
         $user = $this->fakeUser();
 
-        list($users, $hasher, $model) = $this->getUsersMock();
+        [$users, $hasher, $model] = $this->getUsersMock();
 
         $user->shouldReceive('getUserId')->once()->andReturn(1);
 
@@ -260,7 +260,7 @@ class IlluminateUserRepositoryTest extends TestCase
     /** @test */
     public function it_can_create_a_user_using_login()
     {
-        list($users, $hasher, $model) = $this->getUsersMock();
+        [$users, $hasher, $model] = $this->getUsersMock();
 
         $model->shouldReceive('getLoginNames')->andReturn(['email']);
         $model->shouldReceive('fill');
@@ -279,7 +279,7 @@ class IlluminateUserRepositoryTest extends TestCase
     /** @test */
     public function it_can_create_a_user()
     {
-        list($users, $hasher, $model) = $this->getUsersMock();
+        [$users, $hasher, $model] = $this->getUsersMock();
 
         $model->shouldReceive('getLoginNames')->andReturn(['email']);
         $model->shouldReceive('fill');
@@ -298,7 +298,7 @@ class IlluminateUserRepositoryTest extends TestCase
     /** @test */
     public function it_can_create_a_user_with_valid_callback()
     {
-        list($users, $hasher, $model) = $this->getUsersMock();
+        [$users, $hasher, $model] = $this->getUsersMock();
 
         $model->shouldReceive('getLoginNames')->andReturn(['email']);
         $model->shouldReceive('fill');
@@ -319,7 +319,7 @@ class IlluminateUserRepositoryTest extends TestCase
     /** @test */
     public function it_will_not_create_a_user_with_an_invalid_callback()
     {
-        list($users, $hasher, $model) = $this->getUsersMock();
+        [$users, $hasher, $model] = $this->getUsersMock();
 
         $model->shouldReceive('getLoginNames')->andReturn(['email']);
         $model->shouldReceive('fill');
@@ -339,7 +339,7 @@ class IlluminateUserRepositoryTest extends TestCase
     /** @test */
     public function it_can_update_a_user_by_instance()
     {
-        list($users, $hasher, $model) = $this->getUsersMock();
+        [$users, $hasher, $model] = $this->getUsersMock();
 
         $user = $this->fakeUser();
         $user->shouldReceive('getLoginNames')->andReturn(['email']);
@@ -356,7 +356,7 @@ class IlluminateUserRepositoryTest extends TestCase
     /** @test */
     public function it_can_update_a_user_by_id()
     {
-        list($users, $hasher, $model, $query) = $this->getUsersMock();
+        [$users, $hasher, $model, $query] = $this->getUsersMock();
 
         $user = $this->fakeUser();
         $user->shouldReceive('getLoginNames')->andReturn(['email']);
@@ -375,7 +375,7 @@ class IlluminateUserRepositoryTest extends TestCase
     /** @test */
     public function it_can_set_and_get_the_hashing_strategy()
     {
-        list($users) = $this->getUsersMock();
+        [$users] = $this->getUsersMock();
 
         $this->assertInstanceOf(NativeHasher::class, $users->getHasher());
 
@@ -390,7 +390,7 @@ class IlluminateUserRepositoryTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('No [login] credential was passed.');
 
-        list($users, $hasher, $model) = $this->getUsersMock();
+        [$users, $hasher, $model] = $this->getUsersMock();
 
         $model->shouldReceive('getLoginNames')->andReturn(['email']);
 
@@ -407,7 +407,7 @@ class IlluminateUserRepositoryTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('You have not passed a [password].');
 
-        list($users, $hasher, $model) = $this->getUsersMock();
+        [$users, $hasher, $model] = $this->getUsersMock();
 
         $model->shouldReceive('getLoginNames')->andReturn(['email']);
 
@@ -424,7 +424,7 @@ class IlluminateUserRepositoryTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('You have not passed a [password].');
 
-        list($users, $hasher, $model) = $this->getUsersMock();
+        [$users, $hasher, $model] = $this->getUsersMock();
 
         $model->shouldReceive('getLoginNames')->andReturn(['email']);
 

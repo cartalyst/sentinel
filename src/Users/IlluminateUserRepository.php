@@ -85,7 +85,7 @@ class IlluminateUserRepository implements UserRepositoryInterface
 
         $loginNames = $instance->getLoginNames();
 
-        list($logins, $password, $credentials) = $this->parseCredentials($credentials, $loginNames);
+        [$logins] = $this->parseCredentials($credentials, $loginNames);
 
         if (empty($logins)) {
             return null;
@@ -230,7 +230,7 @@ class IlluminateUserRepository implements UserRepositoryInterface
 
         $loginNames = $user->getLoginNames();
 
-        list($logins, $password, $attributes) = $this->parseCredentials($credentials, $loginNames);
+        [$logins, $password, $attributes] = $this->parseCredentials($credentials, $loginNames);
 
         if (is_array($logins)) {
             $user->fill($logins);
@@ -333,7 +333,7 @@ class IlluminateUserRepository implements UserRepositoryInterface
         $loginNames = $instance->getLoginNames();
 
         // We will simply parse credentials which checks logins and passwords
-        list($logins, $password, $credentials) = $this->parseCredentials($credentials, $loginNames);
+        [$logins, $password] = $this->parseCredentials($credentials, $loginNames);
 
         if ($id === null) {
             if (empty($logins)) {
