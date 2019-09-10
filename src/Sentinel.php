@@ -170,7 +170,7 @@ class Sentinel
             throw new InvalidArgumentException('You must provide a closure or a boolean.');
         }
 
-        $this->fireEvent('sentinel.registering', $credentials);
+        $this->fireEvent('sentinel.registering', [$credentials]);
 
         $valid = $this->users->validForCreation($credentials);
 
@@ -296,7 +296,7 @@ class Sentinel
      */
     public function authenticate($credentials, bool $remember = false, bool $login = true)
     {
-        $response = $this->fireEvent('sentinel.authenticating', $credentials, true);
+        $response = $this->fireEvent('sentinel.authenticating', [$credentials], true);
 
         if ($response === false) {
             return false;

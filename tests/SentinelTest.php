@@ -124,12 +124,20 @@ class SentinelTest extends TestCase
         $this->users->shouldReceive('validForCreation')->once()->andReturn(true);
         $this->users->shouldReceive('create')->once()->andReturn($user);
 
-        $this->dispatcher->shouldReceive('dispatch')->twice();
-
-        $result = $this->sentinel->register([
+        $credentials = [
             'email'    => 'foo@example.com',
             'password' => 'secret',
-        ]);
+        ];
+
+        $this->dispatcher->shouldReceive('dispatch')->once()
+            ->with('sentinel.registering', [$credentials])
+        ;
+
+        $this->dispatcher->shouldReceive('dispatch')->once()
+            ->with('sentinel.registered', $user)
+        ;
+
+        $result = $this->sentinel->register($credentials);
 
         $this->assertSame($result, $user);
     }
@@ -298,9 +306,21 @@ class SentinelTest extends TestCase
         $this->users->shouldReceive('validateCredentials')->once()->andReturn(true);
         $this->users->shouldReceive('recordLogin')->once()->andReturn(true);
 
-        $this->dispatcher->shouldReceive('until')->once();
+        $this->dispatcher->shouldReceive('until')->once()
+            ->with('sentinel.authenticating', [$credentials])
+        ;
 
-        $this->dispatcher->shouldReceive('dispatch')->times(3);
+        $this->dispatcher->shouldReceive('dispatch')->once()
+            ->with('sentinel.logging-in', $user)
+        ;
+
+        $this->dispatcher->shouldReceive('dispatch')->once()
+            ->with('sentinel.logged-in', $user)
+        ;
+
+        $this->dispatcher->shouldReceive('dispatch')->once()
+            ->with('sentinel.authenticated', $user)
+        ;
 
         $this->assertSame($user, $this->sentinel->authenticate($credentials));
     }
@@ -314,8 +334,21 @@ class SentinelTest extends TestCase
 
         $this->users->shouldReceive('recordLogin')->once()->andReturn(true);
 
-        $this->dispatcher->shouldReceive('until')->once();
-        $this->dispatcher->shouldReceive('dispatch')->times(3);
+        $this->dispatcher->shouldReceive('until')->once()
+            ->with('sentinel.authenticating', [$user])
+        ;
+
+        $this->dispatcher->shouldReceive('dispatch')->once()
+            ->with('sentinel.logging-in', $user)
+        ;
+
+        $this->dispatcher->shouldReceive('dispatch')->once()
+            ->with('sentinel.logged-in', $user)
+        ;
+
+        $this->dispatcher->shouldReceive('dispatch')->once()
+            ->with('sentinel.authenticated', $user)
+        ;
 
         $this->assertSame($user, $this->sentinel->authenticate($user));
     }
