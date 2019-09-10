@@ -2,9 +2,9 @@
 
 Cartalyst packages are framework agnostic and as such can be integrated easily natively or with your favorite framework.
 
-### Laravel 5
+### Laravel 6
 
-The Sentinel package has optional support for Laravel 5 and it comes bundled with a Service Provider and a Facade for easy integration.
+The Sentinel package has optional support for Laravel 6 and it comes bundled with a Service Provider and a Facade for easy integration.
 
 After installing the package, open your Laravel config file located at `config/app.php` and add the following lines.
 
