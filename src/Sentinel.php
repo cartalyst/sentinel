@@ -412,7 +412,7 @@ class Sentinel
      *
      * @return array
      */
-    public function getRequestCredentials(): array
+    public function getRequestCredentials(): ?array
     {
         if ($this->requestCredentials === null) {
             $this->requestCredentials = function () {
