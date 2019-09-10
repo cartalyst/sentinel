@@ -33,33 +33,46 @@ use Cartalyst\Sentinel\Persistences\EloquentPersistence;
 class EloquentPersistenceTest extends TestCase
 {
     /**
+     * The Persistence instance.
+     *
+     * @var \Cartalyst\Sentinel\Persistences\EloquentPersistence
+     */
+    protected $persistence;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
+    {
+        $this->persistence = new EloquentPersistence();
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function tearDown(): void
     {
+        $this->persistence = null;
+
         m::close();
     }
 
     /** @test */
     public function it_can_get_the_user_relationship()
     {
-        $persistence = new EloquentPersistence();
+        $this->addMockConnection($this->persistence);
 
-        $this->addMockConnection($persistence);
-
-        $this->assertInstanceOf(BelongsTo::class, $persistence->user());
+        $this->assertInstanceOf(BelongsTo::class, $this->persistence->user());
     }
 
     /** @test */
     public function it_can_set_and_get_the_user_model_class_name()
     {
-        $persistence = new EloquentPersistence();
+        $this->assertSame(EloquentUser::class, $this->persistence->getUsersModel());
 
-        $this->assertSame(EloquentUser::class, $persistence->getUsersModel());
+        $this->persistence->setUsersModel('FooClass');
 
-        $persistence->setUsersModel('FooClass');
-
-        $this->assertSame('FooClass', $persistence->getUsersModel());
+        $this->assertSame('FooClass', $this->persistence->getUsersModel());
     }
 
     protected function addMockConnection($model)

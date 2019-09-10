@@ -25,27 +25,44 @@ use Cartalyst\Sentinel\Cookies\NullCookie;
 
 class NullCookieTest extends TestCase
 {
+    /**
+     * The cookie instance.
+     *
+     * @var \Cartalyst\Sentinel\Cookies\NullCookie
+     */
+    protected $cookie;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
+    {
+        $this->cookie = new NullCookie();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function tearDown(): void
+    {
+        $this->cookie = null;
+    }
+
     /** @test */
     public function it_can_put_a_cookie()
     {
-        $cookie = new NullCookie();
-
-        $this->assertNull($cookie->put('cookie'));
+        $this->assertNull($this->cookie->put('cookie'));
     }
 
     /** @test */
     public function it_can_get_a_cookie()
     {
-        $cookie = new NullCookie();
-
-        $this->assertNull($cookie->get());
+        $this->assertNull($this->cookie->get());
     }
 
     /** @test */
     public function it_can_forget_a_cookie()
     {
-        $cookie = new NullCookie();
-
-        $this->assertNull($cookie->forget());
+        $this->assertNull($this->cookie->forget());
     }
 }
