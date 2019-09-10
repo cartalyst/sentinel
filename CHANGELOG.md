@@ -18,8 +18,11 @@
 - Fixed an issue where personal permissions were not taking priority over pattern matching
 - Fixed an issue where the Throttling repository was not being set properly
 - Fixed an issue with the Native Cookie forget method
+- Fixed an issue where the events didn't had the payload passed correctly
+- Fixed an issue where the global throttles cache was not being cleared
 - Removed unnecessary dependencies
 - Removed integrations for both CodeIgniter and FuelPHP
+- Removed strict comparisons in favour of type hinting
 
 ### v2.0.18 - 2019-08-14
 
