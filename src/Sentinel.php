@@ -164,9 +164,9 @@ class Sentinel
      *
      * @return bool|\Cartalyst\Sentinel\Users\UserInterface
      */
-    public function register(array $credentials, $callback = null)
+    public function register(array $credentials, $callback = false)
     {
-        if ($callback !== null && ! $callback instanceof Closure && ! is_bool($callback)) {
+        if (! $callback instanceof Closure && ! is_bool($callback)) {
             throw new InvalidArgumentException('You must provide a closure or a boolean.');
         }
 
@@ -309,7 +309,7 @@ class Sentinel
 
             $valid = $user !== null ? $this->users->validateCredentials($user, $credentials) : false;
 
-            if ($user === null || ! $valid) {
+            if (! $valid) {
                 $this->cycleCheckpoints('fail', $user, false);
 
                 return false;
