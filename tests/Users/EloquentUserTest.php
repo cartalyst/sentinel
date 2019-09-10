@@ -38,6 +38,14 @@ class EloquentUserTest extends TestCase
     /**
      * {@inheritdoc}
      */
+    protected function setUp(): void
+    {
+        $this->user = new EloquentUser();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function tearDown(): void
     {
         m::close();
@@ -46,33 +54,29 @@ class EloquentUserTest extends TestCase
     /** @test */
     public function it_can_get_the_user_permissions_from_the_accessor()
     {
-        $user       = new EloquentUser();
-        $user->slug = 'foo';
+        $this->user->slug = 'foo';
 
         $permissions = ['foo' => true];
 
-        $user->permissions = $permissions;
+        $this->user->permissions = $permissions;
 
-        $this->assertSame($permissions, $user->permissions);
+        $this->assertSame($permissions, $this->user->permissions);
     }
 
     /** @test */
     public function it_can_set_and_get_the_persistable_key()
     {
-        $user = new EloquentUser();
-        $user->setPersistableKey('foo_id');
+        $this->user->setPersistableKey('foo_id');
 
-        $this->assertSame('foo_id', $user->getPersistableKey());
+        $this->assertSame('foo_id', $this->user->getPersistableKey());
     }
 
     /** @test */
     public function it_can_set_and_get_the_persistable_relationship()
     {
-        $user = new EloquentUser();
+        $this->user->setPersistableRelationship('foo_persistences');
 
-        $user->setPersistableRelationship('foo_persistences');
-
-        $this->assertSame('foo_persistences', $user->getPersistableRelationship());
+        $this->assertSame('foo_persistences', $this->user->getPersistableRelationship());
     }
 
     /**
@@ -81,11 +85,9 @@ class EloquentUserTest extends TestCase
      */
     public function it_can_set_and_get_the_roles_model()
     {
-        $user = new EloquentUser();
+        $this->user->setRolesModel('RoleMock');
 
-        $user->setRolesModel('RoleMock');
-
-        $this->assertSame('RoleMock', $user->getRolesModel());
+        $this->assertSame('RoleMock', $this->user->getRolesModel());
     }
 
     /**
@@ -94,11 +96,9 @@ class EloquentUserTest extends TestCase
      */
     public function it_can_set_and_get_the_persistences_model()
     {
-        $user = new EloquentUser();
+        $this->user->setPersistencesModel('PersistenceMock');
 
-        $user->setPersistencesModel('PersistenceMock');
-
-        $this->assertSame('PersistenceMock', $user->getPersistencesModel());
+        $this->assertSame('PersistenceMock', $this->user->getPersistencesModel());
     }
 
     /**
@@ -107,11 +107,9 @@ class EloquentUserTest extends TestCase
      */
     public function it_can_set_and_get_the_activations_model()
     {
-        $user = new EloquentUser();
+        $this->user->setActivationsModel('ActivationMock');
 
-        $user->setActivationsModel('ActivationMock');
-
-        $this->assertSame('ActivationMock', $user->getActivationsModel());
+        $this->assertSame('ActivationMock', $this->user->getActivationsModel());
     }
 
     /**
@@ -120,11 +118,9 @@ class EloquentUserTest extends TestCase
      */
     public function it_can_set_and_get_the_reminders_model()
     {
-        $user = new EloquentUser();
+        $this->user->setRemindersModel('ReminderMock');
 
-        $user->setRemindersModel('ReminderMock');
-
-        $this->assertSame('ReminderMock', $user->getRemindersModel());
+        $this->assertSame('ReminderMock', $this->user->getRemindersModel());
     }
 
     /**
@@ -133,217 +129,190 @@ class EloquentUserTest extends TestCase
      */
     public function it_can_set_and_get_the_throttling_model()
     {
-        $user = new EloquentUser();
+        $this->user->setThrottlingModel('ThrottleMock');
 
-        $user->setThrottlingModel('ThrottleMock');
-
-        $this->assertSame('ThrottleMock', $user->getThrottlingModel());
+        $this->assertSame('ThrottleMock', $this->user->getThrottlingModel());
     }
 
     /** @test */
     public function it_can_get_the_user_id()
     {
-        $user = new EloquentUser();
+        $this->addMockConnection($this->user);
 
-        $this->addMockConnection($user);
+        $this->user->getConnection()->shouldReceive('getName');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
+        $this->user->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->andReturn(1);
 
-        $user->getConnection()->shouldReceive('getName');
-        $user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $user->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
-        $user->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->andReturn(1);
+        $this->user->save();
 
-        $user->save();
-
-        $this->assertSame(1, $user->getUserId());
+        $this->assertSame(1, $this->user->getUserId());
     }
 
     /** @test */
     public function it_can_get_the_persistable_id()
     {
-        $user = new EloquentUser();
+        $this->addMockConnection($this->user);
 
-        $this->addMockConnection($user);
+        $this->user->getConnection()->shouldReceive('getName');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
+        $this->user->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->andReturn(1);
 
-        $user->getConnection()->shouldReceive('getName');
-        $user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $user->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
-        $user->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->andReturn(1);
+        $this->user->save();
 
-        $user->save();
-
-        $this->assertSame('1', $user->getPersistableId());
+        $this->assertSame('1', $this->user->getPersistableId());
     }
 
     /** @test */
     public function it_can_get_the_user_login()
     {
-        $user        = new EloquentUser();
-        $user->email = 'foo@example.com';
+        $this->user->email = 'foo@example.com';
 
-        $this->addMockConnection($user);
+        $this->addMockConnection($this->user);
 
-        $user->getConnection()->shouldReceive('getName');
-        $user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $user->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
-        $user->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->andReturn(1);
+        $this->user->getConnection()->shouldReceive('getName');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
+        $this->user->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->andReturn(1);
 
-        $user->save();
+        $this->user->save();
 
-        $this->assertSame('foo@example.com', $user->getUserLogin());
+        $this->assertSame('foo@example.com', $this->user->getUserLogin());
     }
 
     /** @test */
     public function it_can_get_the_user_login_names()
     {
-        $user = new EloquentUser();
-
-        $this->assertSame(['email'], $user->getLoginNames());
+        $this->assertSame(['email'], $this->user->getLoginNames());
     }
 
     /** @test */
     public function it_can_get_the_user_login_name()
     {
-        $user = new EloquentUser();
-
-        $this->assertSame('email', $user->getUserLoginName());
+        $this->assertSame('email', $this->user->getUserLoginName());
     }
 
     /** @test */
     public function it_can_get_the_user_password()
     {
-        $user           = new EloquentUser();
-        $user->password = 'foobar';
+        $this->user->password = 'foobar';
 
-        $this->assertSame('foobar', $user->getUserPassword());
+        $this->assertSame('foobar', $this->user->getUserPassword());
     }
 
     /** @test */
     public function it_can_generate_a_persistence_code()
     {
-        $user = new EloquentUser();
-
-        $this->assertSame(32, strlen($user->generatePersistenceCode()));
+        $this->assertSame(32, strlen($this->user->generatePersistenceCode()));
     }
 
     /** @test */
     public function it_can_get_the_roles_relationship()
     {
-        $user = new EloquentUser();
+        $this->addMockConnection($this->user);
 
-        $this->addMockConnection($user);
-
-        $this->assertInstanceOf(BelongsToMany::class, $user->roles());
+        $this->assertInstanceOf(BelongsToMany::class, $this->user->roles());
     }
 
     /** @test */
     public function it_can_get_the_persistences_relationship()
     {
-        $user = new EloquentUser();
+        $this->addMockConnection($this->user);
 
-        $this->addMockConnection($user);
-
-        $this->assertInstanceOf(HasMany::class, $user->persistences());
+        $this->assertInstanceOf(HasMany::class, $this->user->persistences());
     }
 
     /** @test */
     public function it_can_get_the_reminders_relationship()
     {
-        $user = new EloquentUser();
+        $this->addMockConnection($this->user);
 
-        $this->addMockConnection($user);
-
-        $this->assertInstanceOf(HasMany::class, $user->reminders());
+        $this->assertInstanceOf(HasMany::class, $this->user->reminders());
     }
 
     /** @test */
     public function it_can_get_the_activations_relationship()
     {
-        $user = new EloquentUser();
+        $this->addMockConnection($this->user);
 
-        $this->addMockConnection($user);
-
-        $this->assertInstanceOf(HasMany::class, $user->activations());
+        $this->assertInstanceOf(HasMany::class, $this->user->activations());
     }
 
     /** @test */
     public function it_can_get_the_throttles_relationship()
     {
-        $user = new EloquentUser();
+        $this->addMockConnection($this->user);
 
-        $this->addMockConnection($user);
-
-        $this->assertInstanceOf(HasMany::class, $user->throttle());
+        $this->assertInstanceOf(HasMany::class, $this->user->throttle());
     }
 
     /** @test */
     public function it_can_check_if_user_is_in_role_using_role_slugs()
     {
-        $user     = new EloquentUser();
-        $user->id = 0;
+        $this->user->id = 0;
 
-        $this->addMockConnection($user);
+        $this->addMockConnection($this->user);
 
-        $user->getConnection()->shouldReceive('getName');
-        $user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $user->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
-        $user->getConnection()->getPostProcessor()->shouldReceive('processSelect')->andReturn([
+        $this->user->getConnection()->shouldReceive('getName');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
+        $this->user->getConnection()->getPostProcessor()->shouldReceive('processSelect')->andReturn([
             ['id' => 1, 'slug' => 'role1'],
             ['id' => 2, 'slug' => 'role2'],
             ['id' => 3, 'slug' => 'role3'],
         ]);
 
-        $user->getConnection()->getQueryGrammar()->shouldReceive('compileSelect');
-        $user->getConnection()->shouldReceive('select');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('compileSelect');
+        $this->user->getConnection()->shouldReceive('select');
 
-        $this->assertTrue($user->inRole('role1'));
-        $this->assertTrue($user->inRole('role2'));
-        $this->assertTrue($user->inRole('role3'));
-        $this->assertFalse($user->inRole('role4'));
+        $this->assertTrue($this->user->inRole('role1'));
+        $this->assertTrue($this->user->inRole('role2'));
+        $this->assertTrue($this->user->inRole('role3'));
+        $this->assertFalse($this->user->inRole('role4'));
     }
 
     /** @test */
     public function it_can_check_if_user_is_in_role_using_an_array_of_role_slugs()
     {
-        $user     = new EloquentUser();
-        $user->id = 0;
+        $this->user->id = 0;
 
-        $this->addMockConnection($user);
+        $this->addMockConnection($this->user);
 
-        $user->getConnection()->shouldReceive('getName');
-        $user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $user->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
-        $user->getConnection()->getPostProcessor()->shouldReceive('processSelect')->andReturn([
+        $this->user->getConnection()->shouldReceive('getName');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
+        $this->user->getConnection()->getPostProcessor()->shouldReceive('processSelect')->andReturn([
             ['id' => 1, 'slug' => 'role1'],
             ['id' => 2, 'slug' => 'role2'],
             ['id' => 3, 'slug' => 'role3'],
         ]);
 
-        $user->getConnection()->getQueryGrammar()->shouldReceive('compileSelect');
-        $user->getConnection()->shouldReceive('select');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('compileSelect');
+        $this->user->getConnection()->shouldReceive('select');
 
-        $this->assertTrue($user->inAnyRole(['role1', 'role2']));
-        $this->assertTrue($user->inAnyRole(['role3', 'role4']));
-        $this->assertFalse($user->inAnyRole(['role5', 'role6']));
+        $this->assertTrue($this->user->inAnyRole(['role1', 'role2']));
+        $this->assertTrue($this->user->inAnyRole(['role3', 'role4']));
+        $this->assertFalse($this->user->inAnyRole(['role5', 'role6']));
     }
 
     /** @test */
     public function it_can_check_if_user_is_in_role_using_role_instances()
     {
-        $user     = new EloquentUser();
-        $user->id = 0;
+        $this->user->id = 0;
 
-        $this->addMockConnection($user);
-        $user->getConnection()->shouldReceive('getName');
-        $user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $user->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
-        $user->getConnection()->getPostProcessor()->shouldReceive('processSelect')->andReturn([
+        $this->addMockConnection($this->user);
+        $this->user->getConnection()->shouldReceive('getName');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
+        $this->user->getConnection()->getPostProcessor()->shouldReceive('processSelect')->andReturn([
             ['id' => 1, 'slug' => 'role1'],
             ['id' => 2, 'slug' => 'role2'],
             ['id' => 3, 'slug' => 'role3'],
         ]);
 
-        $user->getConnection()->getQueryGrammar()->shouldReceive('compileSelect');
-        $user->getConnection()->shouldReceive('select');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('compileSelect');
+        $this->user->getConnection()->shouldReceive('select');
 
         $role1 = m::mock(RoleInterface::class);
         $role2 = m::mock(RoleInterface::class);
@@ -355,30 +324,29 @@ class EloquentUserTest extends TestCase
         $role3->shouldReceive('getRoleId')->once()->andReturn(3);
         $role4->shouldReceive('getRoleId')->once()->andReturn(4);
 
-        $this->assertTrue($user->inRole($role1));
-        $this->assertTrue($user->inRole($role2));
-        $this->assertTrue($user->inRole($role3));
-        $this->assertFalse($user->inRole($role4));
+        $this->assertTrue($this->user->inRole($role1));
+        $this->assertTrue($this->user->inRole($role2));
+        $this->assertTrue($this->user->inRole($role3));
+        $this->assertFalse($this->user->inRole($role4));
     }
 
     /** @test */
     public function it_can_check_if_user_is_in_role_using_an_array_of_role_instances()
     {
-        $user     = new EloquentUser();
-        $user->id = 0;
+        $this->user->id = 0;
 
-        $this->addMockConnection($user);
+        $this->addMockConnection($this->user);
 
-        $user->getConnection()->shouldReceive('getName');
-        $user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $user->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
-        $user->getConnection()->getPostProcessor()->shouldReceive('processSelect')->andReturn([
+        $this->user->getConnection()->shouldReceive('getName');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
+        $this->user->getConnection()->getPostProcessor()->shouldReceive('processSelect')->andReturn([
             ['id' => 1, 'slug' => 'foobar'],
             ['id' => 2, 'slug' => 'foo'],
             ['id' => 3, 'slug' => 'bar'],
         ]);
-        $user->getConnection()->getQueryGrammar()->shouldReceive('compileSelect');
-        $user->getConnection()->shouldReceive('select');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('compileSelect');
+        $this->user->getConnection()->shouldReceive('select');
 
         $foobar = m::mock(RoleInterface::class);
         $foo    = m::mock(RoleInterface::class);
@@ -395,41 +363,38 @@ class EloquentUserTest extends TestCase
         $def->shouldReceive('getRoleId')->once()->andReturn(5);
         $ghi->shouldReceive('getRoleId')->once()->andReturn(6);
 
-        $this->assertFalse($user->inAnyRole([$abc, $def]));
-        $this->assertTrue($user->inAnyRole([$ghi, $foobar]));
-        $this->assertTrue($user->inAnyRole([$foo, $bar]));
+        $this->assertFalse($this->user->inAnyRole([$abc, $def]));
+        $this->assertTrue($this->user->inAnyRole([$ghi, $foobar]));
+        $this->assertTrue($this->user->inAnyRole([$foo, $bar]));
     }
 
     /** @test */
     public function it_can_get_the_roles_of_a_user()
     {
-        $user     = new EloquentUser();
-        $user->id = 0;
+        $this->user->id = 0;
 
-        $this->addMockConnection($user);
+        $this->addMockConnection($this->user);
 
-        $user->getConnection()->shouldReceive('getName');
-        $user->getConnection()->shouldReceive('select');
-        $user->getConnection()->getQueryGrammar()->shouldReceive('compileSelect');
-        $user->getConnection()->getPostProcessor()->shouldReceive('processSelect')->andReturn([]);
+        $this->user->getConnection()->shouldReceive('getName');
+        $this->user->getConnection()->shouldReceive('select');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('compileSelect');
+        $this->user->getConnection()->getPostProcessor()->shouldReceive('processSelect')->andReturn([]);
 
-        $this->assertInstanceOf(Collection::class, $user->getRoles());
+        $this->assertInstanceOf(Collection::class, $this->user->getRoles());
     }
 
     /** @test */
     public function it_can_pass_methods_to_parent()
     {
-        $user = new EloquentUser();
+        $this->addMockConnection($this->user);
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('wrap');
+        $this->user->getConnection()->shouldReceive('raw');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('compileUpdate');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('prepareBindingsForUpdate')->andReturn([]);
+        $this->user->getConnection()->shouldReceive('update')->andReturn(true);
 
-        $this->addMockConnection($user);
-        $user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
-        $user->getConnection()->getQueryGrammar()->shouldReceive('wrap');
-        $user->getConnection()->shouldReceive('raw');
-        $user->getConnection()->getQueryGrammar()->shouldReceive('compileUpdate');
-        $user->getConnection()->getQueryGrammar()->shouldReceive('prepareBindingsForUpdate')->andReturn([]);
-        $user->getConnection()->shouldReceive('update')->andReturn(true);
-
-        $this->assertTrue($user->increment('test'));
+        $this->assertTrue($this->user->increment('test'));
     }
 
     /** @test */
@@ -438,12 +403,11 @@ class EloquentUserTest extends TestCase
         $mockRole              = m::mock(EloquentRole::class);
         $mockRole->permissions = [];
 
-        $user              = new EloquentUser();
-        $user->permissions = ['foo' => true, 'bar' => false];
-        $user->roles       = [$mockRole];
+        $this->user->permissions = ['foo' => true, 'bar' => false];
+        $this->user->roles       = [$mockRole];
 
-        $this->assertTrue($user->hasAccess('foo'));
-        $this->assertFalse($user->hasAccess('bar'));
+        $this->assertTrue($this->user->hasAccess('foo'));
+        $this->assertFalse($this->user->hasAccess('bar'));
     }
 
     /** @test */

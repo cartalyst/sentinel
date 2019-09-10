@@ -30,24 +30,53 @@ use Cartalyst\Sentinel\Activations\IlluminateActivationRepository;
 class ActivationCheckpointTest extends TestCase
 {
     /**
+     * The Activations repository instance.
+     *
+     * @var \Cartalyst\Sentinel\Activations\ActivationRepositoryInterface
+     */
+    protected $activations;
+
+    /**
+     * The Eloquent User instance.
+     *
+     * @var \Cartalyst\Sentinel\Users\EloquentUser
+     */
+    protected $user;
+
+    /**
+     * The activation checkpoint.
+     *
+     * @var \Cartalyst\Sentinel\Checkpoint\ActivationCheckpoint
+     */
+    protected $checkpoint;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
+    {
+        $this->activations = m::mock(IlluminateActivationRepository::class);
+        $this->user        = m::mock(EloquentUser::class);
+        $this->checkpoint  = new ActivationCheckpoint($this->activations);
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function tearDown(): void
     {
+        $this->activations = null;
+        $this->user        = null;
+        $this->checkpoint  = null;
         m::close();
     }
 
     /** @test */
     public function an_activated_user_can_login()
     {
-        $users = m::mock(IlluminateActivationRepository::class);
-        $users->shouldReceive('completed')->once()->andReturn(true);
+        $this->activations->shouldReceive('completed')->once()->andReturn(true);
 
-        $user = m::mock(EloquentUser::class);
-
-        $checkpoint = new ActivationCheckpoint($users);
-
-        $status = $checkpoint->login($user);
+        $status = $this->checkpoint->login($this->user);
 
         $this->assertTrue($status);
     }
@@ -55,15 +84,10 @@ class ActivationCheckpointTest extends TestCase
     /** @test */
     public function an_exception_will_be_thrown_when_authenticating_a_non_activated_user()
     {
-        $users = m::mock(IlluminateActivationRepository::class);
-        $users->shouldReceive('completed')->once()->andReturn(false);
-
-        $user = m::mock(EloquentUser::class);
+        $this->activations->shouldReceive('completed')->once()->andReturn(false);
 
         try {
-            $checkpoint = new ActivationCheckpoint($users);
-
-            $checkpoint->check($user);
+            $this->checkpoint->check($this->user);
         } catch (NotActivatedException $e) {
             $this->assertInstanceOf(EloquentUser::class, $e->getUser());
         }
@@ -72,11 +96,7 @@ class ActivationCheckpointTest extends TestCase
     /** @test */
     public function can_return_true_when_fail_is_called()
     {
-        $users = m::mock(IlluminateActivationRepository::class);
-
-        $checkpoint = new ActivationCheckpoint($users);
-
-        $this->assertTrue($checkpoint->fail());
+        $this->assertTrue($this->checkpoint->fail());
     }
 
     /** @test */
@@ -84,12 +104,8 @@ class ActivationCheckpointTest extends TestCase
     {
         $this->expectException(NotActivatedException::class);
 
-        $users = m::mock(IlluminateActivationRepository::class);
-        $users->shouldReceive('completed')->once();
+        $this->activations->shouldReceive('completed')->once();
 
-        $user = m::mock(EloquentUser::class);
-
-        $checkpoint = new ActivationCheckpoint($users);
-        $checkpoint->check($user);
+        $this->checkpoint->check($this->user);
     }
 }

@@ -32,119 +32,114 @@ class PermissibleTraitTest extends TestCase
     /**
      * {@inheritdoc}
      */
+    protected function setUp(): void
+    {
+        $this->permissible = new PermissibleStub();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function tearDown(): void
     {
+        $this->permissible = null;
         m::close();
     }
 
     /** @test */
     public function it_can_set_and_get_the_permissions_class()
     {
-        $permissible = new PermissibleStub();
+        $this->permissible::setPermissionsClass(StandardPermissions::class);
 
-        $permissible::setPermissionsClass(StandardPermissions::class);
-
-        $this->assertSame(StandardPermissions::class, $permissible::getPermissionsClass());
+        $this->assertSame(StandardPermissions::class, $this->permissible::getPermissionsClass());
     }
 
     /** @test */
     public function it_can_get_the_permissions_intance()
     {
-        $permissible = new PermissibleStub();
+        $this->permissible::setPermissionsClass(StandardPermissions::class);
 
-        $permissible::setPermissionsClass(StandardPermissions::class);
-
-        $this->assertInstanceOf(StandardPermissions::class, $permissible->getPermissionsInstance());
+        $this->assertInstanceOf(StandardPermissions::class, $this->permissible->getPermissionsInstance());
     }
 
     /** @test */
     public function it_can_add_permissions()
     {
-        $permissible = new PermissibleStub();
-
-        $permissible->addPermission('test');
-        $permissible->addPermission('test1');
+        $this->permissible->addPermission('test');
+        $this->permissible->addPermission('test1');
 
         $permissions = [
             'test'  => true,
             'test1' => true,
         ];
 
-        $this->assertSame($permissions, $permissible->getPermissions());
+        $this->assertSame($permissions, $this->permissible->getPermissions());
     }
 
     /** @test */
     public function it_can_update_permissions()
     {
-        $permissible = new PermissibleStub();
-
-        $permissible->addPermission('test');
-        $permissible->addPermission('test1');
-        $permissible->updatePermission('test1', false);
+        $this->permissible->addPermission('test');
+        $this->permissible->addPermission('test1');
+        $this->permissible->updatePermission('test1', false);
 
         $permissions = [
             'test'  => true,
             'test1' => false,
         ];
 
-        $this->assertSame($permissions, $permissible->getPermissions());
+        $this->assertSame($permissions, $this->permissible->getPermissions());
     }
 
     /** @test */
     public function it_can_create_or_update_permissions()
     {
-        $permissible = new PermissibleStub();
-
-        $permissible->addPermission('test1');
-        $permissible->updatePermission('test2', false);
+        $this->permissible->addPermission('test1');
+        $this->permissible->updatePermission('test2', false);
 
         $permissions = [
             'test1' => true,
         ];
 
-        $this->assertSame($permissions, $permissible->getPermissions());
+        $this->assertSame($permissions, $this->permissible->getPermissions());
 
-        $permissible = new PermissibleStub();
+        $this->permissible = new PermissibleStub();
 
-        $permissible->addPermission('test1');
-        $permissible->updatePermission('test2', false, true);
+        $this->permissible->addPermission('test1');
+        $this->permissible->updatePermission('test2', false, true);
 
         $permissions = [
             'test1' => true,
             'test2' => false,
         ];
 
-        $this->assertSame($permissions, $permissible->getPermissions());
+        $this->assertSame($permissions, $this->permissible->getPermissions());
     }
 
     /** @test */
     public function it_can_remove_permissions()
     {
-        $permissible = new PermissibleStub();
-
-        $permissible->addPermission('test');
-        $permissible->addPermission('test1');
-        $permissible->removePermission('test1');
+        $this->permissible->addPermission('test');
+        $this->permissible->addPermission('test1');
+        $this->permissible->removePermission('test1');
 
         $permissions = [
             'test' => true,
         ];
 
-        $this->assertSame($permissions, $permissible->getPermissions());
+        $this->assertSame($permissions, $this->permissible->getPermissions());
     }
 
     /** @test */
     public function it_can_use_the_setter_and_getter()
     {
-        $permissible = new PermissibleStub();
-
         $permissions = [
             'test' => true,
         ];
 
-        $permissible->setPermissions($permissions);
+        $this->permissible->setPermissions($permissions);
 
-        $this->assertSame($permissions, $permissible->getPermissions());
+        $this->assertSame($permissions, $this->permissible->getPermissions());
     }
 }
 

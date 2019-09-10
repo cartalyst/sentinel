@@ -31,25 +31,55 @@ use Cartalyst\Sentinel\Throttling\IlluminateThrottleRepository;
 class ThrottleCheckpointTest extends TestCase
 {
     /**
+     * The Checkpoint instance.
+     *
+     * @var \Cartalyst\Sentinel\Checkpoints\ThrottleCheckpoints
+     */
+    protected $checkpoint;
+
+    /**
+     * The Eloquent User instance.
+     *
+     * @var \Cartalyst\Sentinel\Users\EloquentUser
+     */
+    protected $user;
+
+    /**
+     * The Users repository instance.
+     *
+     * @var \Cartalyst\Sentinel\Throttling\ThrottleRepositoryInterface
+     */
+    protected $throttle;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
+    {
+        $this->throttle   = m::mock(IlluminateThrottleRepository::class);
+        $this->user       = m::mock(EloquentUser::class);
+        $this->checkpoint = new ThrottleCheckpoint($this->throttle, '127.0.0.1');
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function tearDown(): void
     {
+        $this->throttle   = null;
+        $this->user       = null;
+        $this->checkpoint = null;
         m::close();
     }
 
     /** @test */
     public function can_login_the_user_without_being_throttled()
     {
-        $throttle = m::mock(IlluminateThrottleRepository::class);
-        $throttle->shouldReceive('globalDelay')->once()->andReturn(0);
-        $throttle->shouldReceive('userDelay')->once()->andReturn(0);
+        $this->throttle->shouldReceive('globalDelay')->once()->andReturn(0);
+        $this->throttle->shouldReceive('ipDelay')->once();
+        $this->throttle->shouldReceive('userDelay')->once()->andReturn(0);
 
-        $user = m::mock(EloquentUser::class);
-
-        $checkpoint = new ThrottleCheckpoint($throttle);
-
-        $status = $checkpoint->login($user);
+        $status = $this->checkpoint->login($this->user);
 
         $this->assertTrue($status);
     }
@@ -57,13 +87,9 @@ class ThrottleCheckpointTest extends TestCase
     /** @test */
     public function can_check_if_the_user_is_being_throttled()
     {
-        $throttle = m::mock(IlluminateThrottleRepository::class);
+        $this->throttle->shouldReceive('ipDelay')->once();
 
-        $user = m::mock(EloquentUser::class);
-
-        $checkpoint = new ThrottleCheckpoint($throttle);
-
-        $status = $checkpoint->check($user);
+        $status = $this->checkpoint->check($this->user);
 
         $this->assertTrue($status);
     }
@@ -71,16 +97,12 @@ class ThrottleCheckpointTest extends TestCase
     /** @test */
     public function can_log_a_throttling_event()
     {
-        $throttle = m::mock(IlluminateThrottleRepository::class);
-        $throttle->shouldReceive('globalDelay')->once();
-        $throttle->shouldReceive('userDelay')->once();
-        $throttle->shouldReceive('log')->once();
+        $this->throttle->shouldReceive('globalDelay')->once();
+        $this->throttle->shouldReceive('ipDelay')->once();
+        $this->throttle->shouldReceive('userDelay')->once();
+        $this->throttle->shouldReceive('log')->once();
 
-        $user = m::mock(EloquentUser::class);
-
-        $checkpoint = new ThrottleCheckpoint($throttle);
-
-        $checkpoint->fail($user);
+        $this->checkpoint->fail($this->user);
 
         $this->assertTrue(true); // TODO: Add proper assertion later
     }
@@ -88,17 +110,12 @@ class ThrottleCheckpointTest extends TestCase
     /** @test */
     public function testWithIpAddress()
     {
-        $throttle = m::mock(IlluminateThrottleRepository::class);
-        $throttle->shouldReceive('globalDelay')->once();
-        $throttle->shouldReceive('ipDelay')->once();
-        $throttle->shouldReceive('userDelay')->once();
-        $throttle->shouldReceive('log')->once();
+        $this->throttle->shouldReceive('globalDelay')->once();
+        $this->throttle->shouldReceive('ipDelay')->once();
+        $this->throttle->shouldReceive('userDelay')->once();
+        $this->throttle->shouldReceive('log')->once();
 
-        $user = m::mock(EloquentUser::class);
-
-        $checkpoint = new ThrottleCheckpoint($throttle, '127.0.0.1');
-
-        $status = $checkpoint->fail($user);
+        $status = $this->checkpoint->fail($this->user);
 
         $this->assertTrue(true); // TODO: Add proper assertion later
     }
@@ -109,14 +126,9 @@ class ThrottleCheckpointTest extends TestCase
         $this->expectException(ThrottlingException::class);
         $this->expectExceptionMessage('Too many unsuccessful attempts have been made globally, logins are locked for another [10] second(s).');
 
-        $throttle = m::mock(IlluminateThrottleRepository::class);
-        $throttle->shouldReceive('globalDelay')->once()->andReturn(10);
+        $this->throttle->shouldReceive('globalDelay')->once()->andReturn(10);
 
-        $user = m::mock(EloquentUser::class);
-
-        $checkpoint = new ThrottleCheckpoint($throttle);
-
-        $checkpoint->login($user);
+        $this->checkpoint->login($this->user);
     }
 
     /** @test */
@@ -125,15 +137,10 @@ class ThrottleCheckpointTest extends TestCase
         $this->expectException(ThrottlingException::class);
         $this->expectExceptionMessage('Suspicious activity has occured on your IP address and you have been denied access for another [10] second(s).');
 
-        $throttle = m::mock(IlluminateThrottleRepository::class);
-        $throttle->shouldReceive('globalDelay')->once();
-        $throttle->shouldReceive('ipDelay')->once()->andReturn(10);
+        $this->throttle->shouldReceive('globalDelay')->once();
+        $this->throttle->shouldReceive('ipDelay')->once()->andReturn(10);
 
-        $user = m::mock(EloquentUser::class);
-
-        $checkpoint = new ThrottleCheckpoint($throttle, '127.0.0.1');
-
-        $checkpoint->fail($user);
+        $this->checkpoint->fail($this->user);
     }
 
     /** @test */
@@ -142,32 +149,22 @@ class ThrottleCheckpointTest extends TestCase
         $this->expectException(ThrottlingException::class);
         $this->expectExceptionMessage('Too many unsuccessful login attempts have been made against your account. Please try again after another [10] second(s).');
 
-        $throttle = m::mock(IlluminateThrottleRepository::class);
-        $throttle->shouldReceive('globalDelay')->once();
-        $throttle->shouldReceive('ipDelay')->once()->andReturn(0);
-        $throttle->shouldReceive('userDelay')->once()->andReturn(10);
+        $this->throttle->shouldReceive('globalDelay')->once();
+        $this->throttle->shouldReceive('ipDelay')->once()->andReturn(0);
+        $this->throttle->shouldReceive('userDelay')->once()->andReturn(10);
 
-        $user = m::mock(EloquentUser::class);
-
-        $checkpoint = new ThrottleCheckpoint($throttle, '127.0.0.1');
-
-        $checkpoint->fail($user);
+        $this->checkpoint->fail($this->user);
     }
 
     /** @test */
     public function testGetThrottlingExceptionAttributes()
     {
-        $throttle = m::mock(IlluminateThrottleRepository::class);
-        $throttle->shouldReceive('globalDelay')->once();
-        $throttle->shouldReceive('ipDelay')->once()->andReturn(0);
-        $throttle->shouldReceive('userDelay')->once()->andReturn(10);
-
-        $user = m::mock(EloquentUser::class);
+        $this->throttle->shouldReceive('globalDelay')->once();
+        $this->throttle->shouldReceive('ipDelay')->once()->andReturn(0);
+        $this->throttle->shouldReceive('userDelay')->once()->andReturn(10);
 
         try {
-            $checkpoint = new ThrottleCheckpoint($throttle, '127.0.0.1');
-
-            $checkpoint->fail($user);
+            $this->checkpoint->fail($this->user);
         } catch (ThrottlingException $e) {
             $this->assertSame(10, $e->getDelay());
             $this->assertSame('user', $e->getType());

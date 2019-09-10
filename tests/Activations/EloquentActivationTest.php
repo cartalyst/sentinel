@@ -27,30 +27,42 @@ use Cartalyst\Sentinel\Activations\EloquentActivation;
 class EloquentActivationTest extends TestCase
 {
     /**
+     * The Activation Eloquent instance.
+     *
+     * @var \Cartalyst\Sentinel\Activations\EloquentActivation
+     */
+    protected $activation;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
+    {
+        $this->activation = new EloquentActivation();
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function tearDown(): void
     {
+        $this->activation = null;
         m::close();
     }
 
     /** @test */
     public function it_can_get_the_completed_attribute_as_a_boolean()
     {
-        $activation = new EloquentActivation();
+        $this->activation->completed = 1;
 
-        $activation->completed = 1;
-
-        $this->assertTrue($activation->completed);
+        $this->assertTrue($this->activation->completed);
     }
 
     /** @test */
     public function it_can_get_the_activation_code_using_the_getter()
     {
-        $activation = new EloquentActivation();
+        $this->activation->code = 'foo';
 
-        $activation->code = 'foo';
-
-        $this->assertSame('foo', $activation->getCode());
+        $this->assertSame('foo', $this->activation->getCode());
     }
 }

@@ -21,7 +21,9 @@
 namespace Cartalyst\Sentinel\Tests\Reminders;
 
 use Mockery as m;
+use Carbon\Carbon;
 use PHPUnit\Framework\TestCase;
+use Illuminate\Database\Eloquent\Builder;
 use Cartalyst\Sentinel\Reminders\EloquentReminder;
 use Cartalyst\Sentinel\Users\IlluminateUserRepository;
 use Cartalyst\Sentinel\Reminders\IlluminateReminderRepository;
@@ -29,19 +31,65 @@ use Cartalyst\Sentinel\Reminders\IlluminateReminderRepository;
 class IlluminateReminderRepositoryTest extends TestCase
 {
     /**
+     * The User Repository instance.
+     *
+     * @var \Cartalyst\Sentinel\Users\IlluminateUserRepository
+     */
+    protected $users;
+
+    /**
+     * The Eloquent Builder instance.
+     *
+     * @var \Illuminate\Database\Eloquent\Builder
+     */
+    protected $query;
+
+    /**
+     * The Eloquent Reminder instance.
+     *
+     * @var \Cartalyst\Sentinel\Reminders\EloquentReminder
+     */
+    protected $model;
+
+    /**
+     * The Reminder Repository instance.
+     *
+     * @var \Cartalyst\Sentinel\Reminders\IlluminateReminderRepository
+     */
+    protected $reminders;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setUp(): void
+    {
+        $this->users = m::mock(IlluminateUserRepository::class);
+
+        $this->query = m::mock(Builder::class);
+
+        $this->model = m::mock(EloquentReminder::class);
+        $this->model->shouldReceive('newQuery')->andReturn($this->query);
+
+        $this->reminders = m::mock('Cartalyst\Sentinel\Reminders\IlluminateReminderRepository[createModel]', [$this->users]);
+        $this->reminders->shouldReceive('createModel')->andReturn($this->model);
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function tearDown(): void
     {
+        $this->users     = null;
+        $this->query     = null;
+        $this->model     = null;
+        $this->reminders = null;
         m::close();
     }
 
     /** @test */
     public function it_can_be_instantiated()
     {
-        $users = m::mock(IlluminateUserRepository::class);
-
-        $reminders = new IlluminateReminderRepository($users, 'ReminderModelMock', 259200);
+        $reminders = new IlluminateReminderRepository($this->users, 'ReminderModelMock', 259200);
 
         $this->assertSame('ReminderModelMock', $reminders->getModel());
     }
@@ -49,15 +97,13 @@ class IlluminateReminderRepositoryTest extends TestCase
     /** @test */
     public function it_can_create_a_reminder_code()
     {
-        [$reminders, $users, $model, $query] = $this->getReminderMock();
-
-        $model->shouldReceive('fill');
-        $model->shouldReceive('setAttribute');
-        $model->shouldReceive('save')->once();
+        $this->model->shouldReceive('fill');
+        $this->model->shouldReceive('setAttribute');
+        $this->model->shouldReceive('save')->once();
 
         $user = $this->getUserMock();
 
-        $reminder = $reminders->create($user);
+        $reminder = $this->reminders->create($user);
 
         $this->assertInstanceOf(EloquentReminder::class, $reminder);
     }
@@ -65,17 +111,14 @@ class IlluminateReminderRepositoryTest extends TestCase
     /** @test */
     public function it_can_determine_if_a_reminder_exists()
     {
-        [$reminders, $users, $model, $query] = $this->getReminderMock();
-
-        $query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
-        $query->shouldReceive('where')->with('completed', false)->andReturn($query);
-        $query->shouldReceive('first')->once();
-
-        $this->shouldReceiveExpires($query);
+        $this->query->shouldReceive('where')->with('user_id', '1')->andReturnSelf();
+        $this->query->shouldReceive('where')->with('completed', false)->andReturnSelf();
+        $this->query->shouldReceive('where')->with('created_at', '>', m::type(Carbon::class))->andReturnSelf();
+        $this->query->shouldReceive('first')->once();
 
         $user = $this->getUserMock();
 
-        $status = $reminders->exists($user);
+        $status = $this->reminders->exists($user);
 
         $this->assertFalse($status);
     }
@@ -83,18 +126,15 @@ class IlluminateReminderRepositoryTest extends TestCase
     /** @test */
     public function it_can_determine_if_a_reminder_exists_with_a_code()
     {
-        [$reminders, $users, $model, $query] = $this->getReminderMock();
-
-        $query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
-        $query->shouldReceive('where')->with('completed', false)->andReturn($query);
-        $query->shouldReceive('where')->with('code', 'foobar')->andReturn($query);
-        $query->shouldReceive('first')->once();
-
-        $this->shouldReceiveExpires($query);
+        $this->query->shouldReceive('where')->with('user_id', '1')->andReturnSelf();
+        $this->query->shouldReceive('where')->with('completed', false)->andReturnSelf();
+        $this->query->shouldReceive('where')->with('code', 'foobar')->andReturnSelf();
+        $this->query->shouldReceive('where')->with('created_at', '>', m::type(Carbon::class))->andReturnSelf();
+        $this->query->shouldReceive('first')->once();
 
         $user = $this->getUserMock();
 
-        $status = $reminders->exists($user, 'foobar');
+        $status = $this->reminders->exists($user, 'foobar');
 
         $this->assertFalse($status);
     }
@@ -102,25 +142,21 @@ class IlluminateReminderRepositoryTest extends TestCase
     /** @test */
     public function it_can_complete_a_reminder()
     {
-        [$reminders, $users, $model, $query] = $this->getReminderMock();
-
         $user = $this->getUserMock();
 
-        $reminder = m::mock(EloquentReminder::class);
-        $reminder->shouldReceive('fill')->once();
-        $reminder->shouldReceive('save')->once();
+        $this->model->shouldReceive('fill')->once();
+        $this->model->shouldReceive('save')->once();
 
-        $users->shouldReceive('validForUpdate')->once()->andReturn(true);
-        $users->shouldReceive('update')->once()->andReturn($user);
+        $this->users->shouldReceive('validForUpdate')->once()->andReturn(true);
+        $this->users->shouldReceive('update')->once()->andReturn($user);
 
-        $query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
-        $query->shouldReceive('where')->with('code', 'foobar')->andReturn($query);
-        $query->shouldReceive('where')->with('completed', false)->andReturn($query);
-        $query->shouldReceive('first')->once()->andReturn($reminder);
+        $this->query->shouldReceive('where')->with('user_id', '1')->andReturnSelf();
+        $this->query->shouldReceive('where')->with('code', 'foobar')->andReturnSelf();
+        $this->query->shouldReceive('where')->with('completed', false)->andReturnSelf();
+        $this->query->shouldReceive('where')->with('created_at', '>', m::type(Carbon::class))->andReturnSelf();
+        $this->query->shouldReceive('first')->once()->andReturn($this->model);
 
-        $this->shouldReceiveExpires($query);
-
-        $status = $reminders->complete($user, 'foobar', 'secret');
+        $status = $this->reminders->complete($user, 'foobar', 'secret');
 
         $this->assertTrue($status);
     }
@@ -128,17 +164,15 @@ class IlluminateReminderRepositoryTest extends TestCase
     /** @test */
     public function it_cannot_complete_a_reminder_that_does_not_exist()
     {
-        [$reminders, $users, $model, $query] = $this->getReminderMock();
-
-        $query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
-        $query->shouldReceive('where')->with('code', 'foobar')->andReturn($query);
-        $query->shouldReceive('where')->with('completed', false)->andReturn($query);
-        $query->shouldReceive('first')->once()->andReturn(null);
-        $this->shouldReceiveExpires($query);
+        $this->query->shouldReceive('where')->with('user_id', '1')->andReturnSelf();
+        $this->query->shouldReceive('where')->with('code', 'foobar')->andReturnSelf();
+        $this->query->shouldReceive('where')->with('completed', false)->andReturnSelf();
+        $this->query->shouldReceive('where')->with('created_at', '>', m::type(Carbon::class))->andReturnSelf();
+        $this->query->shouldReceive('first')->once()->andReturn(null);
 
         $user = $this->getUserMock();
 
-        $status = $reminders->complete($user, 'foobar', 'secret');
+        $status = $this->reminders->complete($user, 'foobar', 'secret');
 
         $this->assertFalse($status);
     }
@@ -146,22 +180,17 @@ class IlluminateReminderRepositoryTest extends TestCase
     /** @test */
     public function it_cannot_complete_a_reminder_that_has_expired()
     {
-        [$reminders, $users, $model, $query] = $this->getReminderMock();
+        $this->users->shouldReceive('validForUpdate')->once()->andReturn(false);
 
-        $reminder = m::mock(EloquentReminder::class);
-
-        $users->shouldReceive('validForUpdate')->once()->andReturn(false);
-
-        $query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
-        $query->shouldReceive('where')->with('code', 'foobar')->andReturn($query);
-        $query->shouldReceive('where')->with('completed', false)->andReturn($query);
-        $query->shouldReceive('first')->once()->andReturn($reminder);
-
-        $this->shouldReceiveExpires($query);
+        $this->query->shouldReceive('where')->with('user_id', '1')->andReturnSelf();
+        $this->query->shouldReceive('where')->with('code', 'foobar')->andReturnSelf();
+        $this->query->shouldReceive('where')->with('completed', false)->andReturnSelf();
+        $this->query->shouldReceive('where')->with('created_at', '>', m::type(Carbon::class))->andReturnSelf();
+        $this->query->shouldReceive('first')->once()->andReturn($this->model);
 
         $user = $this->getUserMock();
 
-        $status = $reminders->complete($user, 'foobar', 'secret');
+        $status = $this->reminders->complete($user, 'foobar', 'secret');
 
         $this->assertFalse($status);
     }
@@ -169,32 +198,14 @@ class IlluminateReminderRepositoryTest extends TestCase
     /** @test */
     public function it_can_remove_expired_reminders()
     {
-        [$reminders, $users, $model, $query] = $this->getReminderMock();
+        $this->query->shouldReceive('where')->with('completed', false)->andReturnSelf();
+        $this->query->shouldReceive('where')->with('created_at', '<', m::type(Carbon::class))->andReturnSelf();
 
-        $query->shouldReceive('where')->with('completed', false)->andReturn($query);
+        $this->query->shouldReceive('delete')->once()->andReturn(true);
 
-        $this->shouldReceiveExpires($query, '<');
-
-        $query->shouldReceive('delete')->once()->andReturn(true);
-
-        $status = $reminders->removeExpired();
+        $status = $this->reminders->removeExpired();
 
         $this->assertTrue($status);
-    }
-
-    protected function getReminderMock()
-    {
-        $users = m::mock(IlluminateUserRepository::class);
-
-        $query = m::mock('Illuminate\Database\Eloquent\Builder');
-
-        $model = m::mock('Cartalyst\Sentinel\Reminders\EloquentReminder');
-        $model->shouldReceive('newQuery')->andReturn($query);
-
-        $reminders = m::mock('Cartalyst\Sentinel\Reminders\IlluminateReminderRepository[createModel]', [$users]);
-        $reminders->shouldReceive('createModel')->andReturn($model);
-
-        return [$reminders, $users, $model, $query];
     }
 
     protected function getUserMock()
@@ -204,15 +215,5 @@ class IlluminateReminderRepositoryTest extends TestCase
         $user->shouldReceive('getUserId')->once()->andReturn(1);
 
         return $user;
-    }
-
-    protected function shouldReceiveExpires($query, $operator = '>')
-    {
-        $query->shouldReceive('where')
-            ->with('created_at', $operator, m::on(function () {
-                return true;
-            }))
-            ->andReturn($query)
-        ;
     }
 }
