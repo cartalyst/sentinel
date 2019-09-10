@@ -35,6 +35,8 @@ class IlluminateThrottleRepositoryTest extends TestCase
 
     protected $model;
 
+    protected $models;
+
     protected $users;
 
     protected $throttle;
@@ -44,6 +46,8 @@ class IlluminateThrottleRepositoryTest extends TestCase
      */
     protected function setUp(): void
     {
+        $this->models = m::mock(Collection::class);
+
         $this->query = m::mock(Builder::class);
 
         $this->model = m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle');
@@ -86,20 +90,19 @@ class IlluminateThrottleRepositoryTest extends TestCase
         $first = m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle');
         $first->shouldReceive('getAttribute')->andReturn(Carbon::createFromTimestamp(time()));
 
-        $models = m::mock(Collection::class);
-        $models->shouldReceive('count')->andReturn(6);
-        $models->shouldReceive('first')->andReturn($first);
+        $this->models->shouldReceive('count')->andReturn(6);
+        $this->models->shouldReceive('first')->andReturn($first);
 
         $this->throttle->setGlobalInterval(10);
         $this->throttle->setGlobalThresholds(5);
 
-        $this->query->shouldReceive('get')->andReturn($models);
-        $this->query->shouldReceive('where')->with('type', 'global')->andReturn($this->query);
+        $this->query->shouldReceive('get')->andReturn($this->models);
+        $this->query->shouldReceive('where')->with('type', 'global')->andReturnSelf();
         $this->query->shouldReceive('where')->with('created_at', '>', m::on(function ($interval) {
             $this->assertEqualsWithDelta(time() - 10, $interval->getTimestamp(), 3);
 
             return true;
-        }))->andReturn($this->query);
+        }))->andReturnSelf();
 
         $this->assertEqualsWithDelta(10, $this->throttle->globalDelay(), 3);
     }
@@ -110,20 +113,19 @@ class IlluminateThrottleRepositoryTest extends TestCase
         $first = m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle');
         $first->shouldReceive('getAttribute')->andReturn(Carbon::createFromTimestamp(time()));
 
-        $models = m::mock(Collection::class);
-        $models->shouldReceive('count')->andReturn(6);
-        $models->shouldReceive('first')->andReturn($first);
+        $this->models->shouldReceive('count')->andReturn(6);
+        $this->models->shouldReceive('first')->andReturn($first);
 
         $this->throttle->setGlobalInterval(10);
         $this->throttle->setGlobalThresholds(200);
 
-        $this->query->shouldReceive('get')->andReturn($models);
-        $this->query->shouldReceive('where')->with('type', 'global')->andReturn($this->query);
+        $this->query->shouldReceive('get')->andReturn($this->models);
+        $this->query->shouldReceive('where')->with('type', 'global')->andReturnSelf();
         $this->query->shouldReceive('where')->with('created_at', '>', m::on(function ($interval) {
             $this->assertEqualsWithDelta(time() - 10, $interval->getTimestamp(), 3);
 
             return true;
-        }))->andReturn($this->query);
+        }))->andReturnSelf();
 
         $this->assertEqualsWithDelta(0, $this->throttle->globalDelay(), 3);
     }
@@ -134,20 +136,19 @@ class IlluminateThrottleRepositoryTest extends TestCase
         $last = m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle');
         $last->shouldReceive('getAttribute')->andReturn(Carbon::createFromTimestamp(time()));
 
-        $models = m::mock(Collection::class);
-        $models->shouldReceive('count')->andReturn(6);
-        $models->shouldReceive('last')->andReturn($last);
+        $this->models->shouldReceive('count')->andReturn(6);
+        $this->models->shouldReceive('last')->andReturn($last);
 
         $this->throttle->setGlobalInterval(10);
         $this->throttle->setGlobalThresholds([5 => 3, 10 => 10]);
 
-        $this->query->shouldReceive('get')->andReturn($models);
-        $this->query->shouldReceive('where')->with('type', 'global')->andReturn($this->query);
+        $this->query->shouldReceive('get')->andReturn($this->models);
+        $this->query->shouldReceive('where')->with('type', 'global')->andReturnSelf();
         $this->query->shouldReceive('where')->with('created_at', '>', m::on(function ($interval) {
             $this->assertEqualsWithDelta(time() - 10, $interval->getTimestamp(), 3);
 
             return true;
-        }))->andReturn($this->query);
+        }))->andReturnSelf();
 
         $this->assertEqualsWithDelta(3, $this->throttle->globalDelay(), 3);
     }
@@ -158,20 +159,19 @@ class IlluminateThrottleRepositoryTest extends TestCase
         $last = m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle');
         $last->shouldReceive('getAttribute')->andReturn(Carbon::createFromTimestamp(time()));
 
-        $models = m::mock(Collection::class);
-        $models->shouldReceive('count')->andReturn(11);
-        $models->shouldReceive('last')->andReturn($last);
+        $this->models->shouldReceive('count')->andReturn(11);
+        $this->models->shouldReceive('last')->andReturn($last);
 
         $this->throttle->setGlobalInterval(10);
         $this->throttle->setGlobalThresholds([5 => 3, 10 => 10]);
 
-        $this->query->shouldReceive('get')->andReturn($models);
-        $this->query->shouldReceive('where')->with('type', 'global')->andReturn($this->query);
+        $this->query->shouldReceive('get')->andReturn($this->models);
+        $this->query->shouldReceive('where')->with('type', 'global')->andReturnSelf();
         $this->query->shouldReceive('where')->with('created_at', '>', m::on(function ($interval) {
             $this->assertEqualsWithDelta(time() - 10, $interval->getTimestamp(), 3);
 
             return true;
-        }))->andReturn($this->query);
+        }))->andReturnSelf();
 
         $this->assertEqualsWithDelta(10, $this->throttle->globalDelay(), 3);
     }
@@ -182,20 +182,19 @@ class IlluminateThrottleRepositoryTest extends TestCase
         $last = m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle');
         $last->shouldReceive('getAttribute')->andReturn(Carbon::createFromTimestamp(time() - 200));
 
-        $models = m::mock(Collection::class);
-        $models->shouldReceive('count')->andReturn(11);
-        $models->shouldReceive('last')->andReturn($last);
+        $this->models->shouldReceive('count')->andReturn(11);
+        $this->models->shouldReceive('last')->andReturn($last);
 
         $this->throttle->setGlobalInterval(10);
         $this->throttle->setGlobalThresholds([5 => 33, 10 => 100]);
 
-        $this->query->shouldReceive('get')->andReturn($models);
-        $this->query->shouldReceive('where')->with('type', 'global')->andReturn($this->query);
+        $this->query->shouldReceive('get')->andReturn($this->models);
+        $this->query->shouldReceive('where')->with('type', 'global')->andReturnSelf();
         $this->query->shouldReceive('where')->with('created_at', '>', m::on(function ($interval) {
             $this->assertEqualsWithDelta(time() - 10, $interval->getTimestamp(), 3);
 
             return true;
-        }))->andReturn($this->query);
+        }))->andReturnSelf();
 
         $this->assertEqualsWithDelta(0, $this->throttle->globalDelay(), 3);
     }
@@ -206,21 +205,20 @@ class IlluminateThrottleRepositoryTest extends TestCase
         $first = m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle');
         $first->shouldReceive('getAttribute')->andReturn(Carbon::createFromTimestamp(time()));
 
-        $models = m::mock(Collection::class);
-        $models->shouldReceive('count')->andReturn(6);
-        $models->shouldReceive('first')->andReturn($first);
+        $this->models->shouldReceive('count')->andReturn(6);
+        $this->models->shouldReceive('first')->andReturn($first);
 
         $this->throttle->setIpInterval(10);
         $this->throttle->setIpThresholds(5);
 
-        $this->query->shouldReceive('get')->andReturn($models);
-        $this->query->shouldReceive('where')->with('type', 'ip')->andReturn($this->query);
-        $this->query->shouldReceive('where')->with('ip', '127.0.0.1')->andReturn($this->query);
+        $this->query->shouldReceive('get')->andReturn($this->models);
+        $this->query->shouldReceive('where')->with('type', 'ip')->andReturnSelf();
+        $this->query->shouldReceive('where')->with('ip', '127.0.0.1')->andReturnSelf();
         $this->query->shouldReceive('where')->with('created_at', '>', m::on(function ($interval) {
             $this->assertEqualsWithDelta(time() - 10, $interval->getTimestamp(), 3);
 
             return true;
-        }))->andReturn($this->query);
+        }))->andReturnSelf();
 
         $this->assertEqualsWithDelta(10, $this->throttle->ipDelay('127.0.0.1'), 3);
     }
@@ -231,21 +229,20 @@ class IlluminateThrottleRepositoryTest extends TestCase
         $last = m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle');
         $last->shouldReceive('getAttribute')->andReturn(Carbon::createFromTimestamp(time()));
 
-        $models = m::mock(Collection::class);
-        $models->shouldReceive('count')->andReturn(6);
-        $models->shouldReceive('last')->andReturn($last);
+        $this->models->shouldReceive('count')->andReturn(6);
+        $this->models->shouldReceive('last')->andReturn($last);
 
         $this->throttle->setIpInterval(10);
         $this->throttle->setIpThresholds([5 => 3, 10 => 10]);
 
-        $this->query->shouldReceive('get')->andReturn($models);
-        $this->query->shouldReceive('where')->with('type', 'ip')->andReturn($this->query);
-        $this->query->shouldReceive('where')->with('ip', '127.0.0.1')->andReturn($this->query);
+        $this->query->shouldReceive('get')->andReturn($this->models);
+        $this->query->shouldReceive('where')->with('type', 'ip')->andReturnSelf();
+        $this->query->shouldReceive('where')->with('ip', '127.0.0.1')->andReturnSelf();
         $this->query->shouldReceive('where')->with('created_at', '>', m::on(function ($interval) {
             $this->assertEqualsWithDelta(time() - 10, $interval->getTimestamp(), 3);
 
             return true;
-        }))->andReturn($this->query);
+        }))->andReturnSelf();
 
         $this->assertEqualsWithDelta(3, $this->throttle->ipDelay('127.0.0.1'), 3);
     }
@@ -256,21 +253,20 @@ class IlluminateThrottleRepositoryTest extends TestCase
         $last = m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle');
         $last->shouldReceive('getAttribute')->andReturn(Carbon::createFromTimestamp(time()));
 
-        $models = m::mock(Collection::class);
-        $models->shouldReceive('count')->andReturn(11);
-        $models->shouldReceive('last')->andReturn($last);
+        $this->models->shouldReceive('count')->andReturn(11);
+        $this->models->shouldReceive('last')->andReturn($last);
 
         $this->throttle->setIpInterval(10);
         $this->throttle->setIpThresholds([5 => 3, 10 => 10]);
 
-        $this->query->shouldReceive('get')->andReturn($models);
-        $this->query->shouldReceive('where')->with('type', 'ip')->andReturn($this->query);
-        $this->query->shouldReceive('where')->with('ip', '127.0.0.1')->andReturn($this->query);
+        $this->query->shouldReceive('get')->andReturn($this->models);
+        $this->query->shouldReceive('where')->with('type', 'ip')->andReturnSelf();
+        $this->query->shouldReceive('where')->with('ip', '127.0.0.1')->andReturnSelf();
         $this->query->shouldReceive('where')->with('created_at', '>', m::on(function ($interval) {
             $this->assertEqualsWithDelta(time() - 10, $interval->getTimestamp(), 3);
 
             return true;
-        }))->andReturn($this->query);
+        }))->andReturnSelf();
 
         $this->assertEqualsWithDelta(10, $this->throttle->ipDelay('127.0.0.1'), 3);
     }
@@ -284,21 +280,20 @@ class IlluminateThrottleRepositoryTest extends TestCase
         $first = m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle');
         $first->shouldReceive('getAttribute')->andReturn(Carbon::createFromTimestamp(time()));
 
-        $models = m::mock(Collection::class);
-        $models->shouldReceive('count')->andReturn(6);
-        $models->shouldReceive('first')->andReturn($first);
+        $this->models->shouldReceive('count')->andReturn(6);
+        $this->models->shouldReceive('first')->andReturn($first);
 
         $this->throttle->setUserInterval(10);
         $this->throttle->setUserThresholds(5);
 
-        $this->query->shouldReceive('get')->andReturn($models);
-        $this->query->shouldReceive('where')->with('type', 'user')->andReturn($this->query);
-        $this->query->shouldReceive('where')->with('user_id', 1)->andReturn($this->query);
+        $this->query->shouldReceive('get')->andReturn($this->models);
+        $this->query->shouldReceive('where')->with('type', 'user')->andReturnSelf();
+        $this->query->shouldReceive('where')->with('user_id', 1)->andReturnSelf();
         $this->query->shouldReceive('where')->with('created_at', '>', m::on(function ($interval) {
             $this->assertEqualsWithDelta(time() - 10, $interval->getTimestamp(), 3);
 
             return true;
-        }))->andReturn($this->query);
+        }))->andReturnSelf();
 
         $this->assertEqualsWithDelta(10, $this->throttle->userDelay($user), 3);
     }
@@ -312,21 +307,20 @@ class IlluminateThrottleRepositoryTest extends TestCase
         $last = m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle');
         $last->shouldReceive('getAttribute')->andReturn(Carbon::createFromTimestamp(time()));
 
-        $models = m::mock(Collection::class);
-        $models->shouldReceive('count')->andReturn(6);
-        $models->shouldReceive('last')->andReturn($last);
+        $this->models->shouldReceive('count')->andReturn(6);
+        $this->models->shouldReceive('last')->andReturn($last);
 
         $this->throttle->setUserInterval(10);
         $this->throttle->setUserThresholds([5 => 3, 10 => 10]);
 
-        $this->query->shouldReceive('get')->andReturn($models);
-        $this->query->shouldReceive('where')->with('type', 'user')->andReturn($this->query);
-        $this->query->shouldReceive('where')->with('user_id', 1)->andReturn($this->query);
+        $this->query->shouldReceive('get')->andReturn($this->models);
+        $this->query->shouldReceive('where')->with('type', 'user')->andReturnSelf();
+        $this->query->shouldReceive('where')->with('user_id', 1)->andReturnSelf();
         $this->query->shouldReceive('where')->with('created_at', '>', m::on(function ($interval) {
             $this->assertEqualsWithDelta(time() - 10, $interval->getTimestamp(), 3);
 
             return true;
-        }))->andReturn($this->query);
+        }))->andReturnSelf();
 
         $this->assertEqualsWithDelta(3, $this->throttle->userDelay($user), 3);
     }
@@ -340,21 +334,20 @@ class IlluminateThrottleRepositoryTest extends TestCase
         $last = m::mock('Cartalyst\Sentinel\Throttling\EloquentThrottle');
         $last->shouldReceive('getAttribute')->andReturn(Carbon::createFromTimestamp(time()));
 
-        $models = m::mock(Collection::class);
-        $models->shouldReceive('count')->andReturn(11);
-        $models->shouldReceive('last')->andReturn($last);
+        $this->models->shouldReceive('count')->andReturn(11);
+        $this->models->shouldReceive('last')->andReturn($last);
 
         $this->throttle->setUserInterval(10);
         $this->throttle->setUserThresholds([5 => 3, 10 => 10]);
 
-        $this->query->shouldReceive('get')->andReturn($models);
-        $this->query->shouldReceive('where')->with('type', 'user')->andReturn($this->query);
-        $this->query->shouldReceive('where')->with('user_id', 1)->andReturn($this->query);
+        $this->query->shouldReceive('get')->andReturn($this->models);
+        $this->query->shouldReceive('where')->with('type', 'user')->andReturnSelf();
+        $this->query->shouldReceive('where')->with('user_id', 1)->andReturnSelf();
         $this->query->shouldReceive('where')->with('created_at', '>', m::on(function ($interval) {
             $this->assertEqualsWithDelta(time() - 10, $interval->getTimestamp(), 3);
 
             return true;
-        }))->andReturn($this->query);
+        }))->andReturnSelf();
 
         $this->assertEqualsWithDelta(10, $this->throttle->userDelay($user), 3);
     }
@@ -362,11 +355,10 @@ class IlluminateThrottleRepositoryTest extends TestCase
     /** @test */
     public function testDelayHandlesNoThrottle()
     {
-        $models = m::mock(Collection::class);
-        $models->shouldReceive('count')->andReturn(0);
+        $this->models->shouldReceive('count')->andReturn(0);
 
         $this->query->shouldReceive('where')->andReturn($this->query);
-        $this->query->shouldReceive('get')->andReturn($models);
+        $this->query->shouldReceive('get')->andReturn($this->models);
 
         $this->assertSame($this->throttle->GlobalDelay(), 0);
     }
@@ -381,7 +373,7 @@ class IlluminateThrottleRepositoryTest extends TestCase
         $this->model->shouldReceive('save')->times(3);
         $this->model->shouldReceive('setAttribute');
 
-        $this->query->shouldReceive('where')->with('type', 'global')->andReturn($this->query);
+        $this->query->shouldReceive('where')->with('type', 'global')->andReturnSelf();
         $this->query->shouldReceive('where')->with('id', '=', '');
 
         $this->assertNull( // TODO: Add proper assertion later

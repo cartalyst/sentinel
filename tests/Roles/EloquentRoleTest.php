@@ -36,8 +36,18 @@ class EloquentRoleTest extends TestCase
     /**
      * {@inheritdoc}
      */
+    protected function setUp(): void
+    {
+        $this->role = new EloquentRole();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function tearDown(): void
     {
+        $this->role = null;
+
         m::close();
     }
 
@@ -52,47 +62,39 @@ class EloquentRoleTest extends TestCase
     /** @test */
     public function it_can_get_the_permissions_using_the_accessor()
     {
-        $role = new EloquentRole();
-
-        $role->slug = 'foo';
+        $this->role->slug = 'foo';
 
         $permissions = ['foo' => true];
 
-        $role->permissions = $permissions;
+        $this->role->permissions = $permissions;
 
-        $this->assertSame($permissions, $role->permissions);
+        $this->assertSame($permissions, $this->role->permissions);
     }
 
     /** @test */
     public function it_can_get_the_users_for_the_role()
     {
-        $role = new EloquentRole();
+        $this->addMockConnection($this->role);
 
-        $this->addMockConnection($role);
-
-        $this->assertInstanceOf(Collection::class, $role->getUsers());
+        $this->assertInstanceOf(Collection::class, $this->role->getUsers());
     }
 
     /** @test */
     public function it_can_pass_methods_to_the_permissions_instance()
     {
-        $role = new EloquentRole();
-
-        $this->addMockConnection($role);
+        $this->addMockConnection($this->role);
 
         $permissions = [];
 
-        $this->assertFalse($role->hasAnyAccess($permissions));
+        $this->assertFalse($this->role->hasAnyAccess($permissions));
     }
 
     /** @test */
     public function it_can_get_the_users_relationship()
     {
-        $role = new EloquentRole();
+        $this->addMockConnection($this->role);
 
-        $this->addMockConnection($role);
-
-        $this->assertInstanceOf(BelongsToMany::class, $role->users());
+        $this->assertInstanceOf(BelongsToMany::class, $this->role->users());
     }
 
     /** @test */
