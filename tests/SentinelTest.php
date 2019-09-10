@@ -135,7 +135,7 @@ class SentinelTest extends TestCase
         ;
 
         $this->dispatcher->shouldReceive('dispatch')->once()
-            ->with('sentinel.registered', $user)
+            ->with('sentinel.registered', $this->user)
         ;
 
         $result = $this->sentinel->register($credentials);
@@ -296,15 +296,15 @@ class SentinelTest extends TestCase
         ;
 
         $this->dispatcher->shouldReceive('dispatch')->once()
-            ->with('sentinel.logging-in', $user)
+            ->with('sentinel.logging-in', $this->user)
         ;
 
         $this->dispatcher->shouldReceive('dispatch')->once()
-            ->with('sentinel.logged-in', $user)
+            ->with('sentinel.logged-in', $this->user)
         ;
 
         $this->dispatcher->shouldReceive('dispatch')->once()
-            ->with('sentinel.authenticated', $user)
+            ->with('sentinel.authenticated', $this->user)
         ;
 
         $this->assertSame($this->user, $this->sentinel->authenticate($credentials));
@@ -318,19 +318,19 @@ class SentinelTest extends TestCase
         $this->users->shouldReceive('recordLogin')->once()->andReturn(true);
 
         $this->dispatcher->shouldReceive('until')->once()
-            ->with('sentinel.authenticating', [$user])
+            ->with('sentinel.authenticating', [$this->user])
         ;
 
         $this->dispatcher->shouldReceive('dispatch')->once()
-            ->with('sentinel.logging-in', $user)
+            ->with('sentinel.logging-in', $this->user)
         ;
 
         $this->dispatcher->shouldReceive('dispatch')->once()
-            ->with('sentinel.logged-in', $user)
+            ->with('sentinel.logged-in', $this->user)
         ;
 
         $this->dispatcher->shouldReceive('dispatch')->once()
-            ->with('sentinel.authenticated', $user)
+            ->with('sentinel.authenticated', $this->user)
         ;
 
         $this->assertSame($this->user, $this->sentinel->authenticate($this->user));
