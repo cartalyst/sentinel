@@ -410,7 +410,7 @@ class Sentinel
     /**
      * Returns the request credentials.
      *
-      * @return array|null
+     * @return array|null
      */
     public function getRequestCredentials(): ?array
     {
