@@ -309,7 +309,7 @@ class Sentinel
 
             $valid = $user !== null ? $this->users->validateCredentials($user, $credentials) : false;
 
-            if ($user === null || ! $valid) {
+            if (! $valid) {
                 $this->cycleCheckpoints('fail', $user, false);
 
                 return false;
