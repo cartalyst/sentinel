@@ -190,6 +190,9 @@ class IlluminateThrottleRepository implements ThrottleRepositoryInterface
         ]);
         $global->save();
 
+        // Reset global throttles cache
+        $this->globalThrottles = null;
+
         if ($ipAddress !== null) {
             $ipAddressThrottle = $this->createModel();
             $ipAddressThrottle->fill([
