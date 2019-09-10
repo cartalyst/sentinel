@@ -49,7 +49,7 @@ class IlluminateActivationRepositoryTest extends TestCase
     /** @test */
     public function it_can_create_an_activation_code()
     {
-        list($activations, $model) = $this->getActivationMock();
+        [$activations, $model] = $this->getActivationMock();
 
         $model->shouldReceive('fill');
         $model->shouldReceive('setAttribute');
@@ -65,7 +65,7 @@ class IlluminateActivationRepositoryTest extends TestCase
     /** @test */
     public function it_can_determine_if_an_activation_exists()
     {
-        list($activations, $model, $query) = $this->getActivationMock();
+        [$activations, $model, $query] = $this->getActivationMock();
 
         $query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
         $query->shouldReceive('where')->with('completed', false)->andReturn($query);
@@ -88,7 +88,7 @@ class IlluminateActivationRepositoryTest extends TestCase
     /** @test */
     public function it_can_complete_an_activation()
     {
-        list($activations, $model, $query) = $this->getActivationMock();
+        [$activations, $model, $query] = $this->getActivationMock();
 
         $activation = m::mock(EloquentActivation::class);
         $activation->shouldReceive('fill')->once();
@@ -111,7 +111,7 @@ class IlluminateActivationRepositoryTest extends TestCase
     /** @test */
     public function it_cannot_complete_an_activation_that_has_expired()
     {
-        list($activations, $model, $query) = $this->getActivationMock();
+        [$activations, $model, $query] = $this->getActivationMock();
 
         $query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
         $query->shouldReceive('where')->with('code', 'foobar')->andReturn($query);
@@ -130,7 +130,7 @@ class IlluminateActivationRepositoryTest extends TestCase
     /** @test */
     public function it_can_determine_if_an_activation_is_completed()
     {
-        list($activations, $model, $query) = $this->getActivationMock();
+        [$activations, $model, $query] = $this->getActivationMock();
 
         $query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
         $query->shouldReceive('where')->with('completed', true)->andReturn($query);
@@ -146,7 +146,7 @@ class IlluminateActivationRepositoryTest extends TestCase
     /** @test */
     public function it_can_determine_if_an_activation_is_not_completed()
     {
-        list($activations, $model, $query) = $this->getActivationMock();
+        [$activations, $model, $query] = $this->getActivationMock();
 
         $query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
         $query->shouldReceive('where')->with('completed', true)->andReturn($query);
@@ -162,7 +162,7 @@ class IlluminateActivationRepositoryTest extends TestCase
     /** @test */
     public function it_can_remove_non_completed_activations()
     {
-        list($activations, $model, $query) = $this->getActivationMock();
+        [$activations, $model, $query] = $this->getActivationMock();
 
         $query->shouldReceive('where')->with('user_id', '1')->andReturn($query);
         $query->shouldReceive('where')->with('completed', true)->andReturn($query);
@@ -178,7 +178,7 @@ class IlluminateActivationRepositoryTest extends TestCase
     /** @test */
     public function it_can_remove_completed_activations()
     {
-        list($activations, $model, $query) = $this->getActivationMock();
+        [$activations, $model, $query] = $this->getActivationMock();
 
         $activation = m::mock(EloquentActivation::class);
 
@@ -198,7 +198,7 @@ class IlluminateActivationRepositoryTest extends TestCase
     /** @test */
     public function it_can_remove_expired_activations()
     {
-        list($activations, $model, $query) = $this->getActivationMock();
+        [$activations, $model, $query] = $this->getActivationMock();
 
         $query->shouldReceive('where')->with('completed', false)->andReturn($query);
 
