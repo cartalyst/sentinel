@@ -478,7 +478,9 @@ class EloquentUser extends Model implements PermissibleInterface, PersistableInt
         $rolePermissions = [];
 
         foreach ($this->roles as $role) {
-            $rolePermissions[] = $role->permissions;
+            if (! empty($role->permissions)) {
+                $rolePermissions[] = $role->permissions;
+            }
         }
 
         return new static::$permissionsClass($userPermissions, $rolePermissions);

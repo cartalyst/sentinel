@@ -411,6 +411,19 @@ class EloquentUserTest extends TestCase
     }
 
     /** @test */
+    public function it_ignores_empty_secondary_permissions_when_checking_access()
+    {
+        $mockRole              = m::mock(EloquentRole::class);
+        $mockRole->permissions = null;
+
+        $this->user->permissions = ['foo' => true, 'bar' => false];
+        $this->user->roles       = [$mockRole];
+
+        $this->assertTrue($this->user->hasAccess('foo'));
+        $this->assertFalse($this->user->hasAccess('bar'));
+    }
+
+    /** @test */
     public function it_can_delete_a_user()
     {
         $user         = m::mock('Cartalyst\Sentinel\Users\EloquentUser[roles,persistences,activations,reminders,throttle]');
