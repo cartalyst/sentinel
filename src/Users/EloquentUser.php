@@ -473,12 +473,12 @@ class EloquentUser extends Model implements PermissibleInterface, PersistableInt
      */
     protected function createPermissions(): PermissionsInterface
     {
-        $userPermissions = $this->permissions;
+        $userPermissions = $this->getPermissions();
 
         $rolePermissions = [];
 
         foreach ($this->roles as $role) {
-            $rolePermissions[] = $role->permissions;
+            $rolePermissions[] = $role->getPermissions();
         }
 
         return new static::$permissionsClass($userPermissions, $rolePermissions);

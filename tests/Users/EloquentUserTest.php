@@ -403,8 +403,14 @@ class EloquentUserTest extends TestCase
         $mockRole              = m::mock(EloquentRole::class);
         $mockRole->permissions = [];
 
-        $this->user->permissions = ['foo' => true, 'bar' => false];
-        $this->user->roles       = [$mockRole];
+        $permissions = ['foo' => true, 'bar' => false];
+
+        $this->user->roles = [$mockRole];
+
+        $mockRole->shouldReceive('getPermissions')
+            ->once()
+            ->andReturn($permissions)
+        ;
 
         $this->assertTrue($this->user->hasAccess('foo'));
         $this->assertFalse($this->user->hasAccess('bar'));
