@@ -174,7 +174,7 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function flush(PersistableInterface $persistable, $forget = true): void
+    public function flush(PersistableInterface $persistable, bool $forget = true): void
     {
         if ($forget) {
             $this->forget();

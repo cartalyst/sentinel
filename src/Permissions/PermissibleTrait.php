@@ -134,7 +134,7 @@ trait PermissibleTrait
     /**
      * {@inheritdoc}
      */
-    public function removePermission($permission): PermissibleInterface
+    public function removePermission(string $permission): PermissibleInterface
     {
         if (array_key_exists($permission, $this->permissions)) {
             $permissions = $this->permissions;
