@@ -123,7 +123,7 @@ class EloquentRole extends Model implements PermissibleInterface, RoleInterface
     /**
      * {@inheritdoc}
      */
-    public static function setUsersModel($usersModel): void
+    public static function setUsersModel(string $usersModel): void
     {
         static::$usersModel = $usersModel;
     }
