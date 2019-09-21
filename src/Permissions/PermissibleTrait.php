@@ -43,7 +43,7 @@ trait PermissibleTrait
      */
     public function getPermissions(): array
     {
-        return $this->permissions ?: [];
+        return $this->permissions ?? [];
     }
 
     /**

@@ -107,7 +107,7 @@ trait PermissionsTrait
      */
     public function getSecondaryPermissions(): array
     {
-        return $this->secondaryPermissions;
+        return $this->secondaryPermissions ?? [];
     }
 
     /**
