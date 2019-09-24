@@ -1,5 +1,11 @@
 # Changelog
 
+### v3.0.1 - 2019-09-24
+
+`FIXED`
+
+- A few return types.
+
 ### v3.0.0 - 2019-09-11
 
 - BC Break: PHP 7.2 is the minimum required PHP version
