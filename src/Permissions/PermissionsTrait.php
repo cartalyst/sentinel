@@ -101,6 +101,16 @@ trait PermissionsTrait
     }
 
     /**
+     * Returns the main permissions.
+     *
+     * @return array
+     */
+    public function getPermissions(): array
+    {
+        return $this->permissions ?? [];
+    }
+
+    /**
      * Returns the secondary permissions.
      *
      * @return array
