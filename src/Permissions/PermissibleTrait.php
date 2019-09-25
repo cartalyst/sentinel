@@ -118,8 +118,8 @@ trait PermissibleTrait
      */
     public function updatePermission(string $permission, bool $value = true, bool $create = false): PermissibleInterface
     {
-        if (array_key_exists($permission, $this->permissions)) {
-            $permissions = $this->permissions;
+        if (array_key_exists($permission, $this->getPermissions())) {
+            $permissions = $this->getPermissions();
 
             $permissions[$permission] = $value;
 
@@ -136,8 +136,8 @@ trait PermissibleTrait
      */
     public function removePermission(string $permission): PermissibleInterface
     {
-        if (array_key_exists($permission, $this->permissions)) {
-            $permissions = $this->permissions;
+        if (array_key_exists($permission, $this->getPermissions())) {
+            $permissions = $this->getPermissions();
 
             unset($permissions[$permission]);
 
