@@ -31,16 +31,16 @@ class StandardPermissions implements PermissionsInterface
     {
         $prepared = [];
 
-        if (! empty($this->secondaryPermissions)) {
-            foreach ($this->secondaryPermissions as $permissions) {
+        if (! empty($this->getSecondaryPermissions())) {
+            foreach ($this->getSecondaryPermissions() as $permissions) {
                 $this->preparePermissions($prepared, $permissions);
             }
         }
 
-        if (! empty($this->permissions)) {
+        if (! empty($this->getPermissions())) {
             $permissions = [];
 
-            $this->preparePermissions($permissions, $this->permissions);
+            $this->preparePermissions($permissions, $this->getPermissions());
 
             $prepared = array_merge($prepared, $permissions);
         }

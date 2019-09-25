@@ -118,8 +118,8 @@ class PermissionsStub implements PermissionsInterface
     {
         $prepared = [];
 
-        if (! empty($this->secondaryPermissions)) {
-            foreach ($this->secondaryPermissions as $permissions) {
+        if (! empty($this->getSecondaryPermissions())) {
+            foreach ($this->getSecondaryPermissions() as $permissions) {
                 $this->preparePermissions($prepared, $permissions);
             }
         }

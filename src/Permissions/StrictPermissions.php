@@ -31,14 +31,14 @@ class StrictPermissions implements PermissionsInterface
     {
         $prepared = [];
 
-        if (! empty($this->secondaryPermissions)) {
-            foreach ($this->secondaryPermissions as $permissions) {
+        if (! empty($this->getSecondaryPermissions())) {
+            foreach ($this->getSecondaryPermissions() as $permissions) {
                 $this->preparePermissions($prepared, $permissions);
             }
         }
 
-        if (! empty($this->permissions)) {
-            $this->preparePermissions($prepared, $this->permissions);
+        if (! empty($this->getPermissions())) {
+            $this->preparePermissions($prepared, $this->getPermissions());
         }
 
         return $prepared;
