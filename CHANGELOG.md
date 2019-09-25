@@ -1,5 +1,11 @@
 # Changelog
 
+### v3.0.2 - 2019-09-25
+
+`FIXED`
+
+- A bug on the `addPermission` method of the `PermissibleTrait`.
+
 ### v3.0.1 - 2019-09-24
 
 `FIXED`
