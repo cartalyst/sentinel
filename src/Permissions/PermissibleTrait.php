@@ -106,8 +106,8 @@ trait PermissibleTrait
      */
     public function addPermission(string $permission, bool $value = true): PermissibleInterface
     {
-        if (! array_key_exists($permission, $this->permissions)) {
-            $this->permissions = array_merge($this->permissions, [$permission => $value]);
+        if (! array_key_exists($permission, $this->getPermissions())) {
+            $this->permissions = array_merge($this->getPermissions(), [$permission => $value]);
         }
 
         return $this;
