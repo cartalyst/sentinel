@@ -1,5 +1,11 @@
 # Changelog
 
+### v3.0.3 - 2019-09-26
+
+`FIXED`
+
+- A few permissions type retrieval bugs.
+
 ### v3.0.2 - 2019-09-25
 
 `FIXED`
