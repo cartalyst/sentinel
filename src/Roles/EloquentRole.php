@@ -154,6 +154,6 @@ class EloquentRole extends Model implements PermissibleInterface, RoleInterface
      */
     protected function createPermissions(): PermissionsInterface
     {
-        return new static::$permissionsClass($this->permissions);
+        return new static::$permissionsClass($this->getPermissions());
     }
 }

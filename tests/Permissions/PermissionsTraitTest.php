@@ -124,9 +124,9 @@ class PermissionsStub implements PermissionsInterface
             }
         }
 
-        if (! empty($this->permissions)) {
+        if (! empty($this->getPermissions())) {
             $permissions = [];
-            $this->preparePermissions($permissions, $this->permissions);
+            $this->preparePermissions($permissions, $this->getPermissions());
             $prepared = array_merge($prepared, $permissions);
         }
 

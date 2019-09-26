@@ -152,6 +152,6 @@ class PermissibleStub implements PermissibleInterface
 
     protected function createPermissions(): PermissionsInterface
     {
-        return new static::$permissionsClass($this->permissions);
+        return new static::$permissionsClass($this->getPermissions());
     }
 }
