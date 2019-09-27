@@ -2,11 +2,17 @@
 
 Reminder allows you to manage reminders through Sentinel.
 
-#### Reminder::create($user)
+#### Reminder::create()
 
 Creates a new reminder record for the user.
 
-Returns the reminder object.
+Returns: `Cartalyst\Sentinel\Reminders\EloquentReminder`
+
+##### Arguments
+
+Key   | Required | Type                                   | Default | Description
+----- | -------- | -------------------------------------- | ------- | -------------------------
+$user | true     | Cartalyst\Sentinel\Users\UserInterface | null    | The user credentials.
 
 ```php
 $user = Sentinel::findById(1);
@@ -14,11 +20,18 @@ $user = Sentinel::findById(1);
 Reminder::create($user);
 ```
 
-#### Reminder::exists($user)
+#### Reminder::exists()
 
 Check if a reminder record exists for the user.
 
-Returns the reminder object or bool.
+Returns: `bool`
+
+##### Arguments
+
+Key   | Required | Type                                   | Default | Description
+----- | -------- | -------------------------------------- | ------- | -------------------------
+$user | true     | Cartalyst\Sentinel\Users\UserInterface | null    | The user credentials.
+$code | false    | string                                 | null    | The user credentials.
 
 ```php
 $user = Sentinel::findById(1);
@@ -26,11 +39,19 @@ $user = Sentinel::findById(1);
 Reminder::exists($user);
 ```
 
-#### Reminder::complete($user, $code, $password)
+#### Reminder::complete()
 
 Attempt to complete the password reset for the user using the code passed and the new password.
 
-Returns bool.
+Returns: `bool`.
+
+##### Arguments
+
+Key       | Required | Type                                   | Default | Description
+--------- | -------- | -------------------------------------- | ------- | -------------------------
+$user     | true     | Cartalyst\Sentinel\Users\UserInterface | null    | The user credentials.
+$code     | true     | string                                 | null    | The user credentials.
+$password | true     | string                                 | null    | The user credentials.
 
 ```php
 $user = Sentinel::findById(1);
@@ -49,6 +70,8 @@ else
 
 Remove all expired reminders.
 
+Returns: `bool`.
+
 ```php
 Reminder::removeExpired();
 ```
@@ -57,13 +80,21 @@ Reminder::removeExpired();
 
 Creates a new reminder model instance.
 
+Returns: `Cartalyst\Sentinel\Reminders\EloquentReminder`
+
 ```php
 $reminder = Reminder::createModel();
 ```
 
-#### Reminder::setModel($model)
+#### Reminder::setModel()
 
 Sets the reminder model.
+
+##### Arguments
+
+Key    | Required | Type   | Default | Description
+------ | -------- | ------ | ------- | -----------------------------------------
+$model | true     | string | null    | The new reminders model.
 
 ```php
 Reminder::setModel('Your\Reminder\Model');

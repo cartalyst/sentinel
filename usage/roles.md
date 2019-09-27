@@ -107,6 +107,8 @@ $role = Sentinel::findRoleByName('Admin');
 
 Creates a new role model instance.
 
+Returns: `Cartalyst\Sentinel\Role\EloquentRole`.
+
 ```php
 $role = Sentinel::getRoleRepository()->createModel();
 ```

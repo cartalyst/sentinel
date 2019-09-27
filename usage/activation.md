@@ -38,13 +38,14 @@ $activation = Activation::create($user);
 
 Check if an activation record exists for the user.
 
-Returns: `Cartalyst\Sentinel\Activations\EloquentActivation` or `false`.
+Returns: `bool`.
 
 ##### Arguments
 
 Key   | Required | Type                                   | Default | Description
 ----- | -------- | -------------------------------------- | ------- | ---------------------------
 $user | true     | Cartalyst\Sentinel\Users\UserInterface | null    | The Sentinel user object.
+$code | false    | string                                 | null    | The activation code.
 
 ##### Example
 
@@ -106,7 +107,7 @@ true
 
 Check if activation has been completed for the user.
 
-Returns: `Cartalyst\Sentinel\Activations\EloquentActivation` or `false`.
+Returns: `bool`.
 
 ##### Arguments
 
@@ -147,7 +148,7 @@ else
 
 Remove the activation for the user.
 
-Returns: `true` or `null`.
+Returns: `bool`.
 
 ##### Arguments
 
@@ -173,6 +174,8 @@ true
 
 Removes all the expired activations.
 
+Returns: `bool`.
+
 ```php
 Activation::removeExpired();
 ```
@@ -180,6 +183,8 @@ Activation::removeExpired();
 #### Activation::createModel()
 
 Creates a new activation model instance.
+
+Returns: `Cartalyst\Sentinel\Activations\EloquentActivation`
 
 ```php
 $activation = Activation::createModel();

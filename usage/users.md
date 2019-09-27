@@ -133,11 +133,14 @@ Validates the user credentials.
 
 This is useful when you want to verify if the current user password matches the given password.
 
+Returns: `bool`.
+
 ##### Arguments
 
-Key          | Required | Type  | Default | Description
------------- | -------- | ----- | ------- | ------------------------------------
-$credentials | true     | array | null    | The user credentials.
+Key          | Required | Type                                   | Default | Description
+------------ | -------- | -------------------------------------- | ------- | ------------------------------------
+$user        | true     | Cartalyst\Sentinel\Users\UserInterface | null    | The Sentinel user object.
+$credentials | true     | array                                  | null    | The user credentials.
 
 ##### Example
 
@@ -161,6 +164,8 @@ true
 #### Sentinel::validForCreation()
 
 Validates a user for creation.
+
+Returns: `bool`.
 
 ##### Arguments
 
@@ -188,6 +193,8 @@ true
 #### Sentinel::validForUpdate()
 
 Validates a user for update.
+
+Returns: `bool`.
 
 ##### Arguments
 
@@ -217,6 +224,8 @@ true
 #### Sentinel::create()
 
 Creates a new user.
+
+Returns: `Cartalyst\Sentinel\Users\UserInterface` or `null`.
 
 ##### Arguments
 
@@ -261,12 +270,14 @@ $user = Sentinel::create($credentials);
 
 Updates an existing user.
 
+Returns: `Cartalyst\Sentinel\Users\UserInterface`.
+
 ##### Arguments
 
-Key          | Required | Type                                   | Default | Description
------------- | -------- | -------------------------------------- | ------- | ------------------------------------
-$user        | true     | Cartalyst\Sentinel\Users\UserInterface | null    | The Sentinel user object.
-$credentials | true     | array                                  | null    | The user credentials.
+Key          | Required | Type                                         | Default | Description
+------------ | -------- | -------------------------------------------- | ------- | ------------------------------------
+$user        | true     | Cartalyst\Sentinel\Users\UserInterface ; int | null    | The Sentinel user object.
+$credentials | true     | array                                        | null    | The user credentials.
 
 ##### Example
 
@@ -317,6 +328,8 @@ $user->delete();
 
 Returns the current hasher.
 
+Returns: `Cartalyst\Sentinel\Hashing\HasherInterface`.
+
 ##### Example
 
 ```php
@@ -339,15 +352,17 @@ $hasher | true     | Cartalyst\Sentinel\Hashing\HasherInterface  | null    | The
 Sentinel::setHasher(new Cartalyst\Sentinel\Hashing\WhirlpoolHasher);
 ```
 
-#### Sentinel::inRole($role)
+#### Sentinel::inRole()
 
 Check if the current user belongs to the given role.
 
+Returns: `bool`
+
 ##### Arguments
 
-Key          | Required | Type   | Default | Description
------------- | -------- | ------ | ------- | ------------------------------------
-$role        | true     | string | null    | The role to check against.
+Key          | Required | Type                                            | Default | Description
+------------ | -------- | ----------------------------------------------- | ------- | ------------------------------------
+$role        | true     | Cartalyst\Sentinel\Roles\RoleInterface ; string | null    | The role to check against.
 
 ##### Example
 
@@ -358,6 +373,8 @@ $admin = Sentinel::inRole('admin');
 #### Sentinel::createModel()
 
 Creates a new user model instance.
+
+Returns: `Cartalyst\Sentinel\Users\EloquentUser`
 
 ```php
 $user = Sentinel::createModel();

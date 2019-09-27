@@ -4,7 +4,7 @@ In this section, we will cover login methods.
 
 #### Sentinel::login()
 
-This method logs the given a user in, additionally a second `bool` argument of `true` can be passed to set the remember state on the user.
+This method logs the given user in, additionally a second `bool` argument of `true` can be passed to set the remember state on the user.
 
 Returns: `Cartalyst\Sentinel\Users\UserInterface` or `false`.
 

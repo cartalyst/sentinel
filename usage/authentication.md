@@ -4,7 +4,7 @@ In this section, we will cover the Sentinel authentication methods.
 
 #### Sentinel::authenticate()
 
-This method authenticates a user against the given `$credentials`, additionally a second `bool` argument of `true` can be passed to set the remember state on the user.
+This method authenticates a user against the given `$credentials`, additionally a second `bool` argument of `true` can be passed to set the remember state on the user and a third `bool` argument of `false` can be passed to disable automatic login.
 
 Returns: `Cartalyst\Sentinel\Users\UserInterface` or `false`.
 
@@ -14,6 +14,7 @@ Key          | Required | Type  | Default | Description
 ------------ | -------- | ----- | ------- | ------------------------------------
 $credentials | true     | array | null    | The user credentials.
 $remember    | false    | bool  | false   | Flag to set the remember cookie.
+login        | false    | bool  | true    | Flag to disable automatic login.
 
 ##### Example
 

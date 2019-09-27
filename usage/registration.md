@@ -8,14 +8,14 @@ With this method you'll be able to register new users onto your application.
 
 The first argument is a `key/value` pair which should contain the user login column name, the password and other attributes you see fit.
 
-The second argument is a boolean, that when set to `true` will automatically activate the user account.
+The second argument is a `bool` or a `Closure`, that when set to `true` will automatically activate the user account or when a `Closure` is passed the `UserRepositoryInterface` for any aditional checks before creating the user, if the `Closure` returns `true` the user will be saved to the DB otherwise it will not be saved.
 
 ##### Arguments
 
 Key          | Required | Type           | Default | Description
 ------------ | -------- | -------------- | ------- | ---------------------------
 $credentials | true     | array          | null    | The user credentials.
-$callback    | false    | bool ; Closure | null    | This argument is used for two things, either pass in `true` to activate the user or a `Closure` that would be executed before the user is created and can prevent user creation if it returns false.
+$callback    | false    | bool ; Closure | false   | This argument is used for two things, either pass in `true` to activate the user or a `Closure` that would be executed before the user is created and can prevent user creation if it returns false.
 
 ##### Example
 
