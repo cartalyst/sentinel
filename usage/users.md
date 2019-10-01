@@ -338,7 +338,7 @@ Sentinel::setHasher(new Cartalyst\Sentinel\Hashing\WhirlpoolHasher);
 
 Check if the current user belongs to the given role.
 
-Returns: `bool`
+Returns: `bool`.
 
 ##### Arguments
 
@@ -356,7 +356,7 @@ $admin = Sentinel::inRole('admin');
 
 Creates a new user model instance.
 
-Returns: `Cartalyst\Sentinel\Users\EloquentUser`
+Returns: `Cartalyst\Sentinel\Users\EloquentUser`.
 
 ```php
 $user = Sentinel::createModel();

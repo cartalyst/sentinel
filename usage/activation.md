@@ -59,7 +59,7 @@ $activation = Activation::exists($user);
 
 Attempt to complete activation for the user using the code passed.
 
-Returns: `bool`
+Returns: `bool`.
 
 ##### Arguments
 
@@ -144,7 +144,7 @@ Activation::removeExpired();
 
 Creates a new activation model instance.
 
-Returns: `Cartalyst\Sentinel\Activations\EloquentActivation`
+Returns: `Cartalyst\Sentinel\Activations\EloquentActivation`.
 
 ```php
 $activation = Activation::createModel();
