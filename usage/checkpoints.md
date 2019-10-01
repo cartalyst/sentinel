@@ -99,7 +99,7 @@ Returns: result of `$callback`.
 Key           | Required | Type                                               | Default | Description
 ------------- | -------- | ------- | ------- | -----------------------------------------
 $callback     | true     | closure | null    | Closure to use when bypassing checkpoints.
-checkpoints   | false    | array   | []      | Array of checkpoints to bypass.
+$checkpoints  | false    | array   | []      | Array of checkpoints to bypass.
 
 ##### Example
 

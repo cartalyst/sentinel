@@ -14,7 +14,7 @@ Key          | Required | Type  | Default | Description
 ------------ | -------- | ----- | ------- | ------------------------------------
 $credentials | true     | array | null    | The user credentials.
 $remember    | false    | bool  | false   | Flag to set the remember cookie.
-login        | false    | bool  | true    | Flag to disable automatic login.
+$login       | false    | bool  | true    | Flag to disable automatic login.
 
 ##### Example
 
