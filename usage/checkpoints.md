@@ -31,8 +31,8 @@ Add a new checkpoint.
 
 Key           | Required | Type                                               | Default | Description
 ------------- | -------- | -------------------------------------------------- | ------- | -----------------------------------------
-$key          | true     | string                                             | null    | The name of the checkpoint..
-$checkpoint   | true     | Cartalyst\Sentinel\Checkpoints\CheckpointInterface | null    | The name of the checkpoint..
+$key          | true     | string                                             | null    | The array key to use to identify the checkpoint.
+$checkpoint   | true     | Cartalyst\Sentinel\Checkpoints\CheckpointInterface | null    | The checkpoint to add.
 
 ##### Example
 
@@ -46,9 +46,9 @@ Sentinel::addCheckpoint('your_checkpoint', $checkpoint);
 
 ##### Arguments
 
-Key           | Required | Type                                               | Default | Description
+Key           | Required | Type    | Default | Description
 ------------- | -------- | ------- | ------- | -----------------------------------------
-$key          | true     | string  | null    | The name of the checkpoint.
+$key          | true     | string  | null    | The array key to use to identify the checkpoint.
 
 ##### Example
 
@@ -86,7 +86,7 @@ Check whether checkpoints are enabled or disabled.
 $checkpoints = Sentinel::checkpointsStatus();
 ```
 
-##### Sentinel::bypassCheckpoints($callback, $checkpoints)
+##### Sentinel::bypassCheckpoints()
 
 Execute a closure that bypasses all checkpoints.
 

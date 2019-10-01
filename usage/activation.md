@@ -55,20 +55,6 @@ $user = Sentinel::findById(1);
 $activation = Activation::exists($user);
 ```
 
-###### Example Response
-
-```
-{
-	id: "1",
-	user_id: "1",
-	code: "HNjOSGWoVHCNx70UAnbphnAJVIttFvot",
-	completed: false,
-	completed_at: null,
-	created_at: "2014-02-17 02:43:01",
-	updated_at: "2014-02-17 02:43:37"
-}
-```
-
 #### Activation::complete()
 
 Attempt to complete activation for the user using the code passed.
@@ -95,12 +81,6 @@ else
 {
 	// Activation not found or not completed.
 }
-```
-
-##### Example Response
-
-```
-true
 ```
 
 #### Activation::completed()
@@ -130,20 +110,6 @@ else
 }
 ```
 
-##### Example Response
-
-```
-{
-	id: "1",
-	user_id: "1",
-	code: "HiaVCzyLb6XFeZcVFpfUlCoLGZfhddHs",
-	completed: true,
-	completed_at: "2014-02-17 02:44:13",
-	created_at: "2014-02-17 02:43:01",
-	updated_at: "2014-02-17 02:43:37"
-}
-```
-
 #### Activation::remove()
 
 Remove the activation for the user.
@@ -162,12 +128,6 @@ $user | true     | Cartalyst\Sentinel\Users\UserInterface | null    | The Sentin
 $user = Sentinel::findById(1);
 
 Activation::remove($user);
-```
-
-##### Example Response
-
-```
-true
 ```
 
 #### Activation::removeExpired()

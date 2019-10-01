@@ -236,7 +236,7 @@ else
 
 Authenticates using the `HTTP` basic auth.
 
-Returns the auth response.
+Returns: The auth response.
 
 ##### Example
 

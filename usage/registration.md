@@ -10,6 +10,8 @@ The first argument is a `key/value` pair which should contain the user login col
 
 The second argument is a `bool` or a `Closure`, that when set to `true` will automatically activate the user account or when a `Closure` is passed the `UserRepositoryInterface` for any aditional checks before creating the user, if the `Closure` returns `true` the user will be saved to the DB otherwise it will not be saved.
 
+Returns: `Cartalyst\Sentinel\Users\UserInterface` or `false`.
+
 ##### Arguments
 
 Key          | Required | Type           | Default | Description
@@ -42,6 +44,9 @@ $user = Sentinel::register($credentials);
 #### Sentinel::registerAndActivate()
 
 This method registers and activates the user, it's an alias for the `register()` method but it sets the `$callback` flag to `true`.
+
+Returns: `Cartalyst\Sentinel\Users\UserInterface` or `false`.
+
 
 ##### Arguments
 

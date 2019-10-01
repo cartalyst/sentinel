@@ -12,7 +12,7 @@ Returns: `Cartalyst\Sentinel\Reminders\EloquentReminder`
 
 Key   | Required | Type                                   | Default | Description
 ----- | -------- | -------------------------------------- | ------- | -------------------------
-$user | true     | Cartalyst\Sentinel\Users\UserInterface | null    | The user credentials.
+$user | true     | Cartalyst\Sentinel\Users\UserInterface | null    | The Sentinel user object.
 
 ```php
 $user = Sentinel::findById(1);

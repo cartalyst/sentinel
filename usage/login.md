@@ -89,6 +89,8 @@ Sentinel::loginAndRemember($user);
 
 Logs a user out, optionally can be passed a bool parameter `true` that will flush all active sessions for the user.
 
+Returns: `bool`.
+
 ##### Arguments
 
 Key         | Required | Type                                   | Default | Description
@@ -128,23 +130,3 @@ $user = Sentinel::findUserById(1);
 Sentinel::logout($user, true);
 ```
 
-##### Example Response
-
-```
-{
-	id: "1",
-	email: "john.doe@example.com",
-	permissions: {
-		admin: true
-	},
-	last_login: {
-		date: "2014-02-17 03:44:31",
-		timezone_type: 3,
-		timezone: "UTC"
-	},
-	first_name: "John",
-	last_name: "Doe",
-	created_at: "2014-02-17 02:43:01",
-	updated_at: "2014-02-17 02:43:37"
-}
-```

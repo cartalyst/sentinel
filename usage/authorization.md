@@ -86,7 +86,7 @@ else
 
 Check if no user is currently logged in.
 
-Returns `true` if the user is not logged in and `false` otherwise.
+Returns: `true` if the user is not logged in and `false` otherwise.
 
 ##### Example
 
@@ -95,12 +95,6 @@ if (Sentinel::guest())
 {
 	// User is not logged in
 }
-```
-
-##### Example Response
-
-```
-true
 ```
 
 #### Sentinel::getUser()

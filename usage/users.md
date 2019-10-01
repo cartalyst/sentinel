@@ -155,12 +155,6 @@ $user = Sentinel::findUserById(1);
 $user = Sentinel::validateCredentials($user, $credentials);
 ```
 
-###### Example Response
-
-```
-true
-```
-
 #### Sentinel::validForCreation()
 
 Validates a user for creation.
@@ -182,12 +176,6 @@ $credentials = [
 ];
 
 $user = Sentinel::validForCreation($credentials);
-```
-
-###### Example Response
-
-```
-true
 ```
 
 #### Sentinel::validForUpdate()
@@ -213,12 +201,6 @@ $credentials = [
 ];
 
 $user = Sentinel::validForUpdate($user, $credentials);
-```
-
-###### Example Response
-
-```
-true
 ```
 
 #### Sentinel::create()
@@ -326,7 +308,7 @@ $user->delete();
 
 #### Sentinel::getHasher()
 
-Returns the current hasher.
+Returns: The current hasher.
 
 Returns: `Cartalyst\Sentinel\Hashing\HasherInterface`.
 
