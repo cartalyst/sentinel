@@ -96,7 +96,7 @@ Returns: result of `$callback`.
 
 ##### Arguments
 
-Key           | Required | Type                                               | Default | Description
+Key           | Required | Type    | Default | Description
 ------------- | -------- | ------- | ------- | -----------------------------------------
 $callback     | true     | closure | null    | Closure to use when bypassing checkpoints.
 $checkpoints  | false    | array   | []      | Array of checkpoints to bypass.
