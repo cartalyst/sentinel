@@ -8,7 +8,7 @@ Persistence allows you to manage persistences through Sentinel.
 
 Checks for an active persistence record.
 
-Returns the persistence code or null.
+Returns: the persistence code or `null`.
 
 ```php
 $code = $persistence->check();
@@ -18,7 +18,7 @@ $code = $persistence->check();
 
 Find a persistence record by code.
 
-Returns the persistence object or false.
+Returns: the persistence object or `false`.
 
 ```php
 $persistence = $persistence->findByPersistenceCode('foobar');
@@ -28,7 +28,7 @@ $persistence = $persistence->findByPersistenceCode('foobar');
 
 Find the user that is associated with the given persistence code.
 
-Returns the user object or false.
+Returns: the user object or `false`.
 
 ```php
 $user = $persistence->findUserByPersistenceCode('foobar');
@@ -38,7 +38,7 @@ $user = $persistence->findUserByPersistenceCode('foobar');
 
 Persist a user.
 
-Returns bool.
+Returns: `bool`.
 
 ```php
 $user = Sentinel::findById(1);
@@ -50,7 +50,7 @@ $persistence->persist($user);
 
 Persist and remember a user.
 
-Returns bool.
+Returns: `bool`.
 
 ```php
 $user = Sentinel::findById(1);
@@ -62,7 +62,7 @@ $persistence->persistAndRemember($user);
 
 Forget the current persistence cookie and session.
 
-Returns bool or null.
+Returns: `bool` or `null`.
 
 ```php
 $persistence->forget();
@@ -72,7 +72,7 @@ $persistence->forget();
 
 Remove the persistence record that matches the given code.
 
-Returns bool or null.
+Returns: `bool` or `null`.
 
 ```php
 $persistence->remove('foobar');

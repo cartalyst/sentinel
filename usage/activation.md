@@ -38,13 +38,14 @@ $activation = Activation::create($user);
 
 Check if an activation record exists for the user.
 
-Returns: `Cartalyst\Sentinel\Activations\EloquentActivation` or `false`.
+Returns: `bool`.
 
 ##### Arguments
 
 Key   | Required | Type                                   | Default | Description
 ----- | -------- | -------------------------------------- | ------- | ---------------------------
 $user | true     | Cartalyst\Sentinel\Users\UserInterface | null    | The Sentinel user object.
+$code | false    | string                                 | null    | The activation code.
 
 ##### Example
 
@@ -52,20 +53,6 @@ $user | true     | Cartalyst\Sentinel\Users\UserInterface | null    | The Sentin
 $user = Sentinel::findById(1);
 
 $activation = Activation::exists($user);
-```
-
-###### Example Response
-
-```
-{
-	id: "1",
-	user_id: "1",
-	code: "HNjOSGWoVHCNx70UAnbphnAJVIttFvot",
-	completed: false,
-	completed_at: null,
-	created_at: "2014-02-17 02:43:01",
-	updated_at: "2014-02-17 02:43:37"
-}
 ```
 
 #### Activation::complete()
@@ -96,17 +83,11 @@ else
 }
 ```
 
-##### Example Response
-
-```
-true
-```
-
 #### Activation::completed()
 
 Check if activation has been completed for the user.
 
-Returns: `Cartalyst\Sentinel\Activations\EloquentActivation` or `false`.
+Returns: `bool`.
 
 ##### Arguments
 
@@ -129,25 +110,11 @@ else
 }
 ```
 
-##### Example Response
-
-```
-{
-	id: "1",
-	user_id: "1",
-	code: "HiaVCzyLb6XFeZcVFpfUlCoLGZfhddHs",
-	completed: true,
-	completed_at: "2014-02-17 02:44:13",
-	created_at: "2014-02-17 02:43:01",
-	updated_at: "2014-02-17 02:43:37"
-}
-```
-
 #### Activation::remove()
 
 Remove the activation for the user.
 
-Returns: `true` or `null`.
+Returns: `bool`.
 
 ##### Arguments
 
@@ -163,15 +130,11 @@ $user = Sentinel::findById(1);
 Activation::remove($user);
 ```
 
-##### Example Response
-
-```
-true
-```
-
 #### Activation::removeExpired()
 
 Removes all the expired activations.
+
+Returns: `bool`.
 
 ```php
 Activation::removeExpired();
@@ -180,6 +143,8 @@ Activation::removeExpired();
 #### Activation::createModel()
 
 Creates a new activation model instance.
+
+Returns: `Cartalyst\Sentinel\Activations\EloquentActivation`
 
 ```php
 $activation = Activation::createModel();
