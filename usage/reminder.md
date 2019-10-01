@@ -30,8 +30,8 @@ Returns: `bool`
 
 Key   | Required | Type                                   | Default | Description
 ----- | -------- | -------------------------------------- | ------- | -------------------------
-$user | true     | Cartalyst\Sentinel\Users\UserInterface | null    | The user credentials.
-$code | false    | string                                 | null    | The user credentials.
+$user | true     | Cartalyst\Sentinel\Users\UserInterface | null    | The Sentinel user object.
+$code | false    | string                                 | null    | The code used for identifying the reminder.
 
 ```php
 $user = Sentinel::findById(1);
@@ -49,9 +49,9 @@ Returns: `bool`.
 
 Key       | Required | Type                                   | Default | Description
 --------- | -------- | -------------------------------------- | ------- | -------------------------
-$user     | true     | Cartalyst\Sentinel\Users\UserInterface | null    | The user credentials.
-$code     | true     | string                                 | null    | The user credentials.
-$password | true     | string                                 | null    | The user credentials.
+$user     | true     | Cartalyst\Sentinel\Users\UserInterface | null    | The Sentinel user object.
+$code     | false    | string                                 | null    | The code used for identifying the reminder.
+$password | true     | string                                 | null    | The new password to use for the user.
 
 ```php
 $user = Sentinel::findById(1);
