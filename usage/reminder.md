@@ -6,7 +6,7 @@ Reminder allows you to manage reminders through Sentinel.
 
 Creates a new reminder record for the user.
 
-Returns: `Cartalyst\Sentinel\Reminders\EloquentReminder`
+Returns: `Cartalyst\Sentinel\Reminders\EloquentReminder`.
 
 ##### Arguments
 
@@ -24,7 +24,7 @@ Reminder::create($user);
 
 Check if a reminder record exists for the user.
 
-Returns: `bool`
+Returns: `bool`.
 
 ##### Arguments
 
@@ -80,7 +80,7 @@ Reminder::removeExpired();
 
 Creates a new reminder model instance.
 
-Returns: `Cartalyst\Sentinel\Reminders\EloquentReminder`
+Returns: `Cartalyst\Sentinel\Reminders\EloquentReminder`.
 
 ```php
 $reminder = Reminder::createModel();
