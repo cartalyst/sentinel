@@ -925,7 +925,7 @@ class Sentinel
             return call_user_func_array([$roles, $method], $parameters);
         }
 
-        $methods = ['getRoles', 'inRole', 'hasAccess', 'hasAnyAccess'];
+        $methods = ['getRoles', 'inRole', 'inAnyRole', 'hasAccess', 'hasAnyAccess'];
 
         $className = get_class($this);
 
