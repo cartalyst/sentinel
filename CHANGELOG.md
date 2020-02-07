@@ -1,5 +1,11 @@
 # Changelog
 
+### v3.0.4 - 2020-02-07
+
+`ADDED`
+
+- The `inAnyRole` to be called statically, `Sentinel::inAnyRole($role)`
+
 ### v3.0.3 - 2019-09-26
 
 `FIXED`
