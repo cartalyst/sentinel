@@ -1,5 +1,10 @@
 # Changelog
 
+### v4.0.0 - TBA
+
+- BC Break: PHP 7.2 is the minimum required PHP version
+- BC Break: Laravel 7.0 is the minimum supported Laravel version
+
 ### v3.0.4 - 2020-02-07
 
 `ADDED`
