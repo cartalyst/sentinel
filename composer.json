@@ -1,6 +1,6 @@
 {
     "name": "cartalyst/sentinel",
-    "description": "PHP 7.2.5+ Fully-featured Authentication & Authorization System",
+    "description": "PHP 7.3+ Fully-featured Authentication & Authorization System",
     "keywords": [
         "php",
         "cartalyst",
@@ -54,7 +54,7 @@
     "extra": {
         "component": "package",
         "branch-alias": {
-            "dev-master": "4.0.x-dev"
+            "dev-master": "5.0.x-dev"
         },
         "laravel": {
             "providers": [
