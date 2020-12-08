@@ -23,9 +23,9 @@ final class AddCartalystTablesToDb extends AbstractMigration
               PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
         */
-        if( !$this->hasTable('cartalyst_activations') ) {
+        if( !$this->hasTable('activations') ) {
 
-            $table = $this->table('cartalyst_activations');
+            $table = $this->table('activations');
             $table//->addColumn('id', 'integer', ['signed' => false, 'identity' => true]) // automatically generated
                   ->addColumn('user_id', 'integer', ['signed' => false, 'null' => false])
                   ->addColumn('code', 'string', ['limit' => 255, 'null' => false]);
@@ -44,7 +44,7 @@ final class AddCartalystTablesToDb extends AbstractMigration
                   ->addColumn('updated_at', 'timestamp',    ['null' => false, 'default' => 'CURRENT_TIMESTAMP'])
                   ->create();
             
-        } // if( !$this->hasTable('cartalyst_activations') )
+        } // if( !$this->hasTable('activations') )
         
         /**
         # Dump of table persistences
@@ -60,9 +60,9 @@ final class AddCartalystTablesToDb extends AbstractMigration
                 UNIQUE KEY `persistences_code_unique` (`code`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
         */
-        if( !$this->hasTable('cartalyst_persistences') ) {
+        if( !$this->hasTable('persistences') ) {
             
-            $table = $this->table('cartalyst_persistences');
+            $table = $this->table('persistences');
             $table//->addColumn('id', 'integer', ['signed'=>false, 'identity'=>true]) // automatically generated
                   ->addColumn('user_id', 'integer', ['signed'=>false, 'null'=>false])
                   ->addColumn('code', 'string', ['limit'=>255, 'null'=>false])
@@ -87,9 +87,9 @@ final class AddCartalystTablesToDb extends AbstractMigration
                 PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
         */
-        if( !$this->hasTable('cartalyst_reminders') ) {
+        if( !$this->hasTable('reminders') ) {
             
-            $table = $this->table('cartalyst_reminders');
+            $table = $this->table('reminders');
             $table//->addColumn('id', 'integer', ['signed' => false, 'identity' => true]) // automatically generated
                   ->addColumn('user_id', 'integer', ['signed' => false, 'null' => false])
                   ->addColumn('code', 'string', ['limit' => 255, 'null' => false]);
@@ -124,9 +124,9 @@ final class AddCartalystTablesToDb extends AbstractMigration
                 UNIQUE KEY `roles_slug_unique` (`slug`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci; 
         */
-        if( !$this->hasTable('cartalyst_roles') ) {
+        if( !$this->hasTable('roles') ) {
             
-            $table = $this->table('cartalyst_roles');
+            $table = $this->table('roles');
             $table//->addColumn('id', 'integer', ['signed'=>false, 'identity'=>true]) // automatically generated
                   ->addColumn('slug', 'string', ['limit'=>255, 'null'=>false])
                   ->addColumn('name', 'string', ['limit'=>255, 'null'=>false])
@@ -149,9 +149,9 @@ final class AddCartalystTablesToDb extends AbstractMigration
                 PRIMARY KEY (`user_id`,`role_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
         */
-        if( !$this->hasTable('cartalyst_role_users') ) {
+        if( !$this->hasTable('role_users') ) {
             
-            $table = $this->table('cartalyst_role_users');
+            $table = $this->table('role_users');
             $table//->addColumn('id', 'integer', ['signed'=>false, 'identity'=>true]) // automatically generated
                   ->addColumn('user_id', 'integer', ['signed'=>false, 'null'=>false])
                   ->addColumn('role_id', 'integer', ['signed'=>false, 'null'=>false])
@@ -175,9 +175,9 @@ final class AddCartalystTablesToDb extends AbstractMigration
                 KEY `throttle_user_id_index` (`user_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
         */
-        if( !$this->hasTable('cartalyst_throttle') ) {
+        if( !$this->hasTable('throttle') ) {
             
-            $table = $this->table('cartalyst_throttle');
+            $table = $this->table('throttle');
             $table//->addColumn('id', 'integer', ['signed'=>false, 'identity'=>true]) // automatically generated
                   ->addColumn('user_id', 'integer', ['signed'=>false, 'null'=>false])
                   ->addColumn('type', 'string', ['limit'=>255, 'null'=>false])
@@ -206,9 +206,9 @@ final class AddCartalystTablesToDb extends AbstractMigration
                 UNIQUE KEY `users_email_unique` (`email`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
         */
-        if( !$this->hasTable('cartalyst_users') ) {
+        if( !$this->hasTable('users') ) {
             
-            $table = $this->table('cartalyst_users');
+            $table = $this->table('users');
             $table//->addColumn('id', 'integer', ['signed'=>false, 'identity'=>true]) // automatically generated
                   ->addColumn('email', 'string', ['limit'=>255, 'null'=>false])
                   ->addColumn('password', 'string', ['limit'=>255, 'null'=>false])
@@ -226,13 +226,13 @@ final class AddCartalystTablesToDb extends AbstractMigration
     public function down()
     {
         // place down commands here
-        $this->hasTable('cartalyst_activations') && $this->table('cartalyst_activations')->drop()->save();
-        $this->hasTable('cartalyst_persistences') && $this->table('cartalyst_persistences')->drop()->save();
-        $this->hasTable('cartalyst_reminders') && $this->table('cartalyst_reminders')->drop()->save();
-        $this->hasTable('cartalyst_roles') && $this->table('cartalyst_roles')->drop()->save();
-        $this->hasTable('cartalyst_role_users') && $this->table('cartalyst_role_users')->drop()->save();
-        $this->hasTable('cartalyst_throttle') && $this->table('cartalyst_throttle')->drop()->save();
-        $this->hasTable('cartalyst_users') && $this->table('cartalyst_users')->drop()->save();
+        $this->hasTable('activations') && $this->table('activations')->drop()->save();
+        $this->hasTable('persistences') && $this->table('persistences')->drop()->save();
+        $this->hasTable('reminders') && $this->table('reminders')->drop()->save();
+        $this->hasTable('roles') && $this->table('roles')->drop()->save();
+        $this->hasTable('role_users') && $this->table('role_users')->drop()->save();
+        $this->hasTable('throttle') && $this->table('throttle')->drop()->save();
+        $this->hasTable('users') && $this->table('users')->drop()->save();
 
     }
     
