@@ -244,3 +244,4 @@ final class AddCartalystTablesToDb extends AbstractMigration
         );
     }
 }
+
