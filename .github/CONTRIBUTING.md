@@ -91,7 +91,7 @@ When you make a pull request, the tests will automatically be run again by [Trav
 
 
 [link-semver]: http://semver.org
-[link-travis]: https://travis-ci.org
+[link-travis]: https://travis-ci.com
 [link-psr-1]: http://www.php-fig.org/psr/psr-1/
 [link-psr-2]: http://www.php-fig.org/psr/psr-2/
 [link-psr-4]: http://www.php-fig.org/psr/psr-4/
