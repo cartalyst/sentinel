@@ -114,7 +114,7 @@ class PermissionsStub implements PermissionsInterface
 {
     use PermissionsTrait;
 
-    protected function createPreparedPermissions()
+    protected function createPreparedPermissions(): array
     {
         $prepared = [];
 
