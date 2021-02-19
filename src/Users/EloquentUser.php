@@ -36,11 +36,10 @@ use Cartalyst\Sentinel\Permissions\PermissionsInterface;
 use Cartalyst\Sentinel\Persistences\EloquentPersistence;
 use Cartalyst\Sentinel\Persistences\PersistableInterface;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Notifications\Notifiable;
 
 class EloquentUser extends Model implements PermissibleInterface, PersistableInterface, RoleableInterface, UserInterface
 {
-    use PermissibleTrait,Notifiable;
+    use PermissibleTrait;
 
     /**
      * The table associated with the model.
