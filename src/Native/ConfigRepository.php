@@ -65,7 +65,7 @@ class ConfigRepository implements ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function offsetExists($key)
+    public function offsetExists($key): bool
     {
         return isset($this->config[$key]);
     }
@@ -73,7 +73,7 @@ class ConfigRepository implements ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function offsetGet($key)
+    public function offsetGet($key): mixed
     {
         return $this->config[$key];
     }
@@ -81,7 +81,7 @@ class ConfigRepository implements ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function offsetSet($key, $value)
+    public function offsetSet($key, $value): void
     {
         $this->config[$key] = $value;
     }
@@ -89,7 +89,7 @@ class ConfigRepository implements ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function offsetUnset($key)
+    public function offsetUnset($key): void
     {
         unset($this->config[$key]);
     }
