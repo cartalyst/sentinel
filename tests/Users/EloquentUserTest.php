@@ -142,6 +142,7 @@ class EloquentUserTest extends TestCase
         $this->user->getConnection()->shouldReceive('getName');
         $this->user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
         $this->user->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('getBitwiseOperators')->andReturn([]);
         $this->user->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->andReturn(1);
 
         $this->user->save();
@@ -157,6 +158,7 @@ class EloquentUserTest extends TestCase
         $this->user->getConnection()->shouldReceive('getName');
         $this->user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
         $this->user->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('getBitwiseOperators')->andReturn([]);
         $this->user->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->andReturn(1);
 
         $this->user->save();
@@ -174,6 +176,7 @@ class EloquentUserTest extends TestCase
         $this->user->getConnection()->shouldReceive('getName');
         $this->user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
         $this->user->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('getBitwiseOperators')->andReturn([]);
         $this->user->getConnection()->getPostProcessor()->shouldReceive('processInsertGetId')->andReturn(1);
 
         $this->user->save();
@@ -257,6 +260,7 @@ class EloquentUserTest extends TestCase
         $this->user->getConnection()->shouldReceive('getName');
         $this->user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
         $this->user->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('getBitwiseOperators')->andReturn([]);
         $this->user->getConnection()->getPostProcessor()->shouldReceive('processSelect')->andReturn([
             ['id' => 1, 'slug' => 'role1'],
             ['id' => 2, 'slug' => 'role2'],
@@ -282,6 +286,7 @@ class EloquentUserTest extends TestCase
         $this->user->getConnection()->shouldReceive('getName');
         $this->user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
         $this->user->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('getBitwiseOperators')->andReturn([]);
         $this->user->getConnection()->getPostProcessor()->shouldReceive('processSelect')->andReturn([
             ['id' => 1, 'slug' => 'role1'],
             ['id' => 2, 'slug' => 'role2'],
@@ -305,6 +310,7 @@ class EloquentUserTest extends TestCase
         $this->user->getConnection()->shouldReceive('getName');
         $this->user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
         $this->user->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('getBitwiseOperators')->andReturn([]);
         $this->user->getConnection()->getPostProcessor()->shouldReceive('processSelect')->andReturn([
             ['id' => 1, 'slug' => 'role1'],
             ['id' => 2, 'slug' => 'role2'],
@@ -340,6 +346,7 @@ class EloquentUserTest extends TestCase
         $this->user->getConnection()->shouldReceive('getName');
         $this->user->getConnection()->getQueryGrammar()->shouldReceive('getDateFormat')->andReturn('Y-m-d H:i:s');
         $this->user->getConnection()->getQueryGrammar()->shouldReceive('compileInsertGetId');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('getBitwiseOperators')->andReturn([]);
         $this->user->getConnection()->getPostProcessor()->shouldReceive('processSelect')->andReturn([
             ['id' => 1, 'slug' => 'foobar'],
             ['id' => 2, 'slug' => 'foo'],
@@ -378,6 +385,7 @@ class EloquentUserTest extends TestCase
         $this->user->getConnection()->shouldReceive('getName');
         $this->user->getConnection()->shouldReceive('select');
         $this->user->getConnection()->getQueryGrammar()->shouldReceive('compileSelect');
+        $this->user->getConnection()->getQueryGrammar()->shouldReceive('getBitwiseOperators')->andReturn([]);
         $this->user->getConnection()->getPostProcessor()->shouldReceive('processSelect')->andReturn([]);
 
         $this->assertInstanceOf(Collection::class, $this->user->getRoles());
