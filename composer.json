@@ -17,17 +17,17 @@
         }
     ],
     "require": {
-        "php": "^8.0",
-        "cartalyst/support": "^6.0",
-        "illuminate/support": "^9.0"
+        "php": "^8.1",
+        "cartalyst/support": "^7.0",
+        "illuminate/support": "^10.0"
     },
     "require-dev": {
         "cartalyst/php-cs-fixer-config": "^2.0",
-        "illuminate/cookie": "^9.0",
-        "illuminate/database": "^9.0",
-        "illuminate/events": "^9.0",
-        "illuminate/http": "^9.0",
-        "illuminate/session": "^9.0",
+        "illuminate/cookie": "^10.0",
+        "illuminate/database": "^10.0",
+        "illuminate/events": "^10.0",
+        "illuminate/http": "^10.0",
+        "illuminate/session": "^10.0",
         "mockery/mockery": "^1.0",
         "phpunit/phpunit": "^9.0"
     },
@@ -54,7 +54,7 @@
     "extra": {
         "component": "package",
         "branch-alias": {
-            "dev-master": "6.0.x-dev"
+            "dev-master": "7.0.x-dev"
         },
         "laravel": {
             "providers": [
@@ -70,6 +70,6 @@
     "scripts": {
         "cs:check": "./vendor/bin/php-cs-fixer fix --verbose --ansi --show-progress=estimating --diff --dry-run --config .php_cs.php",
         "cs:fix": "./vendor/bin/php-cs-fixer fix --verbose --ansi --show-progress=estimating --config .php_cs.php",
-        "test": "./vendor/bin/phpunit --verbose --colors=always"
+        "test": "./vendor/bin/phpunit --colors=always"
     }
 }

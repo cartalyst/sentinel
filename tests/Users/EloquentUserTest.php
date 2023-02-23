@@ -11,10 +11,10 @@
  * bundled with this package in the LICENSE file.
  *
  * @package    Sentinel
- * @version    6.0.0
+ * @version    7.0.0
  * @author     Cartalyst LLC
  * @license    BSD License (3-clause)
- * @copyright  (c) 2011-2022, Cartalyst LLC
+ * @copyright  (c) 2011-2023, Cartalyst LLC
  * @link       https://cartalyst.com
  */
 
@@ -35,6 +35,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class EloquentUserTest extends TestCase
 {
+    protected $user;
+
     /**
      * {@inheritdoc}
      */
@@ -408,8 +410,8 @@ class EloquentUserTest extends TestCase
     /** @test */
     public function it_can_pass_methods_to_permissions_instance()
     {
-        $mockRole              = m::mock(EloquentRole::class);
-        $mockRole->permissions = [];
+        $mockRole = m::mock(EloquentRole::class);
+        $mockRole->shouldReceive('permissions')->andReturn([]);
 
         $permissions = ['foo' => true, 'bar' => false];
 
@@ -427,8 +429,8 @@ class EloquentUserTest extends TestCase
     /** @test */
     public function it_will_ignore_empty_secondary_permissions()
     {
-        $mockRole              = m::mock(EloquentRole::class);
-        $mockRole->permissions = null;
+        $mockRole = m::mock(EloquentRole::class);
+        $mockRole->shouldReceive('permissions')->andReturn(null);
 
         $permissions = ['foo' => true, 'bar' => false];
 

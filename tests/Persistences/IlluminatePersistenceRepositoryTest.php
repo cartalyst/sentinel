@@ -11,10 +11,10 @@
  * bundled with this package in the LICENSE file.
  *
  * @package    Sentinel
- * @version    6.0.0
+ * @version    7.0.0
  * @author     Cartalyst LLC
  * @license    BSD License (3-clause)
- * @copyright  (c) 2011-2022, Cartalyst LLC
+ * @copyright  (c) 2011-2023, Cartalyst LLC
  * @link       https://cartalyst.com
  */
 
@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Cartalyst\Sentinel\Users\UserInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Cartalyst\Sentinel\Cookies\CookieInterface;
+use Cartalyst\Sentinel\Persistences\EloquentPersistence;
 use Cartalyst\Sentinel\Sessions\SessionInterface;
 use Cartalyst\Sentinel\Persistences\PersistableInterface;
 use Cartalyst\Sentinel\Persistences\PersistenceInterface;
@@ -117,7 +118,7 @@ class IlluminatePersistenceRepositoryTest extends TestCase
     {
         $user = m::mock(UserInterface::class);
 
-        $persistence       = m::mock(PersistenceInterface::class);
+        $persistence       = new EloquentPersistence();
         $persistence->user = $user;
 
         $query = m::mock(Builder::class);
