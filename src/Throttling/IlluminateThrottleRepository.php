@@ -105,6 +105,13 @@ class IlluminateThrottleRepository implements ThrottleRepositoryInterface
      * @var \Illuminate\Database\Eloquent\Collection
      */
     protected $userThrottles = [];
+    
+    /**
+     * The EloquentThrottle Model.
+     *
+     * @var string
+     */
+    protected $model;
 
     /**
      * Create a new Illuminate throttle repository.
