@@ -1,5 +1,9 @@
 # Changelog
 
+### v6.0.1 - 2023-08-10
+
+- Fix some deprecation warnings on PHP 8.2
+
 ### v6.0.0 - 2022-04-06
 
 - Add Laravel 9 support
