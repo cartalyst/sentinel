@@ -113,8 +113,6 @@ class IlluminateThrottleRepository implements ThrottleRepositoryInterface
      */
     protected $model;
 
-    protected $model;
-
     /**
      * Create a new Illuminate throttle repository.
      *
