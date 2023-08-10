@@ -206,7 +206,7 @@ class SentinelServiceProvider extends ServiceProvider
 
             foreach ($activeCheckpoints as $checkpoint) {
                 if (! $app->offsetExists("sentinel.checkpoint.{$checkpoint}")) {
-                    throw new InvalidArgumentException("Invalid checkpoint [${checkpoint}] given.");
+                    throw new InvalidArgumentException("Invalid checkpoint [{$checkpoint}] given.");
                 }
 
                 $checkpoints[$checkpoint] = $app["sentinel.checkpoint.{$checkpoint}"];
