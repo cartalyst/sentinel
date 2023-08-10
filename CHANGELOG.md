@@ -1,5 +1,9 @@
 # Changelog
 
+### v7.0.1 - 2023-08-10
+
+- Fix some deprecation warnings on PHP 8.2
+
 ### v7.0.0 - 2023-02-23
 
 - Add Laravel 10 support
