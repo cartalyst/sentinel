@@ -4,9 +4,9 @@ A modern and framework agnostic authorization and authentication package featuri
 
 The package follows the FIG standard PSR-4 to ensure a high level of interoperability between shared PHP code.
 
-The package requires PHP 8.2+ and comes bundled with a Laravel 11 Facade and a Service Provider to simplify the optional framework integration.
+The package requires PHP 8.3+ and comes bundled with a Laravel 12 Facade and a Service Provider to simplify the optional framework integration.
 
-Have a [read through the Installation Guide](#installation) and on how to [Integrate it with Laravel 11](#laravel-11).
+Have a [read through the Installation Guide](#installation) and on how to [Integrate it with Laravel 12](#laravel-12).
 
 ###### Create a user
 
