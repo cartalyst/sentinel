@@ -42,15 +42,17 @@ class IlluminateSession implements SessionInterface
      * Constructor.
      *
      * @param \Illuminate\Session\Store $session
-     * @param string                    $key
+     * @param string|null               $key
      *
      * @return void
      */
-    public function __construct(SessionStore $session, string $key = null)
+    public function __construct(SessionStore $session, ?string $key = null)
     {
         $this->session = $session;
 
-        $this->key = $key;
+        if ($key !== null) {
+            $this->key = $key;
+        }
     }
 
     /**

@@ -52,10 +52,10 @@ interface ThrottleRepositoryInterface
     /**
      * Logs a new throttling entry.
      *
-     * @param string                                  $ipAddress
-     * @param \Cartalyst\Sentinel\Users\UserInterface $user
+     * @param string|null                             $ipAddress
+     * @param \Cartalyst\Sentinel\Users\UserInterface|null $user
      *
      * @return void
      */
-    public function log($ipAddress = null, UserInterface $user = null);
+    public function log($ipAddress = null, ?UserInterface $user = null);
 }

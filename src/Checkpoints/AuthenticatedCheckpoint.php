@@ -27,7 +27,7 @@ trait AuthenticatedCheckpoint
     /**
      * {@inheritdoc}
      */
-    public function fail(UserInterface $user = null): bool
+    public function fail(?UserInterface $user = null): bool
     {
         return true;
     }

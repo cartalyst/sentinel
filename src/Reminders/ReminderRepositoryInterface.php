@@ -41,7 +41,7 @@ interface ReminderRepositoryInterface
      *
      * @return \Illuminate\Database\Eloquent\Model|null
      */
-    public function get(UserInterface $user, string $code = null);
+    public function get(UserInterface $user, ?string $code = null);
 
     /**
      * Check if a valid reminder exists.
@@ -51,7 +51,7 @@ interface ReminderRepositoryInterface
      *
      * @return bool
      */
-    public function exists(UserInterface $user, string $code = null): bool;
+    public function exists(UserInterface $user, ?string $code = null): bool;
 
     /**
      * Complete reminder for the given user.

@@ -55,18 +55,22 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface
      * Constructor.
      *
      * @param \Cartalyst\Sentinel\Users\UserRepositoryInterface $users
-     * @param string                                            $model
-     * @param int                                               $expires
+     * @param string|null                                       $model
+     * @param int|null                                          $expires
      *
      * @return void
      */
-    public function __construct(UserRepositoryInterface $users, string $model = null, int $expires = null)
+    public function __construct(UserRepositoryInterface $users, ?string $model = null, ?int $expires = null)
     {
         $this->users = $users;
 
-        $this->model = $model;
+        if ($model !== null) {
+            $this->model = $model;
+        }
 
-        $this->expires = $expires;
+        if ($expires !== null) {
+            $this->expires = $expires;
+        }
     }
 
     /**
@@ -93,7 +97,7 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function get(UserInterface $user, string $code = null)
+    public function get(UserInterface $user, ?string $code = null)
     {
         $expires = $this->expires();
 
@@ -115,7 +119,7 @@ class IlluminateReminderRepository implements ReminderRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function exists(UserInterface $user, string $code = null): bool
+    public function exists(UserInterface $user, ?string $code = null): bool
     {
         return (bool) $this->get($user, $code);
     }

@@ -75,7 +75,7 @@ class ThrottleCheckpoint implements CheckpointInterface
     /**
      * {@inheritdoc}
      */
-    public function fail(UserInterface $user = null): bool
+    public function fail(?UserInterface $user = null): bool
     {
         // We'll check throttling firstly from any previous attempts. This
         // will throw the required exceptions if the user has already
@@ -97,7 +97,7 @@ class ThrottleCheckpoint implements CheckpointInterface
      *
      * @return bool
      */
-    protected function checkThrottling(string $action, UserInterface $user = null): bool
+    protected function checkThrottling(string $action, ?UserInterface $user = null): bool
     {
         // If we are just checking an existing logged in person, the global delay
         // shouldn't stop them being logged in at all. Only their IP address and

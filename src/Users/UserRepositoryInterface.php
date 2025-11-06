@@ -106,7 +106,7 @@ interface UserRepositoryInterface
      *
      * @return \Cartalyst\Sentinel\Users\UserInterface|null
      */
-    public function create(array $credentials, Closure $callback = null): ?UserInterface;
+    public function create(array $credentials, ?Closure $callback = null): ?UserInterface;
 
     /**
      * Updates a user.

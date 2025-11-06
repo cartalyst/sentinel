@@ -535,7 +535,7 @@ class Sentinel
      *
      * @return bool
      */
-    public function logout(UserInterface $user = null, bool $everywhere = false): bool
+    public function logout(?UserInterface $user = null, bool $everywhere = false): bool
     {
         $currentUser = $this->check();
 
@@ -692,7 +692,7 @@ class Sentinel
      *
      * @return bool
      */
-    protected function cycleCheckpoints(string $method, UserInterface $user = null, bool $halt = true): bool
+    protected function cycleCheckpoints(string $method, ?UserInterface $user = null, bool $halt = true): bool
     {
         if (! $this->checkpointsStatus) {
             return true;

@@ -81,7 +81,7 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function get(UserInterface $user, string $code = null): ?ActivationInterface
+    public function get(UserInterface $user, ?string $code = null): ?ActivationInterface
     {
         $expires = $this->expires();
 
@@ -101,7 +101,7 @@ class IlluminateActivationRepository implements ActivationRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function exists(UserInterface $user, string $code = null): bool
+    public function exists(UserInterface $user, ?string $code = null): bool
     {
         return (bool) $this->get($user, $code);
     }

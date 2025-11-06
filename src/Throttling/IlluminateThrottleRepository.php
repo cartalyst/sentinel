@@ -189,7 +189,7 @@ class IlluminateThrottleRepository implements ThrottleRepositoryInterface
     /**
      * {@inheritdoc}
      */
-    public function log($ipAddress = null, UserInterface $user = null)
+    public function log($ipAddress = null, ?UserInterface $user = null)
     {
         $global = $this->createModel();
         $global->fill([

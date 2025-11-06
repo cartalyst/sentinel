@@ -53,7 +53,7 @@ trait PermissionsTrait
      *
      * @return void
      */
-    public function __construct(array $permissions = null, array $secondaryPermissions = null)
+    public function __construct(?array $permissions = null, ?array $secondaryPermissions = null)
     {
         $this->permissions = $permissions;
 

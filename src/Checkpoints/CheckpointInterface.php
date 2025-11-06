@@ -51,5 +51,5 @@ interface CheckpointInterface
      *
      * @return bool
      */
-    public function fail(UserInterface $user = null): bool;
+    public function fail(?UserInterface $user = null): bool;
 }

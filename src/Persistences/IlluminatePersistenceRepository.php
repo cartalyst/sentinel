@@ -62,18 +62,20 @@ class IlluminatePersistenceRepository implements PersistenceRepositoryInterface
      *
      * @param \Cartalyst\Sentinel\Sessions\SessionInterface $session
      * @param \Cartalyst\Sentinel\Cookies\CookieInterface   $cookie
-     * @param string                                        $model
+     * @param string|null                                   $model
      * @param bool                                          $single
      *
      * @return void
      */
-    public function __construct(SessionInterface $session, CookieInterface $cookie, string $model = null, bool $single = false)
+    public function __construct(SessionInterface $session, CookieInterface $cookie, ?string $model = null, bool $single = false)
     {
-        $this->model = $model;
-
         $this->session = $session;
 
         $this->cookie = $cookie;
+
+        if ($model !== null) {
+            $this->model = $model;
+        }
 
         $this->single = $single;
     }

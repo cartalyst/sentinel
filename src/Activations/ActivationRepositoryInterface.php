@@ -41,7 +41,7 @@ interface ActivationRepositoryInterface
      *
      * @return \Cartalyst\Sentinel\Activations\ActivationInterface|null
      */
-    public function get(UserInterface $user, string $code = null): ?ActivationInterface;
+    public function get(UserInterface $user, ?string $code = null): ?ActivationInterface;
 
     /**
      * Checks if a valid activation for the given user exists.
@@ -51,7 +51,7 @@ interface ActivationRepositoryInterface
      *
      * @return bool
      */
-    public function exists(UserInterface $user, string $code = null): bool;
+    public function exists(UserInterface $user, ?string $code = null): bool;
 
     /**
      * Completes the activation for the given user.

@@ -36,13 +36,15 @@ class IlluminateRoleRepository implements RoleRepositoryInterface
     /**
      * Create a new Illuminate role repository.
      *
-     * @param string $model
+     * @param string|null $model
      *
      * @return void
      */
-    public function __construct(string $model = null)
+    public function __construct(?string $model = null)
     {
-        $this->model = $model;
+        if ($model !== null) {
+            $this->model = $model;
+        }
     }
 
     /**

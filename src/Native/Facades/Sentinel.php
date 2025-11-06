@@ -41,11 +41,11 @@ class Sentinel
     /**
      * Constructor.
      *
-     * @param \Cartalyst\Sentinel\Native\SentinelBootstrapper $bootstrapper
+     * @param \Cartalyst\Sentinel\Native\SentinelBootstrapper|null $bootstrapper
      *
      * @return void
      */
-    public function __construct(SentinelBootstrapper $bootstrapper = null)
+    public function __construct(?SentinelBootstrapper $bootstrapper = null)
     {
         if ($bootstrapper === null) {
             $bootstrapper = new SentinelBootstrapper();
@@ -67,11 +67,11 @@ class Sentinel
     /**
      * Creates a new Native Bootstraper instance.
      *
-     * @param \Cartalyst\Sentinel\Native\SentinelBootstrapper $bootstrapper
+     * @param \Cartalyst\Sentinel\Native\SentinelBootstrapper|null $bootstrapper
      *
      * @return \Cartalyst\Sentinel\Native\SentinelBootstrapper
      */
-    public static function instance(SentinelBootstrapper $bootstrapper = null)
+    public static function instance(?SentinelBootstrapper $bootstrapper = null)
     {
         if (static::$instance === null) {
             static::$instance = new static($bootstrapper);
